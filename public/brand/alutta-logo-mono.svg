@@ -1,0 +1,22 @@
+<svg width="960" height="520" viewBox="0 0 960 520" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Alutta monochrome logo</title>
+  <desc id="desc">A monochrome ribbon-style A mark above the Alutta wordmark.</desc>
+  <defs>
+    <style>
+      .wordmark {
+        font-family: "Mier B", "MierB", Arial, sans-serif;
+        font-size: 86px;
+        font-weight: 600;
+        letter-spacing: 0.18em;
+      }
+    </style>
+  </defs>
+
+  <g transform="translate(0 6)">
+    <path d="M314 241C350 144 390 72 462 72C519 72 550 115 574 179L610 276C620 302 643 313 665 300C687 288 695 262 682 238L628 128" stroke="#1E3A5F" stroke-width="27" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M335 312C303 312 281 285 291 256C302 221 337 199 388 184C448 166 535 157 568 110C591 77 566 43 515 34C442 22 389 68 351 146L310 231" stroke="#1E3A5F" stroke-width="25" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M335 312C303 312 281 285 291 256C302 221 337 199 388 184C448 166 535 157 568 110" stroke="#F8F7F4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" opacity="0.95"/>
+  </g>
+
+  <text x="480" y="430" text-anchor="middle" class="wordmark" fill="#1E3A5F">ALUTTA</text>
+</svg>

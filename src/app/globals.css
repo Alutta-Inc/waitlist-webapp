@@ -7,7 +7,7 @@
   }
 
   body {
-    @apply bg-brand-bg text-brand-dark antialiased;
+    @apply bg-brand-bg text-brand-dark font-body antialiased;
   }
 }
 

@@ -1,0 +1,42 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Alutta mark</title>
+  <desc id="desc">A refined ribbon-style A brand mark.</desc>
+  <defs>
+    <linearGradient id="alutta-ribbon" x1="97" y1="94" x2="414" y2="337" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#1E3A5F"/>
+      <stop offset="0.58" stop-color="#1565C0"/>
+      <stop offset="1" stop-color="#0EA5E9"/>
+    </linearGradient>
+  </defs>
+
+  <path
+    d="M102 300C142 178 186 86 261 86C319 86 352 131 378 200L416 304C426 331 450 343 474 329C497 316 505 288 492 263L435 145"
+    stroke="url(#alutta-ribbon)"
+    stroke-width="30"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M129 379C93 379 68 348 80 315C93 274 132 249 190 232C255 213 349 205 385 153C411 116 382 78 327 68C248 54 190 106 148 194L101 295"
+    stroke="#1E3A5F"
+    stroke-width="30"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+  <path
+    d="M129 379C93 379 68 348 80 315C93 274 132 249 190 232C255 213 349 205 385 153"
+    stroke="#F8F7F4"
+    stroke-width="12"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.95"
+  />
+  <path
+    d="M164 348C143 365 119 361 111 342C103 323 119 302 150 288C185 272 235 263 290 248C341 233 397 209 436 162"
+    stroke="#0EA5E9"
+    stroke-width="10"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.9"
+  />
+</svg>

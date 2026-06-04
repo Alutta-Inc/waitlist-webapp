@@ -28,7 +28,7 @@ export async function sendWaitlistConfirmation({
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>You're on the Alutta waitlist</title>
+  <title>You are on the Alutta waitlist</title>
 </head>
 <body style="margin:0;padding:0;background:#f8f7f4;font-family:system-ui,-apple-system,sans-serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8f7f4;padding:40px 16px;">
@@ -56,7 +56,7 @@ export async function sendWaitlistConfirmation({
                 clear, affordable, and stress-free — and you&rsquo;ll be among the first to experience it.
               </p>
 
-              <!-- What's coming -->
+              <!-- What is coming -->
               <div style="background:#f0f7ff;border-radius:12px;padding:24px;margin:0 0 28px;">
                 <p style="margin:0 0 14px;font-size:14px;font-weight:600;color:#1e3a5f;text-transform:uppercase;letter-spacing:0.5px;">What you&rsquo;re getting early access to</p>
                 <table cellpadding="0" cellspacing="0" width="100%">
@@ -93,8 +93,9 @@ export async function sendWaitlistConfirmation({
               <p style="margin:0;font-size:15px;color:#4b5563;line-height:1.6;">
                 We&rsquo;re moving fast. Expect to hear from us soon — 
                 and in the meantime, follow us on 
-                <a href="https://twitter.com/alutta" style="color:#0ea5e9;text-decoration:none;">Twitter/X</a> and
-                <a href="https://instagram.com/alutta" style="color:#0ea5e9;text-decoration:none;">Instagram</a> 
+                <a href="https://twitter.com/aluttahq" style="color:#0ea5e9;text-decoration:none;">Twitter/X</a>,
+                <a href="https://instagram.com/aluttahq" style="color:#0ea5e9;text-decoration:none;">Instagram</a>, and
+                <a href="https://www.tiktok.com/@aluttahq" style="color:#0ea5e9;text-decoration:none;">TikTok</a>
                 for updates.
               </p>
             </td>
@@ -122,7 +123,7 @@ export async function sendWaitlistConfirmation({
   return getResend().emails.send({
     from: FROM,
     to: email,
-    subject: `You're on the Alutta waitlist, ${firstName} 🎉`,
+    subject: `You are on the Alutta waitlist, ${firstName} 🎉`,
     html,
   });
 }

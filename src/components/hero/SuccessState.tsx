@@ -51,10 +51,10 @@ export default function SuccessState({ journeyData, onReset }: SuccessStateProps
       {/* Success Message */}
       <div className="space-y-2">
         <h3 className="font-display font-medium text-2xl text-brand-dark">
-          You&apos;re on the list!
+          You are on the list!
         </h3>
         <p className="text-brand-dark/60">
-          We&apos;ll be in touch soon with early access to Alutta
+          We will be in touch soon with early access to Alutta
         </p>
       </div>
 
@@ -81,7 +81,7 @@ export default function SuccessState({ journeyData, onReset }: SuccessStateProps
         </div>
       </div>
 
-      {/* What's Next */}
+      {/* What Is Next */}
       <div className="space-y-3">
         <p className="text-sm font-medium text-brand-dark">What happens next?</p>
         <div className="text-sm text-brand-dark/60 space-y-2">
@@ -91,7 +91,7 @@ export default function SuccessState({ journeyData, onReset }: SuccessStateProps
           </div>
           <div className="flex items-start gap-2">
             <span className="text-brand-primary font-semibold">2.</span>
-            <span>We&apos;ll notify you when Alutta launches</span>
+            <span>We will notify you when Alutta launches</span>
           </div>
           <div className="flex items-start gap-2">
             <span className="text-brand-primary font-semibold">3.</span>

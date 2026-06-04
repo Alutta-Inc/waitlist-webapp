@@ -22,36 +22,71 @@ export default function Hero() {
           }}
         />
 
-        {/* Abstract Dotted Pattern - Top Right */}
-        <div className="absolute top-0 right-0 w-96 h-96 pointer-events-none opacity-40">
+        {/* Elegant ambient pattern */}
+        <div className="absolute -top-32 -right-40 w-[980px] h-[760px] pointer-events-none opacity-80 hidden sm:block">
           <svg
             width="100%"
             height="100%"
-            viewBox="0 0 400 400"
+            viewBox="0 0 980 760"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
+            className="animate-[heroPatternDrift_18s_ease-in-out_infinite]"
           >
-            {/* Grid of dots */}
-            {Array.from({ length: 12 }).map((_, row) =>
-              Array.from({ length: 12 }).map((_, col) => {
-                const x = col * 32 + 16;
-                const y = row * 32 + 16;
-                // Create a fade effect from top-right
-                const opacity = Math.max(0, 1 - (row * 0.08 + col * 0.02));
-                const size = Math.max(1.5, 3 - row * 0.15);
-                return (
-                  <circle
-                    key={`${row}-${col}`}
-                    cx={x}
-                    cy={y}
-                    r={size}
-                    fill="#1e3a5f"
-                    opacity={opacity * 0.6}
-                  />
-                );
-              })
-            )}
+            <defs>
+              <linearGradient id="heroPatternStroke" x1="120" y1="80" x2="910" y2="620" gradientUnits="userSpaceOnUse">
+                <stop stopColor="#1565C0" stopOpacity="0.14" />
+                <stop offset="0.48" stopColor="#0EA5E9" stopOpacity="0.1" />
+                <stop offset="1" stopColor="#1565C0" stopOpacity="0" />
+              </linearGradient>
+              <pattern id="heroPatternDots" x="0" y="0" width="34" height="34" patternUnits="userSpaceOnUse">
+                <circle cx="2" cy="2" r="1.15" fill="#1565C0" fillOpacity="0.12" />
+              </pattern>
+              <mask id="heroPatternFade">
+                <rect width="980" height="760" fill="black" />
+                <ellipse cx="690" cy="210" rx="380" ry="290" fill="white" />
+                <ellipse cx="330" cy="500" rx="300" ry="190" fill="white" opacity="0.55" />
+              </mask>
+            </defs>
+            <g className="animate-[heroLineFloat_12s_ease-in-out_infinite]">
+              <path d="M76 574C238 344 444 208 700 166C810 148 891 156 960 184" stroke="url(#heroPatternStroke)" strokeWidth="1.35" strokeLinecap="round" />
+              <path d="M38 488C214 282 424 157 684 118C784 103 876 111 946 137" stroke="url(#heroPatternStroke)" strokeWidth="1" strokeLinecap="round" opacity="0.72" />
+              <path d="M144 660C318 438 520 314 748 284C836 272 912 282 972 310" stroke="url(#heroPatternStroke)" strokeWidth="1" strokeLinecap="round" opacity="0.52" />
+              <path d="M10 612C150 515 286 475 420 492C524 505 612 552 724 548" stroke="url(#heroPatternStroke)" strokeWidth="0.9" strokeLinecap="round" opacity="0.38" />
+            </g>
+            <g opacity="0.45" className="animate-[heroDotsFloat_16s_ease-in-out_infinite]">
+              <rect x="238" y="42" width="650" height="560" fill="url(#heroPatternDots)" mask="url(#heroPatternFade)" />
+            </g>
           </svg>
+          <style jsx>{`
+            @keyframes heroPatternDrift {
+              0%, 100% {
+                transform: translate3d(0, 0, 0) scale(1);
+              }
+              50% {
+                transform: translate3d(-18px, 14px, 0) scale(1.025);
+              }
+            }
+            @keyframes heroLineFloat {
+              0%, 100% {
+                transform: translate3d(0, 0, 0);
+                opacity: 1;
+              }
+              50% {
+                transform: translate3d(-28px, 20px, 0);
+                opacity: 0.72;
+              }
+            }
+            @keyframes heroDotsFloat {
+              0%, 100% {
+                transform: translate3d(0, 0, 0);
+                opacity: 0.45;
+              }
+              50% {
+                transform: translate3d(22px, -16px, 0);
+                opacity: 0.7;
+              }
+            }
+          `}</style>
         </div>
 
         {/* Abstract Dotted Pattern - Bottom Left (smaller, more subtle) */}
@@ -112,23 +147,22 @@ export default function Hero() {
           <div className="max-w-7xl mx-auto lg:max-w-none">
             <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left Content */}
-              <div className="lg:max-w-xl">
+              <div className="lg:max-w-2xl">
                 {/* Accent Text - Mier B Book */}
-                <p className="text-brand-accent text-center lg:text-left text-2xl leading-tight font-[450] mb-4">
+                <p className="text-brand-accent text-center lg:text-left text-xl sm:text-2xl leading-tight font-semibold mb-4">
                   Your study abroad companion
                 </p>
 
-                {/* Headline - Recoleta Medium */}
-                <h1 className="font-display font-medium text-center lg:text-left text-4xl sm:text-5xl lg:text-[52px] text-brand-dark leading-none mb-6">
-                  The all-in-one
-                  <br />
-                  platform for
-                  <br />
-                  <span className="text-brand-primary">international students</span>
+                {/* Headline */}
+                <h1 className="font-display font-bold text-center lg:text-left text-[46px] sm:text-6xl lg:text-[72px] xl:text-[82px] text-brand-dark leading-[1.04] mb-7 text-balance">
+                  <span className="block">The all-in-one platform</span>
+                  <span className="block">
+                    for <span className="text-brand-primary">international students</span>
+                  </span>
                 </h1>
 
                 {/* Subheadline - Mier B Regular */}
-                <p className="text-center lg:text-left text-xl sm:text-2xl text-brand-dark leading-tight mb-8">
+                <p className="text-center lg:text-left text-xl sm:text-2xl text-brand-dark/80 leading-snug mb-8 max-w-xl">
                   From application fees to settling in — we map your entire journey,
                   handle your payments, and help you thrive in your new country.
                 </p>

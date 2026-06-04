@@ -17,8 +17,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        display: ["Georgia", "Cambria", "serif"],
-        body: ["system-ui", "-apple-system", "sans-serif"],
+        display: ["var(--font-mierb)", "Arial", "sans-serif"],
+        body: ["var(--font-mierb)", "Arial", "sans-serif"],
       },
       spacing: {
         "75": "18.75rem",
