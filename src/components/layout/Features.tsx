@@ -22,7 +22,7 @@ const features = [
     title: "School Research",
     description:
       "Explore universities across the US, UK, and Canada. Compare programs, tuition costs, and admission requirements all in one place.",
-    image: "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1552512556-37ac2c074743?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "University campus",
     studentName: "Fatima Al-Hassan",
     studentRole: "Prospective Student",
@@ -33,7 +33,7 @@ const features = [
     title: "Journey Mapping",
     description:
       "We map your entire study abroad journey — from application to graduation. See every fee, deadline, and milestone.",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1539207004020-449ced88dbf4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Students planning their journey",
     studentName: "Sarah Chen",
     studentRole: "Graduate Student",
@@ -46,7 +46,7 @@ const features = [
     title: "Fee Payments",
     description:
       "Pay application fees, tuition deposits, and semester fees all from one platform. Competitive rates with no hidden charges.",
-    image: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1644635681984-0f526ca05af0?q=80&w=686&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Secure payment processing",
     studentName: "James Okonkwo",
     studentRole: "Undergraduate Student",
@@ -59,7 +59,7 @@ const features = [
     title: "Visa Support",
     description:
       "Get guided support through your visa application. We help you understand requirements and track your application status.",
-    image: "https://images.unsplash.com/photo-1569098644584-210bcd375b59?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1659356874266-c672f53e6473?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Visa application documents",
     studentName: "Priya Sharma",
     studentRole: "Masters Student",
@@ -72,7 +72,7 @@ const features = [
     title: "Flight Booking",
     description:
       "Once your visa is approved, book your flights directly through Alutta. Student-friendly rates and flexible options.",
-    image: "https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1627923146572-5e3d07f32980?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Airplane flying",
     studentName: "Ahmed Hassan",
     studentRole: "PhD Candidate",
@@ -86,7 +86,7 @@ const features = [
     title: "Accommodation",
     description:
       "Browse verified student housing options near your university. Pay deposits securely before you even land.",
-    image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Student accommodation",
     studentName: "Maria Santos",
     studentRole: "Exchange Student",
@@ -98,7 +98,7 @@ const features = [
     title: "Airport Pickup",
     description:
       "A local rep meets you at the airport, helps you navigate arrival, and gets you safely to your accommodation.",
-    image: "https://images.unsplash.com/photo-1540339832862-474599807836?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1731755429012-83a172bec732?q=80&w=1371&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Airport arrival hall",
     studentName: "David Kim",
     studentRole: "Undergraduate Student",
@@ -111,7 +111,7 @@ const features = [
     title: "Settlement Services",
     description:
       "Get help setting up your bank account, local SIM card, and other essentials. We make your first week stress-free.",
-    image: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Banking services",
     studentName: "Emma Wilson",
     studentRole: "Graduate Student",
@@ -123,8 +123,8 @@ const features = [
     icon: HeadphonesIcon,
     title: "Ongoing Support",
     description:
-      "Our support doesn't end when you land. Get help throughout your studies — from renewing visas to finding work.",
-    image: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&w=800&q=80",
+      "Our support does not end when you land. Get help throughout your studies — from renewing visas to finding work.",
+    image: "https://images.unsplash.com/photo-1656733519386-105d8c149ef8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Student on phone call",
     studentName: "Chen Wei",
     studentRole: "Masters Student",

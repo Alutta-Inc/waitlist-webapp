@@ -372,7 +372,12 @@ export const sourceCountries = [
   { code: "BB", name: "Barbados" },
   { code: "BS", name: "Bahamas" },
 
+  // North America
+  { code: "US", name: "United States" },
+  { code: "CA", name: "Canada" },
+
   // Europe
+  { code: "UK", name: "United Kingdom" },
   { code: "DE", name: "Germany" },
   { code: "FR", name: "France" },
   { code: "IT", name: "Italy" },
@@ -405,5 +410,45 @@ export const sourceCountries = [
   { code: "PG", name: "Papua New Guinea" },
 
   // Other
+  { code: "OT", name: "Other" },
+];
+
+export const destinationCountries = [
+  { code: "US", name: "United States" },
+  { code: "UK", name: "United Kingdom" },
+  { code: "CA", name: "Canada" },
+  { code: "AU", name: "Australia" },
+  { code: "DE", name: "Germany" },
+  { code: "FR", name: "France" },
+  { code: "IE", name: "Ireland" },
+  { code: "NL", name: "Netherlands" },
+  { code: "NZ", name: "New Zealand" },
+  { code: "SE", name: "Sweden" },
+  { code: "FI", name: "Finland" },
+  { code: "NO", name: "Norway" },
+  { code: "DK", name: "Denmark" },
+  { code: "IT", name: "Italy" },
+  { code: "ES", name: "Spain" },
+  { code: "PT", name: "Portugal" },
+  { code: "BE", name: "Belgium" },
+  { code: "CH", name: "Switzerland" },
+  { code: "AT", name: "Austria" },
+  { code: "PL", name: "Poland" },
+  { code: "CZ", name: "Czech Republic" },
+  { code: "HU", name: "Hungary" },
+  { code: "JP", name: "Japan" },
+  { code: "KR", name: "South Korea" },
+  { code: "CN", name: "China" },
+  { code: "SG", name: "Singapore" },
+  { code: "MY", name: "Malaysia" },
+  { code: "AE", name: "United Arab Emirates" },
+  { code: "QA", name: "Qatar" },
+  { code: "SA", name: "Saudi Arabia" },
+  { code: "TR", name: "Turkey" },
+  { code: "ZA", name: "South Africa" },
+  { code: "IN", name: "India" },
+  { code: "BR", name: "Brazil" },
+  { code: "MX", name: "Mexico" },
+  { code: "AR", name: "Argentina" },
   { code: "OT", name: "Other" },
 ];

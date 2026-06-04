@@ -41,8 +41,8 @@ export default function VideoModal({ isOpen, onClose, videoId }: VideoModalProps
           <div className="text-5xl mb-4">🎬</div>
           <h3 className="font-display font-medium text-xl text-brand-dark mb-2">Coming soon</h3>
           <p className="text-gray-500 text-sm leading-relaxed">
-            We&apos;re putting the finishing touches on our explainer video. 
-            Join the waitlist to be notified when it&apos;s live!
+            We are putting the finishing touches on our explainer video. 
+            Join the waitlist to be notified when it is live!
           </p>
         </div>
       </div>

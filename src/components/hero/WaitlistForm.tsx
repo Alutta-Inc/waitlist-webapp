@@ -142,7 +142,7 @@ export default function WaitlistForm({
           Your journey is mapped
         </h3>
         <p className="text-brand-dark/60">
-          Join the early access waitlist and we&apos;ll keep you posted.
+          Join the early access waitlist and we will keep you posted.
         </p>
       </div>
 

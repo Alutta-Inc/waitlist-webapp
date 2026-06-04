@@ -11,8 +11,8 @@ const testimonials = [
     role: "Graduate Student, USA",
     shortQuote: "Alutta made my dream of studying abroad feel achievable, not overwhelming",
     fullQuote:
-      "Alutta made my dream of studying abroad feel achievable, not overwhelming. As a first-generation international student, I had no idea where to start. The fees, the deadlines, the visa process — it was all so confusing. But Alutta laid everything out for me step by step. I knew exactly what to pay and when. The support team was always there when I had questions. I honestly don't think I could have done this without them. Now I'm thriving at my dream school in Boston!",
-    image: "https://images.unsplash.com/photo-1531123897727-8f129e1688ce?auto=format&fit=crop&w=800&q=80",
+      "Alutta made my dream of studying abroad feel achievable, not overwhelming. As a first-generation international student, I had no idea where to start. The fees, the deadlines, the visa process — it was all so confusing. But Alutta laid everything out for me step by step. I knew exactly what to pay and when. The support team was always there when I had questions. I honestly do not think I could have done this without them. Now I am thriving at my dream school in Boston!",
+    image: "https://images.unsplash.com/photo-1500301111609-42f1aa6df72a?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     bgColor: "bg-[#FDE8E8]",
     textColor: "text-[#BE185D]",
     accentColor: "text-[#BE185D]",
@@ -23,8 +23,8 @@ const testimonials = [
     role: "Undergraduate, Canada",
     shortQuote: "I knew exactly what to pay and when. No surprises, no stress",
     fullQuote:
-      "I knew exactly what to pay and when. No surprises, no stress. Before Alutta, I was using spreadsheets to track my fees and deadlines. I missed a deposit once and almost lost my admission. When I found Alutta, everything changed. The journey timeline showed me every single payment I needed to make. The exchange rates were transparent, and I could pay directly from Nigeria. My parents were so relieved to see everything organized in one place. I'm now in my second year at University of Toronto!",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&w=800&q=80",
+      "I knew exactly what to pay and when. No surprises, no stress. Before Alutta, I was using spreadsheets to track my fees and deadlines. I missed a deposit once and almost lost my admission. When I found Alutta, everything changed. The journey timeline showed me every single payment I needed to make. The exchange rates were transparent, and I could pay directly from Nigeria. My parents were so relieved to see everything organized in one place. I am now in my second year at University of Toronto!",
+    image: "https://images.unsplash.com/photo-1683135231682-51fb7eb05749?q=80&w=1374&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     bgColor: "bg-[#E8F5F2]",
     textColor: "text-[#047857]",
     accentColor: "text-[#047857]",
@@ -35,8 +35,8 @@ const testimonials = [
     role: "Masters Student, UK",
     shortQuote: "From visa fees to tuition, everything was handled in one place",
     fullQuote:
-      "From visa fees to tuition, everything was handled in one place. I was accepted to three universities in the UK, and Alutta helped me compare the total costs — not just tuition, but visa fees, accommodation deposits, and living expenses. That clarity helped me make the right choice for my family's budget. When it came time to pay, I didn't have to worry about exchange rates or hidden fees. Alutta handled it all. The settlement support when I arrived in London was the cherry on top!",
-    image: "https://images.unsplash.com/photo-1589156280159-27698a70f29e?auto=format&fit=crop&w=800&q=80",
+      "From visa fees to tuition, everything was handled in one place. I was accepted to three universities in the UK, and Alutta helped me compare the total costs — not just tuition, but visa fees, accommodation deposits, and living expenses. That clarity helped me make the right choice for my family's budget. When it came time to pay, I did not have to worry about exchange rates or hidden fees. Alutta handled it all. The settlement support when I arrived in London was the cherry on top!",
+    image: "https://images.unsplash.com/photo-1641464587469-fa15d2220930?q=80&w=735&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     bgColor: "bg-[#EDE9FE]",
     textColor: "text-[#7C3AED]",
     accentColor: "text-[#7C3AED]",
@@ -48,7 +48,7 @@ const testimonials = [
     shortQuote: "The settlement support made my first week abroad completely stress-free",
     fullQuote:
       "The settlement support made my first week abroad completely stress-free. I landed at JFK with two heavy bags and a lot of anxiety. But someone from Alutta's network was there to pick me up! They helped me get to my apartment, took me to get a SIM card, and even showed me where to buy Nigerian food nearby. I felt at home immediately. For anyone worried about the 'what happens when I land' part — Alutta has you covered. I can now focus 100% on my research.",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1647316897340-6b6de5597c0f?q=80&w=764&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     bgColor: "bg-[#FEF3C7]",
     textColor: "text-[#B45309]",
     accentColor: "text-[#B45309]",

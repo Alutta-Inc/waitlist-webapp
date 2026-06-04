@@ -6,14 +6,54 @@ import { customAlphabet } from "nanoid";
 // 8-char alphanumeric referral codes — easy to share
 const nanoid = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 8);
 
+function isTurnstileDisabled() {
+  return process.env.NODE_ENV !== "production" && process.env.TURNSTILE_DISABLED === "true";
+}
+
+async function verifyTurnstileToken(token: string, remoteIp: string | null) {
+  if (isTurnstileDisabled()) {
+    return true;
+  }
+
+  if (!process.env.TURNSTILE_SECRET_KEY) {
+    throw new Error("TURNSTILE_SECRET_KEY is required.");
+  }
+
+  const formData = new FormData();
+  formData.append("secret", process.env.TURNSTILE_SECRET_KEY);
+  formData.append("response", token);
+  if (remoteIp) formData.append("remoteip", remoteIp);
+
+  const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+    method: "POST",
+    body: formData,
+  });
+
+  if (!response.ok) {
+    return false;
+  }
+
+  const result = (await response.json()) as { success?: boolean };
+  return result.success === true;
+}
+
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { firstName, email, country, destination, program, referredBy, source, utm } = body;
+    const { firstName, email, country, destination, program, referredBy, source, utm, turnstileToken } = body;
+    const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || null;
 
     // ── Validation ──────────────────────────────────────────
     if (!firstName?.trim() || !email?.trim()) {
       return NextResponse.json({ error: "Name and email are required." }, { status: 400 });
+    }
+
+    if (!country?.trim() || !destination?.trim()) {
+      return NextResponse.json({ error: "Country and study destination are required." }, { status: 400 });
+    }
+
+    if (!isTurnstileDisabled() && (!turnstileToken || typeof turnstileToken !== "string")) {
+      return NextResponse.json({ error: "Please complete the security check." }, { status: 400 });
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -21,26 +61,16 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Please enter a valid email address." }, { status: 400 });
     }
 
+    const turnstileValid = await verifyTurnstileToken(String(turnstileToken || ""), ip);
+    if (!turnstileValid) {
+      return NextResponse.json({ error: "Security check failed. Please try again." }, { status: 403 });
+    }
+
     const cleanEmail = email.trim().toLowerCase();
     const cleanName = firstName.trim();
+    const cleanCountry = country.trim();
+    const cleanDestination = destination.trim();
     const supabaseAdmin = getSupabaseAdmin();
-
-    // ── Check for duplicate ──────────────────────────────────
-    const { data: existing } = await supabaseAdmin
-      .from("waitlist")
-      .select("id, referral_code")
-      .eq("email", cleanEmail)
-      .maybeSingle();
-
-    if (existing) {
-      // Already signed up — return their referral code gracefully
-      return NextResponse.json({
-        success: true,
-        alreadySignedUp: true,
-        referralCode: existing.referral_code,
-        message: "You're already on the waitlist!",
-      });
-    }
 
     // ── Validate referral code if provided ───────────────────
     let validReferredBy: string | null = null;
@@ -53,18 +83,55 @@ export async function POST(req: NextRequest) {
       if (referrer) validReferredBy = referredBy.toUpperCase();
     }
 
+    // ── Check for duplicate ──────────────────────────────────
+    const { data: existing } = await supabaseAdmin
+      .from("waitlist")
+      .select("id, referral_code")
+      .eq("email", cleanEmail)
+      .maybeSingle();
+
+    if (existing) {
+      const updatePayload = {
+        country: cleanCountry,
+        destination: cleanDestination,
+        program: program || null,
+        source: source || "hero",
+        utm_source: utm?.source || null,
+        utm_medium: utm?.medium || null,
+        utm_campaign: utm?.campaign || null,
+        ip_address: ip,
+        ...(validReferredBy ? { referred_by: validReferredBy } : {}),
+      };
+
+      const { error: updateError } = await supabaseAdmin
+        .from("waitlist")
+        .update(updatePayload)
+        .eq("id", existing.id);
+
+      if (updateError) {
+        console.error("Supabase update error:", updateError);
+        return NextResponse.json({ error: "Failed to update your details. Please try again." }, { status: 500 });
+      }
+
+      // Already signed up - return their referral code gracefully.
+      return NextResponse.json({
+        success: true,
+        alreadySignedUp: true,
+        referralCode: existing.referral_code,
+        message: "You are already on the waitlist!",
+      });
+    }
+
     const referralCode = nanoid();
 
     // ── Insert into database ─────────────────────────────────
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0] || null;
-
     const { error: insertError } = await supabaseAdmin
       .from("waitlist")
       .insert({
         first_name: cleanName,
         email: cleanEmail,
-        country: country || null,
-        destination: destination || null,
+        country: cleanCountry,
+        destination: cleanDestination,
         program: program || null,
         referral_code: referralCode,
         referred_by: validReferredBy,
@@ -92,7 +159,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       referralCode,
-      message: "You're on the waitlist!",
+      message: "You are on the waitlist!",
     });
 
   } catch (err) {

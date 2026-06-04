@@ -34,8 +34,8 @@ const steps: Step[] = [
     number: "1",
     title: "Map your journey",
     description:
-      "Tell us where you want to study, and we'll lay out everything you need — fees, deadlines, documents, and milestones — in one clear timeline.",
-    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=1200&q=80",
+      "Tell us where you want to study, and we will lay out everything you need — fees, deadlines, documents, and milestones — in one clear timeline.",
+    image: "https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Student planning journey",
     studentName: "Amara Obi",
     studentRole: "Graduate Student",
@@ -56,7 +56,7 @@ const steps: Step[] = [
     title: "Pay with confidence",
     description:
       "From tuition deposits to visa fees, pay everything through one secure platform. Transparent rates, no hidden charges, and real-time tracking.",
-    image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1758874573126-cf93a36261e8?q=80&w=1632&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Student making payment",
     studentName: "Emeka Okonkwo",
     studentRole: "Undergraduate Student",
@@ -72,7 +72,7 @@ const steps: Step[] = [
     title: "Settle in smoothly",
     description:
       "From airport pickup to opening a bank account, we connect you with everything you need to feel at home from day one. Focus on your studies, not logistics.",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&q=80",
+    image: "https://images.unsplash.com/photo-1680918029754-3d6765210647?q=80&w=756&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Students settling in",
     studentName: "Priya Venkatesh",
     studentRole: "Masters Student",

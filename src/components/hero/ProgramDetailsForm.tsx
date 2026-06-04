@@ -30,7 +30,7 @@ function validateProgram(value: string): { isValid: boolean; error: string | nul
     return { isValid: false, error: "Program name must contain letters" };
   }
   
-  // Check if it's not just special characters and spaces
+  // Check that it is not just special characters and spaces.
   const alphanumericCount = (trimmed.match(/[a-zA-Z0-9]/g) || []).length;
   if (alphanumericCount < 2) {
     return { isValid: false, error: "Please enter a valid program name" };
@@ -116,7 +116,7 @@ export default function ProgramDetailsForm({
           Tell us about your program
         </h3>
         <p className="text-brand-dark/60">
-          We&apos;ll use this to map your journey
+          We will use this to map your journey
         </p>
       </div>
 
@@ -133,7 +133,7 @@ export default function ProgramDetailsForm({
               onClick={() => setIsUniversityUndecided(false)}
               className="w-full px-4 py-3 rounded-xl border-2 border-brand-primary/30 bg-brand-primary/5 text-brand-dark cursor-pointer flex items-center justify-between"
             >
-              <span>I&apos;m still exploring options</span>
+              <span>I am still exploring options</span>
               <span className="text-sm text-brand-primary">Change</span>
             </div>
           ) : !showUniversityDropdown ? (
@@ -181,7 +181,7 @@ export default function ProgramDetailsForm({
                   onClick={handleUndecided}
                   className="w-full px-4 py-3 text-left hover:bg-gray-50 text-brand-primary font-medium border-b border-gray-100"
                 >
-                  I&apos;m still exploring options
+                  I am still exploring options
                 </button>
 
                 {/* University list */}

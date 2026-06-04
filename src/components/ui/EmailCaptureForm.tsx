@@ -37,10 +37,10 @@ export default function EmailCaptureForm({ onSuccess }: EmailCaptureFormProps) {
           <Check className="w-8 h-8 text-green-600" />
         </div>
         <h3 className="font-display font-medium text-2xl text-brand-dark mb-2">
-          You&apos;re on the list!
+          You are on the list!
         </h3>
         <p className="text-gray-600">
-          We&apos;ll notify you when Alutta is ready for you.
+          We will notify you when Alutta is ready for you.
         </p>
       </div>
     );

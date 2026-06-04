@@ -1,0 +1,20 @@
+# Alutta
+
+> Alutta is a study abroad platform for international students. It helps students plan, fund, and manage the journey from university applications and tuition payments to visas, housing, travel, and settlement support.
+
+## Core Pages
+
+- [Home](https://alutta.com/): Overview of Alutta and the early access waitlist.
+- [Privacy Policy](https://alutta.com/privacy): How Alutta handles waitlist, referral, usage, and anti-spam data.
+- [Terms of Service](https://alutta.com/terms): Terms for using Alutta's website and waitlist.
+
+## Social Profiles
+
+- [X/Twitter](https://twitter.com/aluttahq)
+- [LinkedIn](https://linkedin.com/company/alutta)
+- [Instagram](https://instagram.com/aluttahq)
+- [TikTok](https://www.tiktok.com/@aluttahq)
+
+## Product Summary
+
+Alutta is built for international students who need a clearer, more coordinated way to manage study abroad decisions and logistics. The platform focuses on application planning, payment coordination, visa and document readiness, accommodation, travel, airport arrival, and settlement support.
