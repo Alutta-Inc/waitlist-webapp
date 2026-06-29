@@ -32,7 +32,7 @@ const features = [
     icon: Route,
     title: "Journey Mapping",
     description:
-      "We map your entire study abroad journey — from application to graduation. See every fee, deadline, and milestone.",
+      "We map your entire study abroad journey, from application to graduation. See every fee, deadline, and milestone.",
     image: "https://images.unsplash.com/photo-1539207004020-449ced88dbf4?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Students planning their journey",
     studentName: "Sarah Chen",
@@ -123,7 +123,7 @@ const features = [
     icon: HeadphonesIcon,
     title: "Ongoing Support",
     description:
-      "Our support does not end when you land. Get help throughout your studies — from renewing visas to finding work.",
+      "Our support does not end when you land. Get help throughout your studies, from renewing visas to finding work.",
     image: "https://images.unsplash.com/photo-1656733519386-105d8c149ef8?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     imageAlt: "Student on phone call",
     studentName: "Chen Wei",

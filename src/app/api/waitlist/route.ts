@@ -149,12 +149,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Failed to save your details. Please try again." }, { status: 500 });
     }
 
-    // ── Send confirmation email (non-blocking) ───────────────
-    sendWaitlistConfirmation({
+    // ── Send confirmation email ──────────────────────────────
+    const emailResult = await sendWaitlistConfirmation({
       firstName: cleanName,
       email: cleanEmail,
       referralCode,
-    }).catch((err) => console.error("Email send failed:", err));
+    });
+
+    if (emailResult.error) {
+      // User is saved — log the error but don't block the success response.
+      console.error("Resend delivery error:", JSON.stringify(emailResult.error));
+    }
 
     return NextResponse.json({
       success: true,

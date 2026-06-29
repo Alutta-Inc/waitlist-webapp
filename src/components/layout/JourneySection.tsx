@@ -51,9 +51,9 @@ export default function JourneySection() {
               {/* Description */}
               <div className="space-y-4 text-lg text-gray-700 leading-relaxed mb-8">
                 <p>
-                  Studying abroad shouldn&apos;t feel like solving a puzzle with missing pieces. 
+                  Studying abroad should not feel like solving a puzzle with missing pieces. 
                   Between application fees, visa deadlines, tuition deposits, and accommodation 
-                  bookings, it is easy to lose track — or worse, miss something important.
+                  bookings, it is easy to lose track, or worse, miss something important.
                 </p>
                 <p>
                   Alutta gives you a clear, step-by-step view of your entire journey. From 
