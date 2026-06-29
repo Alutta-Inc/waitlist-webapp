@@ -1,0 +1,23 @@
+{
+  "name": "Alutta",
+  "short_name": "Alutta",
+  "description": "Your study abroad journey, simplified.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#003024",
+  "theme_color": "#029b47",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
