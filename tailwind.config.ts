@@ -10,10 +10,24 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          dark: "#1e3a5f",
-          primary: "#1565C0",
-          accent: "#0ea5e9",
-          bg: "#f8f7f4",
+          // Primary greens (from logo + style guide)
+          primary: "#029b47",       // Logo solid green
+          "primary-light": "#13CA58", // Malachite (style guide)
+          "primary-vivid": "#00d45f", // Logo gradient start
+          "primary-mid": "#39b54a",   // Logo gradient end
+
+          // Dark backgrounds / text
+          dark: "#003024",          // Burnham — deep forest green
+          iridium: "#354440",       // Iridium — muted dark green (body text)
+
+          // Backgrounds
+          bg: "#FFFFEB",            // Ivory
+          "bg-alt": "#f5f7f2",      // Softer off-white tint
+
+          // Accents
+          accent: "#13CA58",        // Malachite — CTA highlights
+          turbo: "#FFCC33",         // Yellow accent
+          lava: "#FF8533",          // Orange accent
         },
       },
       fontFamily: {

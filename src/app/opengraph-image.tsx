@@ -30,7 +30,7 @@ export default function Image() {
         <div style={{ maxWidth: 760, marginTop: 30, fontSize: 30, lineHeight: 1.3, color: "#49627a" }}>
           Applications, payments, visas, housing, travel, and settlement support for international students.
         </div>
-        <div style={{ marginTop: 54, display: "flex", gap: 16, fontSize: 24, color: "#0ea5e9", fontWeight: 700 }}>
+        <div style={{ marginTop: 54, display: "flex", gap: 16, fontSize: 24, color: "#13CA58", fontWeight: 700 }}>
           <span>Plan</span>
           <span>•</span>
           <span>Fund</span>

@@ -2,12 +2,12 @@
 @config "../../tailwind.config.ts";
 
 @layer base {
-  html {
+  html[data-scroll-behavior="smooth"] {
     scroll-behavior: smooth;
   }
 
   body {
-    @apply bg-brand-bg text-brand-dark font-body antialiased;
+    @apply bg-brand-bg text-brand-iridium font-body antialiased;
   }
 }
 

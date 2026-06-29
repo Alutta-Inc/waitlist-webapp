@@ -1,0 +1,32 @@
+# AWS App Runner service configuration
+# Deploy via: aws apprunner create-service --cli-input-yaml file://apprunner.yaml
+# Or connect this repo in the App Runner console with auto-deploy on push
+
+version: 1.0
+runtime: DOCKER
+source:
+  image_repository:
+    image_identifier: <AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/alutta-website:latest
+    image_repository_type: ECR
+    image_configuration:
+      port: "3000"
+      runtime_environment_variables:
+        NODE_ENV: production
+        # Inject secrets from AWS Secrets Manager or Parameter Store — do NOT hardcode here
+        # NEXT_PUBLIC_SUPABASE_URL: set in App Runner console or via IAM-linked secrets
+        # NEXT_PUBLIC_SUPABASE_ANON_KEY: set in App Runner console
+        # RESEND_API_KEY: set in App Runner console
+network:
+  ingress:
+    is_publicly_accessible: true
+instance_configuration:
+  cpu: "1 vCPU"
+  memory: "2 GB"
+  instance_role_arn: arn:aws:iam::<AWS_ACCOUNT_ID>:role/AppRunnerInstanceRole
+health_check:
+  protocol: HTTP
+  path: /api/health
+  interval: 20
+  timeout: 5
+  healthy_threshold: 1
+  unhealthy_threshold: 5

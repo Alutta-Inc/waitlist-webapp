@@ -34,12 +34,12 @@ export default function Hero() {
           >
             <defs>
               <linearGradient id="heroPatternStroke" x1="120" y1="80" x2="910" y2="620" gradientUnits="userSpaceOnUse">
-                <stop stopColor="#1565C0" stopOpacity="0.14" />
-                <stop offset="0.48" stopColor="#0EA5E9" stopOpacity="0.1" />
-                <stop offset="1" stopColor="#1565C0" stopOpacity="0" />
+                <stop stopColor="#029b47" stopOpacity="0.14" />
+                <stop offset="0.48" stopColor="#13CA58" stopOpacity="0.1" />
+                <stop offset="1" stopColor="#029b47" stopOpacity="0" />
               </linearGradient>
               <pattern id="heroPatternDots" x="0" y="0" width="34" height="34" patternUnits="userSpaceOnUse">
-                <circle cx="2" cy="2" r="1.15" fill="#1565C0" fillOpacity="0.12" />
+                <circle cx="2" cy="2" r="1.15" fill="#029b47" fillOpacity="0.12" />
               </pattern>
               <mask id="heroPatternFade">
                 <rect width="980" height="760" fill="black" />
@@ -114,7 +114,7 @@ export default function Hero() {
                     cx={x}
                     cy={y}
                     r={2}
-                    fill="#0ea5e9"
+                    fill="#13CA58"
                     opacity={opacity * 0.5}
                   />
                 );
@@ -134,7 +134,7 @@ export default function Hero() {
           >
             <path
               d="M10 110 Q 60 10, 110 60"
-              stroke="#1e3a5f"
+              stroke="#003024"
               strokeWidth="2"
               fill="none"
               strokeLinecap="round"

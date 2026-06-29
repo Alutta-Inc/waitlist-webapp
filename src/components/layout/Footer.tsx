@@ -1,4 +1,6 @@
+import { assetUrl } from "@/lib/assets";
 import Link from "next/link";
+import Image from "next/image";
 
 function XIcon() {
   return <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>;
@@ -22,16 +24,22 @@ const socials = [
 
 export default function Footer() {
   return (
-    <footer className="bg-brand-bg">
+    <footer className="bg-brand-dark">
       <div className="px-4 md:px-6 lg:px-8">
         <div className="pl-4 pr-4 md:pl-6 md:pr-6 py-16 lg:py-20">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10 lg:gap-16 mb-12">
             {/* Brand */}
             <div className="md:col-span-1">
-              <Link href="/" className="text-3xl font-medium text-brand-dark font-display inline-block mb-4">
-                alutta
+              <Link href="/" className="inline-block mb-4">
+                <Image
+                  src={assetUrl("/brand/logo-horizontal-white-text.svg")}
+                  alt="Alutta"
+                  width={120}
+                  height={30}
+                  className="h-8 w-auto"
+                />
               </Link>
-              <p className="text-gray-600 leading-relaxed text-sm">
+              <p className="text-white/60 leading-relaxed text-sm">
                 We help international students navigate their study abroad journey
                 with clarity and confidence. From application to graduation,
                 we are with you every step of the way.
@@ -40,7 +48,7 @@ export default function Footer() {
 
             {/* Quick Links */}
             <div>
-              <h3 className="font-semibold text-brand-dark mb-4 text-sm uppercase tracking-wide">Platform</h3>
+              <h3 className="font-semibold text-white/40 mb-4 text-sm uppercase tracking-wide">Platform</h3>
               <ul className="space-y-2.5">
                 {[
                   { label: "Features", href: "#features" },
@@ -48,7 +56,7 @@ export default function Footer() {
                   { label: "Join Waitlist", href: "#journey-builder" },
                 ].map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-gray-600 hover:text-brand-dark transition-colors text-sm">
+                    <Link href={link.href} className="text-white/60 hover:text-white transition-colors text-sm">
                       {link.label}
                     </Link>
                   </li>
@@ -58,14 +66,14 @@ export default function Footer() {
 
             {/* Legal */}
             <div>
-              <h3 className="font-semibold text-brand-dark mb-4 text-sm uppercase tracking-wide">Legal</h3>
+              <h3 className="font-semibold text-white/40 mb-4 text-sm uppercase tracking-wide">Legal</h3>
               <ul className="space-y-2.5">
                 {[
                   { label: "Privacy Policy", href: "/privacy" },
                   { label: "Terms of Service", href: "/terms" },
                 ].map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-gray-600 hover:text-brand-dark transition-colors text-sm">
+                    <Link href={link.href} className="text-white/60 hover:text-white transition-colors text-sm">
                       {link.label}
                     </Link>
                   </li>
@@ -74,15 +82,15 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="border-t border-gray-200 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-            <div className="text-xs text-gray-400 max-w-lg">
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+            <div className="text-xs text-white/40 max-w-lg">
               Alutta is not a bank or licensed financial institution. Payment services are provided through our
               licensed partners. We do not provide immigration or legal advice.
             </div>
             <div className="flex items-center gap-3">
               {socials.map((s) => (
                 <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                  className="w-9 h-9 rounded-full border border-gray-300 flex items-center justify-center text-gray-500 hover:text-brand-dark hover:border-brand-dark transition-colors"
+                  className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/60 transition-colors"
                   aria-label={s.label}>
                   <s.Icon />
                 </a>
@@ -90,7 +98,7 @@ export default function Footer() {
             </div>
           </div>
 
-          <div className="mt-6 text-xs text-gray-400">
+          <div className="mt-6 text-xs text-white/30">
             © {new Date().getFullYear()} Alutta Inc. All rights reserved.
           </div>
         </div>
