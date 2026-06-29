@@ -163,7 +163,7 @@ export default function Hero() {
 
                 {/* Subheadline - Mier B Regular */}
                 <p className="text-center lg:text-left text-xl sm:text-2xl text-brand-dark/80 leading-snug mb-8 max-w-xl">
-                  From application fees to settling in — we map your entire journey,
+                  From application fees to settling in, we map your entire journey,
                   handle your payments, and help you thrive in your new country.
                 </p>
 

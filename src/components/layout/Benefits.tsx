@@ -5,19 +5,19 @@ const benefits = [
     icon: GraduationCap,
     title: "Mapped journey",
     description:
-      "From application to graduation — we map every fee, deadline, and milestone so nothing catches you off guard.",
+      "From application to graduation, we map every fee, deadline, and milestone so nothing catches you off guard.",
   },
   {
     icon: CreditCard,
     title: "Pay with ease",
     description:
-      "Tuition, visa fees, accommodation deposits — pay everything from one platform with rates you can trust.",
+      "Tuition, visa fees, accommodation deposits, pay everything from one platform with rates you can trust.",
   },
   {
     icon: MapPin,
     title: "Settle in smoothly",
     description:
-      "Airport pickup, local SIM, bank account setup — we connect you with everything you need from day one.",
+      "Airport pickup, local SIM, bank account setup, we connect you with everything you need from day one.",
   },
   {
     icon: Compass,

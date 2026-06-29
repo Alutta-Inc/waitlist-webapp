@@ -53,7 +53,7 @@ export default function FinalCTA() {
             </p>
           </div>
 
-          {/* Right — form */}
+          {/* Right, form */}
           <div className="bg-gray-50 rounded-2xl p-8 lg:p-10 shadow-sm">
             <WaitlistForm variant="cta" source="final_cta" />
           </div>
