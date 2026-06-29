@@ -64,6 +64,20 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
+  // Favicon and app icons — Next.js reads these from /src/app/ and /public/
+  icons: {
+    icon: [
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon.ico", sizes: "48x48" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      { rel: "mask-icon", url: "/brand/alutta-mark.svg", color: "#003024" },
+    ],
+  },
+  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     locale: "en_US",
