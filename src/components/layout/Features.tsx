@@ -180,6 +180,7 @@ function ImageCard({ feature }: { feature: typeof features[0] }) {
           src={feature.image}
           alt={feature.imageAlt}
           fill
+          sizes="(max-width: 1024px) 100vw, 33vw"
           className="object-cover object-center"
           priority
         />

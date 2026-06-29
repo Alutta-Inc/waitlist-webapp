@@ -38,16 +38,16 @@ export async function sendWaitlistConfirmation({
           
           <!-- Header -->
           <tr>
-            <td style="background:#1e3a5f;padding:32px 40px;">
+            <td style="background:#003024;padding:32px 40px;">
               <p style="margin:0;font-size:28px;font-weight:600;color:#ffffff;letter-spacing:-0.5px;">Alutta</p>
-              <p style="margin:4px 0 0;font-size:13px;color:#0ea5e9;letter-spacing:1px;">INTERNATIONAL STUDENT PLATFORM</p>
+              <p style="margin:4px 0 0;font-size:13px;color:#13CA58;letter-spacing:1px;">INTERNATIONAL STUDENT PLATFORM</p>
             </td>
           </tr>
 
           <!-- Body -->
           <tr>
             <td style="padding:40px 40px 32px;">
-              <p style="margin:0 0 8px;font-size:22px;font-weight:600;color:#1e3a5f;">
+              <p style="margin:0 0 8px;font-size:22px;font-weight:600;color:#003024;">
                 You&rsquo;re on the list, ${firstName}! 🎉
               </p>
               <p style="margin:0 0 24px;font-size:16px;color:#4b5563;line-height:1.6;">
@@ -58,7 +58,7 @@ export async function sendWaitlistConfirmation({
 
               <!-- What is coming -->
               <div style="background:#f0f7ff;border-radius:12px;padding:24px;margin:0 0 28px;">
-                <p style="margin:0 0 14px;font-size:14px;font-weight:600;color:#1e3a5f;text-transform:uppercase;letter-spacing:0.5px;">What you&rsquo;re getting early access to</p>
+                <p style="margin:0 0 14px;font-size:14px;font-weight:600;color:#003024;text-transform:uppercase;letter-spacing:0.5px;">What you&rsquo;re getting early access to</p>
                 <table cellpadding="0" cellspacing="0" width="100%">
                   ${[
                     ["🗺️", "Journey Map", "Your personalised 12-step study abroad timeline"],
@@ -71,7 +71,7 @@ export async function sendWaitlistConfirmation({
                       <span style="font-size:18px;">${emoji}</span>
                     </td>
                     <td style="padding:6px 0 6px 8px;vertical-align:top;">
-                      <p style="margin:0;font-size:14px;font-weight:600;color:#1e3a5f;">${title}</p>
+                      <p style="margin:0;font-size:14px;font-weight:600;color:#003024;">${title}</p>
                       <p style="margin:2px 0 0;font-size:13px;color:#6b7280;">${desc}</p>
                     </td>
                   </tr>`).join("")}
@@ -80,12 +80,12 @@ export async function sendWaitlistConfirmation({
 
               <!-- Referral section -->
               <div style="border:2px solid #e0eaff;border-radius:12px;padding:24px;margin:0 0 28px;">
-                <p style="margin:0 0 6px;font-size:15px;font-weight:600;color:#1e3a5f;">Share your early access link</p>
+                <p style="margin:0 0 6px;font-size:15px;font-weight:600;color:#003024;">Share your early access link</p>
                 <p style="margin:0 0 16px;font-size:14px;color:#6b7280;line-height:1.5;">
                   Know someone else planning to study abroad? Share your personal link:
                 </p>
                 <div style="background:#f8f7f4;border:1px solid #e5e7eb;border-radius:8px;padding:12px 16px;word-break:break-all;">
-                  <a href="${referralLink}" style="font-size:13px;color:#0ea5e9;text-decoration:none;font-weight:500;">${referralLink}</a>
+                  <a href="${referralLink}" style="font-size:13px;color:#13CA58;text-decoration:none;font-weight:500;">${referralLink}</a>
                 </div>
                 <p style="margin:10px 0 0;font-size:12px;color:#9ca3af;">Copy this link and share it on WhatsApp, Twitter/X, or with friends who are planning to study abroad.</p>
               </div>
@@ -93,9 +93,9 @@ export async function sendWaitlistConfirmation({
               <p style="margin:0;font-size:15px;color:#4b5563;line-height:1.6;">
                 We&rsquo;re moving fast. Expect to hear from us soon — 
                 and in the meantime, follow us on 
-                <a href="https://twitter.com/aluttahq" style="color:#0ea5e9;text-decoration:none;">Twitter/X</a>,
-                <a href="https://instagram.com/aluttahq" style="color:#0ea5e9;text-decoration:none;">Instagram</a>, and
-                <a href="https://www.tiktok.com/@aluttahq" style="color:#0ea5e9;text-decoration:none;">TikTok</a>
+                <a href="https://twitter.com/aluttahq" style="color:#13CA58;text-decoration:none;">Twitter/X</a>,
+                <a href="https://instagram.com/aluttahq" style="color:#13CA58;text-decoration:none;">Instagram</a>, and
+                <a href="https://www.tiktok.com/@aluttahq" style="color:#13CA58;text-decoration:none;">TikTok</a>
                 for updates.
               </p>
             </td>

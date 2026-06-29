@@ -90,6 +90,7 @@ function TestimonialCard({ testimonial }: { testimonial: typeof testimonials[0] 
             src={testimonial.image}
             alt={testimonial.name}
             fill
+            sizes="(max-width: 640px) 43vw, (max-width: 1024px) 300px, 350px"
             className="object-cover"
           />
           {/* Name Badge */}

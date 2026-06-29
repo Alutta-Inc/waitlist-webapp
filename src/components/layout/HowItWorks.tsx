@@ -142,7 +142,7 @@ function StepMockup({ mockup }: { mockup: Mockup }) {
 function StepNumber({ number, isActive }: { number: string; isActive: boolean }) {
   // Colors
   const bgColor = "#E8F5F2"; // Section background
-  const accentColor = "#0ea5e9"; // Brand accent
+  const accentColor = "#13CA58"; // Brand accent
   
   // Text shadow creates the outline effect
   const textShadow = `${accentColor} -1px -1px 0px, ${accentColor} 1px -1px 0px, ${accentColor} -1px 1px 0px, ${accentColor} 1px 1px 0px`;

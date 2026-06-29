@@ -8,20 +8,20 @@ function AnimatedPattern() {
       <svg className="absolute w-full h-full" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
         <defs>
           <linearGradient id="lg1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" stopColor="#0ea5e9" stopOpacity="0" />
-            <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#0ea5e9" stopOpacity="0" />
+            <stop offset="0%" stopColor="#13CA58" stopOpacity="0" />
+            <stop offset="50%" stopColor="#13CA58" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="#13CA58" stopOpacity="0" />
           </linearGradient>
           <linearGradient id="lg2" x1="100%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="#1e3a5f" stopOpacity="0" />
-            <stop offset="50%" stopColor="#1e3a5f" stopOpacity="0.2" />
-            <stop offset="100%" stopColor="#1e3a5f" stopOpacity="0" />
+            <stop offset="0%" stopColor="#003024" stopOpacity="0" />
+            <stop offset="50%" stopColor="#003024" stopOpacity="0.2" />
+            <stop offset="100%" stopColor="#003024" stopOpacity="0" />
           </linearGradient>
           <pattern id="dots" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-            <circle cx="20" cy="20" r="1" fill="#1e3a5f" fillOpacity="0.08" />
+            <circle cx="20" cy="20" r="1" fill="#003024" fillOpacity="0.08" />
           </pattern>
           <pattern id="grid" x="0" y="0" width="80" height="80" patternUnits="userSpaceOnUse">
-            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#1e3a5f" strokeWidth="0.5" strokeOpacity="0.06" />
+            <path d="M 80 0 L 0 0 0 80" fill="none" stroke="#003024" strokeWidth="0.5" strokeOpacity="0.06" />
           </pattern>
         </defs>
         <rect width="100%" height="100%" fill="url(#grid)" />

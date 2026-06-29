@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { Menu, X } from "lucide-react";
+import { assetUrl } from "@/lib/assets";
 
 const navItems = [
   { label: "Features", href: "#features" },
@@ -21,17 +23,24 @@ export default function Header() {
 
   return (
     <header className={`relative lg:sticky lg:top-0 z-50 transition-all duration-300 ${
-      isScrolled ? "lg:bg-white/95 lg:backdrop-blur-sm lg:shadow-sm bg-brand-bg" : "bg-brand-bg"
+      isScrolled ? "lg:bg-brand-bg/95 lg:backdrop-blur-sm lg:shadow-sm bg-brand-bg" : "bg-brand-bg"
     }`}>
       <div className="px-8 sm:px-8 lg:px-10 xl:px-10">
         <div className="h-16 lg:h-20 grid grid-cols-2 lg:grid-cols-[1fr_auto_1fr] items-center gap-8">
           <Link href="/" className="flex items-center">
-            <span className="font-display font-medium text-2xl text-brand-dark">Alutta</span>
+            <Image
+              src={assetUrl("/brand/logo-horizontal-coloured.svg")}
+              alt="Alutta"
+              width={120}
+              height={30}
+              priority
+              className="h-8 w-auto"
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8">
             {navItems.map((item) => (
-              <Link key={item.label} href={item.href} className="text-brand-dark/70 hover:text-brand-dark transition-colors font-medium">
+              <Link key={item.label} href={item.href} className="text-brand-iridium/70 hover:text-brand-dark transition-colors font-medium">
                 {item.label}
               </Link>
             ))}
@@ -54,11 +63,11 @@ export default function Header() {
         </div>
 
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-100">
+          <div className="lg:hidden py-4 border-t border-brand-primary/10">
             <nav className="flex flex-col gap-4">
               {navItems.map((item) => (
                 <Link key={item.label} href={item.href} onClick={() => setIsMobileMenuOpen(false)}
-                  className="text-brand-dark/70 hover:text-brand-dark transition-colors font-medium py-2">
+                  className="text-brand-iridium/70 hover:text-brand-dark transition-colors font-medium py-2">
                   {item.label}
                 </Link>
               ))}
