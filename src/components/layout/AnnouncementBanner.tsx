@@ -5,10 +5,7 @@ export default function AnnouncementBanner() {
         <p className="text-center">
           <span className="text-brand-accent font-medium">Now in private beta!</span>
           {" "}
-          Supporting students heading to the{" "}
-          <span className="font-semibold">US</span>,{" "}
-          <span className="font-semibold">UK</span>, and{" "}
-          <span className="font-semibold">Canada</span>
+          Supporting students leaving their home country to study abroad.
         </p>
       </div>
     </div>
