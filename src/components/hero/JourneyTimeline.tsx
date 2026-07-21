@@ -153,6 +153,7 @@ export default function JourneyTimeline({
 
       {/* CTA */}
       <button
+        data-track="cta-hero"
         onClick={onContinue}
         disabled={isRevealing}
         className={`

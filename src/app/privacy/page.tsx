@@ -24,7 +24,7 @@ const sections = [
   {
     title: "Services We Use",
     body: [
-      "We use trusted service providers to operate the waitlist and website, including Supabase for database storage, Resend for email delivery, Cloudflare Turnstile for bot protection, and hosting or analytics providers as needed.",
+      "We use trusted service providers to operate the waitlist and website, including Alutta's own secure infrastructure for data storage, Resend for email delivery, Cloudflare Turnstile for bot protection, and hosting or analytics providers as needed.",
       "These providers may process information in countries outside your location, subject to their own security and compliance practices.",
     ],
   },

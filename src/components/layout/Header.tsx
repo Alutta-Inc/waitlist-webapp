@@ -31,10 +31,10 @@ export default function Header() {
             <Image
               src={assetUrl("/brand/logo-horizontal-coloured.svg")}
               alt="Alutta"
-              width={120}
-              height={30}
+              width={98}
+              height={24}
               priority
-              className="h-8 w-auto"
+              className="h-6 w-auto"
             />
           </Link>
 

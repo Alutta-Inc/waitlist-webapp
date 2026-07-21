@@ -4,6 +4,7 @@ import "./globals.css";
 import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
+import { Analytics } from "@/components/Analytics";
 
 const mierB = localFont({
   src: [
@@ -151,6 +152,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       </head>
       <body className={mierB.variable} suppressHydrationWarning>
+        <Analytics />
         <AnnouncementBanner />
         <Header />
         <main>{children}</main>
