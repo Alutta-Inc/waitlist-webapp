@@ -51,13 +51,13 @@ export default function Footer() {
               <h3 className="font-semibold text-white/40 mb-4 text-sm uppercase tracking-wide">Platform</h3>
               <ul className="space-y-2.5">
                 {[
-                  { label: "Features", href: "#features" },
-                  { label: "How It Works", href: "#how-it-works" },
-                  { label: "Careers", href: "/careers" },
-                  { label: "Join Waitlist", href: "#journey-builder" },
+                  { label: "Features", href: "#features", track: "nav-features" },
+                  { label: "How It Works", href: "#how-it-works", track: "nav-how-it-works" },
+                  { label: "Careers", href: "/careers", track: "nav-careers" },
+                  { label: "Join Waitlist", href: "#journey-builder", track: "cta-header" },
                 ].map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-white/60 hover:text-white transition-colors text-sm">
+                    <Link href={link.href} data-track={link.track} className="text-white/60 hover:text-white transition-colors text-sm">
                       {link.label}
                     </Link>
                   </li>
@@ -90,7 +90,7 @@ export default function Footer() {
             </div>
             <div className="flex items-center gap-3">
               {socials.map((s) => (
-                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
+                <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer" data-track="social-click"
                   className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/50 hover:text-white hover:border-white/60 transition-colors"
                   aria-label={s.label}>
                   <s.Icon />
