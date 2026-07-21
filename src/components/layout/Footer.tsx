@@ -34,9 +34,9 @@ export default function Footer() {
                 <Image
                   src={assetUrl("/brand/logo-horizontal-white-text.svg")}
                   alt="Alutta"
-                  width={120}
-                  height={30}
-                  className="h-8 w-auto"
+                  width={98}
+                  height={24}
+                  className="h-6 w-auto"
                 />
               </Link>
               <p className="text-white/60 leading-relaxed text-sm">
@@ -53,6 +53,7 @@ export default function Footer() {
                 {[
                   { label: "Features", href: "#features" },
                   { label: "How It Works", href: "#how-it-works" },
+                  { label: "Careers", href: "/careers" },
                   { label: "Join Waitlist", href: "#journey-builder" },
                 ].map((link) => (
                   <li key={link.href}>

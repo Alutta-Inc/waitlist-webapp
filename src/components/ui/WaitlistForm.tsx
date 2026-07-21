@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useState, useEffect, useId, useMemo, useRef } from "react";
 import { Loader2, ArrowRight, Check, Copy, Share2, Search, ChevronDown } from "lucide-react";
 import { destinationCountries, sourceCountries } from "@/lib/journey-data";
+import { track } from "@/lib/analytics";
 import { cn } from "@/lib/utils";
 
 type FormVariant = "hero" | "cta";
@@ -300,6 +301,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
   };
 
   const handleShare = async () => {
+    track("share-referral");
     if (navigator.share) {
       await navigator.share({
         title: "Join me on Alutta",
@@ -332,6 +334,11 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
     setIsSubmitting(true);
     setError(null);
 
+    // We already know the ISO code for each selected country — send it so
+    // customer-service stores the canonical alpha-2 key, not just a name.
+    const countryCode = sourceCountries.find((c) => c.name === country)?.code ?? "";
+    const destinationCode = destinationCountries.find((c) => c.name === destination)?.code ?? "";
+
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
@@ -340,7 +347,9 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
           firstName: firstName.trim(),
           email: email.trim().toLowerCase(),
           country,
+          countryCode,
           destination,
+          destinationCode,
           referredBy,
           source,
           utm: getUtmParams(),
@@ -357,6 +366,10 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
         setIsSubmitting(false);
         return;
       }
+
+      // Real conversion — record it as the "waitlist-signup" event tag. New
+      // signups only, so re-submits by an existing email do not inflate the count.
+      if (!data.alreadySignedUp) track("waitlist-signup", { source });
 
       setSubmitted({
         referralCode: data.referralCode,

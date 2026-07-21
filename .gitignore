@@ -60,3 +60,6 @@ Thumbs.db
 *.tgz
 tmp/
 temp/
+
+# Claude Code local config
+.claude/

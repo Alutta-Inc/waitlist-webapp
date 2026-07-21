@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getSupabaseAdmin } from "@/lib/supabase";
-import { sendWaitlistConfirmation } from "@/lib/email";
-import { customAlphabet } from "nanoid";
 
-// 8-char alphanumeric referral codes — easy to share
-const nanoid = customAlphabet("ABCDEFGHJKLMNPQRSTUVWXYZ23456789", 8);
+// The waitlist now lives in Alutta's own customer-service (behind the API
+// gateway), not Supabase. This route validates + verifies Turnstile, then hands
+// the signup to `POST /v1/customers/waitlist/`, which is idempotent by email,
+// assigns the referral code, and sends the confirmation email via the
+// transactional outbox → notification-service. No database or email code here.
+const ALUTTA_API_URL = process.env.ALUTTA_API_URL || "http://localhost:8080";
 
 function isTurnstileDisabled() {
   return process.env.NODE_ENV !== "production" && process.env.TURNSTILE_DISABLED === "true";
@@ -40,7 +41,7 @@ async function verifyTurnstileToken(token: string, remoteIp: string | null) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { firstName, email, country, destination, program, referredBy, source, utm, turnstileToken } = body;
+    const { firstName, email, country, countryCode, destination, destinationCode, program, referredBy, source, utm, turnstileToken } = body;
     const ip = req.headers.get("cf-connecting-ip") || req.headers.get("x-forwarded-for")?.split(",")[0] || null;
 
     // ── Validation ──────────────────────────────────────────
@@ -70,103 +71,63 @@ export async function POST(req: NextRequest) {
     const cleanName = firstName.trim();
     const cleanCountry = country.trim();
     const cleanDestination = destination.trim();
-    const supabaseAdmin = getSupabaseAdmin();
+    // The canonical alpha-2 code, when the form knew it. customer-service
+    // normalizes either way, so a missing code just falls back to the name.
+    const cleanCountryCode = typeof countryCode === "string" ? countryCode.trim() : "";
+    const cleanDestinationCode = typeof destinationCode === "string" ? destinationCode.trim() : "";
 
-    // ── Validate referral code if provided ───────────────────
-    let validReferredBy: string | null = null;
-    if (referredBy) {
-      const { data: referrer } = await supabaseAdmin
-        .from("waitlist")
-        .select("id")
-        .eq("referral_code", referredBy.toUpperCase())
-        .maybeSingle();
-      if (referrer) validReferredBy = referredBy.toUpperCase();
-    }
-
-    // ── Check for duplicate ──────────────────────────────────
-    const { data: existing } = await supabaseAdmin
-      .from("waitlist")
-      .select("id, referral_code")
-      .eq("email", cleanEmail)
-      .maybeSingle();
-
-    if (existing) {
-      const updatePayload = {
-        country: cleanCountry,
-        destination: cleanDestination,
-        program: program || null,
-        source: source || "hero",
-        utm_source: utm?.source || null,
-        utm_medium: utm?.medium || null,
-        utm_campaign: utm?.campaign || null,
-        ip_address: ip,
-        ...(validReferredBy ? { referred_by: validReferredBy } : {}),
-      };
-
-      const { error: updateError } = await supabaseAdmin
-        .from("waitlist")
-        .update(updatePayload)
-        .eq("id", existing.id);
-
-      if (updateError) {
-        console.error("Supabase update error:", updateError);
-        return NextResponse.json({ error: "Failed to update your details. Please try again." }, { status: 500 });
-      }
-
-      // Already signed up - return their referral code gracefully.
-      return NextResponse.json({
-        success: true,
-        alreadySignedUp: true,
-        referralCode: existing.referral_code,
-        message: "You are already on the waitlist!",
+    // ── Hand the signup to customer-service ──────────────────
+    // It is idempotent by email, assigns the referral code, and queues the
+    // confirmation email via its outbox. Full attribution is preserved:
+    // utm_source is carried as `channel`, plus utm_medium/utm_campaign and the
+    // study program.
+    let res: Response;
+    try {
+      res = await fetch(`${ALUTTA_API_URL}/v1/customers/waitlist/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: cleanName,
+          email: cleanEmail,
+          country: cleanCountry,
+          country_code: cleanCountryCode,
+          destination: cleanDestination,
+          destination_code: cleanDestinationCode,
+          source: source || "hero",
+          channel: utm?.source || "",
+          utm_medium: utm?.medium || "",
+          utm_campaign: utm?.campaign || "",
+          program: program || "",
+          referred_by: referredBy ? String(referredBy).toUpperCase() : "",
+        }),
       });
+    } catch (e) {
+      console.error("customer-service unreachable:", e);
+      return NextResponse.json({ error: "Failed to save your details. Please try again." }, { status: 502 });
     }
 
-    const referralCode = nanoid();
+    const data = (await res.json().catch(() => ({}))) as {
+      ok?: boolean;
+      referral_code?: string;
+      error?: { message?: string };
+    };
 
-    // ── Insert into database ─────────────────────────────────
-    const { error: insertError } = await supabaseAdmin
-      .from("waitlist")
-      .insert({
-        first_name: cleanName,
-        email: cleanEmail,
-        country: cleanCountry,
-        destination: cleanDestination,
-        program: program || null,
-        referral_code: referralCode,
-        referred_by: validReferredBy,
-        source: source || "hero",
-        utm_source: utm?.source || null,
-        utm_medium: utm?.medium || null,
-        utm_campaign: utm?.campaign || null,
-        ip_address: ip,
-      })
-      .select()
-      .single();
-
-    if (insertError) {
-      console.error("Supabase insert error:", insertError);
-      return NextResponse.json({ error: "Failed to save your details. Please try again." }, { status: 500 });
+    if (!res.ok) {
+      console.error("customer-service waitlist error:", res.status, data);
+      return NextResponse.json(
+        { error: data?.error?.message || "Failed to save your details. Please try again." },
+        { status: 502 }
+      );
     }
 
-    // ── Send confirmation email ──────────────────────────────
-    const emailResult = await sendWaitlistConfirmation({
-      firstName: cleanName,
-      email: cleanEmail,
-      referralCode,
-    });
-
-    if (emailResult.error) {
-      // User is saved — log the error but don't block the success response.
-      console.error("Resend delivery error:", JSON.stringify(emailResult.error));
-    }
-
+    // 201 = brand-new signup, 200 = already on the list (idempotent).
+    const alreadySignedUp = res.status === 200;
     return NextResponse.json({
       success: true,
-      referralCode,
-      message: "You are on the waitlist!",
+      alreadySignedUp,
+      referralCode: data.referral_code,
+      message: alreadySignedUp ? "You are already on the waitlist!" : "You are on the waitlist!",
     });
-
   } catch (err) {
     console.error("Waitlist API error:", err);
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
