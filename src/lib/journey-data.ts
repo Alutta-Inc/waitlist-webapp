@@ -375,6 +375,12 @@ export const sourceCountries = [
   // North America
   { code: "US", name: "United States" },
   { code: "CA", name: "Canada" },
+  // Nigeria is a DESTINATION, not only a source. A student applying from Lagos
+  // to a Nigerian private university is a real customer of the domestic
+  // admissions track, and until this option existed they had no way to say so —
+  // which also meant we could not measure whether that demand exists. Answering
+  // "Nigeria" here is what routes a student to the domestic product.
+  { code: "NG", name: "Nigeria" },
 
   // Europe
   { code: "UK", name: "United Kingdom" },

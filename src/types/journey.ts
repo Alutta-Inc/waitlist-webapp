@@ -53,17 +53,6 @@ export interface JourneyData {
   location: UserLocation | null;
 }
 
-export interface WaitlistFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  country: Country | null;
-  university: string;
-  program: string;
-  intake: IntakePeriod | null;
-  location: string;
-}
-
 // State management types
 export type JourneyBuilderStep = 
   | "country" 
