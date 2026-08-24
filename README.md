@@ -50,6 +50,38 @@ WaitlistForm (client)
   which also pre-fills the form) all ride along.
 - **No email code here** — the branded confirmation email is customer-service's
   job (its transactional outbox), not the website's.
+- **Destination is the routing signal** — the form asks where the student intends
+  to *study*, and **Nigeria is one of the answers**. A Nigerian student applying to a
+  Nigerian private university is a customer of the domestic admissions track, and this
+  field is what identifies them. It is also the only measurement of whether that demand
+  exists, which is why it was added before anything was built for them.
+
+### Input rules
+
+This route is the only place an anonymous stranger can put text into Alutta's systems,
+and what they type is stored, shown to staff, and interpolated into an email. The rules
+live in `src/lib/waitlist-input.ts`:
+
+- **Country and destination are checked against the list**, not inspected for danger, and
+  their ISO codes are derived server-side — a caller cannot pair a name with someone
+  else's code, and those two fields have no injectable surface at all.
+- **Reject, never sanitise.** Markup, encoded markup, `javascript:`/`data:` URLs, `on*=`
+  handlers, control characters and bidi overrides are refused. A name containing a tag is
+  not a name with a problem to strip out; it is not a name.
+- **Caps everywhere**, including on the request body, which is size-checked *before* it is
+  parsed.
+- **Attribution is best effort.** `referredBy`, `source` and the `utm_*` values arrive from
+  the URL and are outside anyone's control — ad platforms emit commas, pipes and colons
+  routinely. A value that does not fit is **dropped, not fatal**. Losing a tag costs a row
+  in a report; losing the signup costs the person.
+- **Rate limits are generous on purpose** (60 requests / 10 minutes per address) with a
+  much tighter failure budget (15). This audience shares addresses — a cybercafe, a
+  university lab, a whole mobile network behind carrier NAT — so a tight per-IP cap
+  locks out the students we are trying to reach. Attackers generate *rejected* requests;
+  shared networks do not. Turnstile is the gate; this is a brake.
+
+customer-service enforces the same rules again (`customers/safe_text.py`), because the
+endpoint is public and this site is not the only thing that can reach it.
 
 ---
 
