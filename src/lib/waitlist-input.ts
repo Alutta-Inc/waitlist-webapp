@@ -168,6 +168,29 @@ export function token(
   return raw;
 }
 
+/** The same check, but a failure DROPS the value instead of refusing the
+ *  request.
+ *
+ *  For attribution only — a referral code somebody pasted, whatever an ad
+ *  platform put in utm_campaign. Those arrive from the URL and are outside
+ *  anyone's control: ad tools emit commas, pipes, colons and percent-encoding
+ *  routinely. Rejecting the signup over one would mean a student cannot join
+ *  the waitlist because a marketing tag was untidy. Losing the tag costs a row
+ *  in a report; losing the signup costs the person.
+ *
+ *  It still never returns anything dangerous: a value carrying markup, a
+ *  script URL or control characters fails `text` and is dropped like any
+ *  other value that does not fit. */
+export function optional(value: unknown, max: number, pattern?: RegExp): string {
+  try {
+    const raw = text(value, "attribution", max);
+    if (!raw) return "";
+    return !pattern || pattern.test(raw) ? raw : "";
+  } catch {
+    return "";
+  }
+}
+
 /** utm_*, source and program: the characters analytics tools actually emit. */
 export const TAG = /^[A-Za-z0-9][A-Za-z0-9 _.\-+/&()]*$/;
 /** A referral code we issued. Ours are alphanumeric; nothing else is one. */

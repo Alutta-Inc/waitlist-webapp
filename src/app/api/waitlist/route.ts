@@ -5,12 +5,11 @@ import {
   InvalidInput,
   MAX_BODY_BYTES,
   REFERRAL,
-  TAG,
   email as cleanEmail,
   fromList,
+  optional,
   personName,
   text,
-  token,
 } from "@/lib/waitlist-input";
 
 // The waitlist lives in Alutta's own customer-service (behind the API gateway),
@@ -179,16 +178,24 @@ export async function POST(req: NextRequest) {
         "destination",
         "Study destination",
       );
+      // Free text, and treated as such. A programme called "Master's in
+      // Computer Science" is a real answer; only markup and length are
+      // refused, which `text` already does.
       program = text(body.program, "program", 120, { label: "Programme" });
-      if (program && !TAG.test(program)) {
-        throw new InvalidInput("program", "That programme name is not valid.");
-      }
-      referredBy = token(body.referredBy, "referredBy", 16, REFERRAL).toUpperCase();
-      source = token(body.source, "source", 64, TAG) || "hero";
+
+      // ── Attribution is BEST EFFORT, never a reason to refuse a person ────
+      // These come from the URL: a referral code somebody pasted, and whatever
+      // an ad platform put in utm_campaign. Ad tools emit commas, pipes,
+      // colons and percent-encoding freely. Refusing the request over one
+      // would mean a real student cannot join the waitlist because a marketing
+      // tag was untidy — attribution lost is a rounding error, a lost signup
+      // is the whole point of the page.
+      referredBy = optional(body.referredBy, 16, REFERRAL).toUpperCase();
+      source = optional(body.source, 64) || "hero";
       const utm = (body.utm ?? {}) as Record<string, unknown>;
-      utmSource = token(utm.source, "utm", 64, TAG);
-      utmMedium = token(utm.medium, "utm", 64, TAG);
-      utmCampaign = token(utm.campaign, "utm", 120, TAG);
+      utmSource = optional(utm.source, 64);
+      utmMedium = optional(utm.medium, 64);
+      utmCampaign = optional(utm.campaign, 120);
     } catch (e) {
       if (e instanceof InvalidInput) {
         return refuse(ip, 400, { error: e.message, field: e.field });

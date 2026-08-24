@@ -70,6 +70,10 @@ live in `src/lib/waitlist-input.ts`:
   not a name with a problem to strip out; it is not a name.
 - **Caps everywhere**, including on the request body, which is size-checked *before* it is
   parsed.
+- **Attribution is best effort.** `referredBy`, `source` and the `utm_*` values arrive from
+  the URL and are outside anyone's control — ad platforms emit commas, pipes and colons
+  routinely. A value that does not fit is **dropped, not fatal**. Losing a tag costs a row
+  in a report; losing the signup costs the person.
 - **Rate limits are generous on purpose** (60 requests / 10 minutes per address) with a
   much tighter failure budget (15). This audience shares addresses — a cybercafe, a
   university lab, a whole mobile network behind carrier NAT — so a tight per-IP cap
