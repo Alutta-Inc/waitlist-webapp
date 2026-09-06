@@ -1,6 +1,5 @@
-"use client";
-
-import WaitlistForm from "@/components/ui/WaitlistForm";
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 
 function AnimatedPattern() {
   return (
@@ -31,33 +30,36 @@ function AnimatedPattern() {
         <style>{`
           @keyframes flowR { 0%{transform:translateX(-200px);opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{transform:translateX(200px);opacity:0} }
           @keyframes flowL { 0%{transform:translateX(200px);opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{transform:translateX(-200px);opacity:0} }
+          @media (prefers-reduced-motion: reduce) { path[style] { animation: none !important; } }
         `}</style>
       </svg>
     </div>
   );
 }
 
+/** The last word on the homepage. It used to carry a second copy of the
+ *  waitlist form; the form lives on /waitlist now, and this band sends people
+ *  there with one line and one button. */
 export default function FinalCTA() {
   return (
-    <section className="relative bg-white py-20 lg:py-28 overflow-hidden">
+    <section className="relative bg-white py-24 lg:py-32 overflow-hidden">
       <AnimatedPattern />
-      <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 lg:px-16">
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left */}
-          <div>
-            <h2 className="font-display font-medium text-3xl sm:text-4xl lg:text-[44px] text-brand-dark leading-tight mb-6">
-              Ready to start your<br />study abroad journey?
-            </h2>
-            <p className="text-lg text-gray-600 mb-8 max-w-md">
-              Join the early access waitlist and be among the first to try Alutta.
-            </p>
-          </div>
-
-          {/* Right, form */}
-          <div className="bg-gray-50 rounded-2xl p-8 lg:p-10 shadow-sm">
-            <WaitlistForm variant="cta" source="final_cta" />
-          </div>
-        </div>
+      <div className="relative z-10 max-w-3xl mx-auto px-6 md:px-10 text-center">
+        <h2 className="font-display font-medium text-3xl sm:text-4xl lg:text-[44px] text-brand-dark leading-tight mb-5 text-balance">
+          Ready to start your study abroad journey?
+        </h2>
+        <p className="text-lg text-gray-600 mb-9 max-w-xl mx-auto">
+          Join the waitlist and be among the first to try Alutta. It is free, and
+          we email you when it is your turn.
+        </p>
+        <Link
+          href="/waitlist"
+          data-track="cta-final"
+          className="inline-flex items-center justify-center gap-2 bg-brand-dark text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-brand-dark/90 transition-colors"
+        >
+          Join the waitlist
+          <ArrowRight className="w-5 h-5" />
+        </Link>
       </div>
     </section>
   );

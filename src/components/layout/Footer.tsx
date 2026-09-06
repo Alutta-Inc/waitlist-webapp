@@ -51,10 +51,10 @@ export default function Footer() {
               <h3 className="font-semibold text-white/40 mb-4 text-sm uppercase tracking-wide">Platform</h3>
               <ul className="space-y-2.5">
                 {[
-                  { label: "Features", href: "#features", track: "nav-features" },
-                  { label: "How It Works", href: "#how-it-works", track: "nav-how-it-works" },
+                  { label: "Features", href: "/#features", track: "nav-features" },
+                  { label: "How it works", href: "/#how-it-works", track: "nav-how-it-works" },
                   { label: "Careers", href: "/careers", track: "nav-careers" },
-                  { label: "Join Waitlist", href: "#journey-builder", track: "cta-header" },
+                  { label: "Join the waitlist", href: "/waitlist", track: "cta-footer" },
                 ].map((link) => (
                   <li key={link.href}>
                     <Link href={link.href} data-track={link.track} className="text-white/60 hover:text-white transition-colors text-sm">

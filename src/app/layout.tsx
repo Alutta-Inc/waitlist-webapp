@@ -5,6 +5,7 @@ import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
+import { STUDENT_APP_URL } from "@/lib/site";
 
 const mierB = localFont({
   src: [
@@ -65,7 +66,10 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  // Favicon and app icons — Next.js reads these from /src/app/ and /public/
+  // Favicon and the icon iOS uses for a bookmark. There is deliberately no web
+  // app manifest: alutta.com is the company's website, and the student product
+  // is a separate app on its own host. A manifest here made browsers offer to
+  // "install" the marketing site as if it were that app.
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
@@ -78,7 +82,6 @@ export const metadata: Metadata = {
       { rel: "mask-icon", url: "/brand/alutta-mark.svg", color: "#003024" },
     ],
   },
-  manifest: "/manifest.json",
   openGraph: {
     type: "website",
     locale: "en_US",
@@ -126,12 +129,14 @@ const jsonLd = {
       publisher: { "@id": `${siteUrl}/#organization` },
     },
     {
+      // The product, at its own address, so search engines do not read this
+      // site as the application.
       "@type": "SoftwareApplication",
       "@id": `${siteUrl}/#software`,
       name: "Alutta",
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
-      url: siteUrl,
+      url: STUDENT_APP_URL,
       description:
         "A study abroad platform for international students covering applications, payments, visas, housing, travel, and settlement support.",
       publisher: { "@id": `${siteUrl}/#organization` },

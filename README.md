@@ -27,14 +27,36 @@ also runs the Next.js server routes natively, so there's no adapter to maintain.
 
 ---
 
+## A website, not an app
+
+alutta.com is the company's front door: what Alutta is, what it does, how it
+works, and one way in. The student product is a separate app on its own host
+(`NEXT_PUBLIC_STUDENT_APP_URL`, app.alutta.com), and the two must not be mistaken for
+each other. So this site ships **no web app manifest** and never offers to be
+installed; the one icon it declares is the favicon and the bookmark icon iOS
+asks for. The `SoftwareApplication` structured data names the product at the
+app's address, not this one.
+
+The homepage carries no form. It used to open with the waitlist form beside the
+headline, which made it read as a signup funnel; the form now has a page of its
+own, and every "join" link on the site (header, banner, journey section, footer,
+the closing band) lands there. The placeholder explainer video is gone too; it
+returns when there is a film.
+
 ## The waitlist
 
 The waitlist used to live in Supabase. It now lives in Alutta's own
 **customer-service**, so signups are worked from the **workspace** alongside every
 other customer record. This app never touches a database or sends an email.
 
+**It has one page, `/waitlist`.** A shared referral link (`?ref=CODE`) opens it
+with the code filled in. The page says what happens next (a confirmation, access
+opened in small groups, nobody asked for money) beside the form, and links
+existing students to the app's sign-in, at the foot of the form and as the header's
+button on that page (where "join the waitlist" would point at itself).
+
 ```
-WaitlistForm (client)
+/waitlist → WaitlistForm (client)
    └─ POST /api/waitlist                       (Next server route)
         ├─ verify Cloudflare Turnstile          (bot guard, server-side)
         └─ POST ${ALUTTA_API_URL}/v1/customers/waitlist/   (customer-service)
@@ -45,7 +67,7 @@ WaitlistForm (client)
 - **Idempotent by email** — a repeat signup returns the existing referral code
   (`200`); a new one is `201`. The UI says "already on the list" vs "you're on the
   list" accordingly.
-- **Attribution preserved** — `source` (hero / cta), `utm_source` → `channel`,
+- **Attribution preserved** — `source` (`waitlist`, the page; older rows read `hero` / `final_cta`), `utm_source` → `channel`,
   `utm_medium`, `utm_campaign`, `program`, and `referred_by` (from `?ref=CODE`,
   which also pre-fills the form) all ride along.
 - **No email code here** — the branded confirmation email is customer-service's
@@ -118,7 +140,7 @@ Variables**.
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | client | Turnstile site key; renders the widget on the form. |
 | `NEXT_PUBLIC_CAREERS_URL` | client | `https://api.alutta.com` — recruitment-service public jobs. |
 | `NEXT_PUBLIC_ANALYTICS_URL` | client | `https://api.alutta.com` — analytics ingest (defaults to this if unset). |
-| `NEXT_PUBLIC_APP_URL` | client | The consumer app URL, for cross-links. |
+| `NEXT_PUBLIC_STUDENT_APP_URL` | client | The student app, `https://app.alutta.com` (the default). Sign-in links cross to it. Named for the student app because the older `NEXT_PUBLIC_APP_URL` was pointed at the workspace in one environment and sent students to a 404. |
 | `TURNSTILE_DISABLED` / `NEXT_PUBLIC_TURNSTILE_DISABLED` | both | `true` **only** in local dev to skip Turnstile; never set in production. |
 
 > There is **no** Supabase, Resend, or admin-password config any more — those were
@@ -158,7 +180,8 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 
 | Path | What |
 | --- | --- |
-| `/` | Landing page + hero waitlist form |
+| `/` | The company homepage: message, benefits, features, how it works, one CTA |
+| `/waitlist` | The waitlist form, and where every "join" link and shared referral link lands |
 | `/careers` | Open roles (from recruitment-service) |
 | `/privacy`, `/terms` | Legal |
 | `/api/waitlist` | Server route: Turnstile verify → customer-service (`POST`). `GET` is a health ping. |
@@ -173,17 +196,19 @@ src/
 ├── app/
 │   ├── api/waitlist/route.ts   ← Turnstile verify → customer-service
 │   ├── careers/page.tsx        ← open roles
-│   ├── layout.tsx, page.tsx    ← shell + landing
+│   ├── waitlist/page.tsx       ← the waitlist form's page
+│   ├── layout.tsx, page.tsx    ← shell + homepage
 │   ├── robots.ts, sitemap.ts
 ├── components/
 │   ├── Analytics.tsx           ← first-party analytics
-│   ├── hero/                   ← hero + journey builder
 │   ├── careers/                ← roles list
-│   ├── layout/                 ← header, footer, sections
-│   └── ui/WaitlistForm.tsx     ← the shared waitlist form
+│   ├── layout/                 ← header, footer, homepage sections
+│   ├── waitlist/WaitlistCard.tsx ← the form in its card
+│   └── ui/WaitlistForm.tsx     ← the waitlist form
 └── lib/
     ├── analytics.ts            ← analytics-service ingest
     ├── careers.ts              ← recruitment-service public jobs
+    ├── site.ts                 ← where the app lives, as distinct from this site
     └── utils.ts
 ```
 
