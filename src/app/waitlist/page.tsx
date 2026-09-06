@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Mail, ShieldCheck, Users } from "lucide-react";
 
 import WaitlistCard from "@/components/waitlist/WaitlistCard";
-import { STUDENT_SIGNIN_URL } from "@/lib/site";
 
 // The one place a person joins the waitlist. The homepage used to carry the
 // form in its hero, which made alutta.com read as a signup funnel rather than
@@ -70,20 +69,8 @@ export default function WaitlistPage() {
               </p>
             </div>
 
-            <div id="join" className="flex flex-col items-center lg:items-end lg:col-start-2 lg:row-start-1 lg:row-span-2">
+            <div id="join" className="flex justify-center lg:justify-end lg:col-start-2 lg:row-start-1 lg:row-span-2">
               <WaitlistCard />
-              {/* Under the form, not in a corner: somebody who already has a
-                  place should see the door before they fill in a second form. */}
-              <p className="w-full max-w-md mt-6 text-center text-base text-brand-iridium/80 font-medium">
-                Already a student on Alutta?{" "}
-                <a
-                  href={STUDENT_SIGNIN_URL}
-                  data-track="cta-signin"
-                  className="text-brand-dark font-semibold underline underline-offset-4 hover:text-brand-primary transition-colors"
-                >
-                  Sign in
-                </a>
-              </p>
             </div>
 
             <div className="lg:col-start-1 lg:row-start-2">

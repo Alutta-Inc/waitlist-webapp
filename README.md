@@ -52,7 +52,7 @@ other customer record. This app never touches a database or sends an email.
 **It has one page, `/waitlist`.** A shared referral link (`?ref=CODE`) opens it
 with the code filled in. The page says what happens next (a confirmation, access
 opened in small groups, nobody asked for money) beside the form, and links
-existing students to the app's sign-in, under the form and as the header's
+existing students to the app's sign-in, at the foot of the form and as the header's
 button on that page (where "join the waitlist" would point at itself).
 
 ```

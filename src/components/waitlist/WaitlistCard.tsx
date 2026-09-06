@@ -1,6 +1,7 @@
 "use client";
 
 import WaitlistForm from "@/components/ui/WaitlistForm";
+import { STUDENT_SIGNIN_URL } from "@/lib/site";
 
 /** The waitlist form in its card, with the three things a nervous first-time
  *  visitor wants to read before typing an email under it. This used to sit
@@ -25,6 +26,20 @@ export default function WaitlistCard() {
         </div>
 
         <WaitlistForm variant="hero" source="waitlist" />
+
+        {/* The other door, at the foot of the form where every sign-up form
+            keeps it. The rule says "this is something else" without a heading,
+            so it does not read as a second call to action. */}
+        <div className="mt-6 pt-5 border-t border-gray-100 text-center text-sm text-gray-500">
+          Already a student on Alutta?{" "}
+          <a
+            href={STUDENT_SIGNIN_URL}
+            data-track="cta-signin"
+            className="text-brand-dark font-semibold underline underline-offset-4 hover:text-brand-primary transition-colors"
+          >
+            Sign in
+          </a>
+        </div>
       </div>
 
       <div className="flex items-center justify-center gap-6 mt-4">
