@@ -31,7 +31,7 @@ also runs the Next.js server routes natively, so there's no adapter to maintain.
 
 alutta.com is the company's front door: what Alutta is, what it does, how it
 works, and one way in. The student product is a separate app on its own host
-(`NEXT_PUBLIC_APP_URL`, app.alutta.com), and the two must not be mistaken for
+(`NEXT_PUBLIC_STUDENT_APP_URL`, app.alutta.com), and the two must not be mistaken for
 each other. So this site ships **no web app manifest** and never offers to be
 installed; the one icon it declares is the favicon and the bookmark icon iOS
 asks for. The `SoftwareApplication` structured data names the product at the
@@ -52,7 +52,8 @@ other customer record. This app never touches a database or sends an email.
 **It has one page, `/waitlist`.** A shared referral link (`?ref=CODE`) opens it
 with the code filled in. The page says what happens next (a confirmation, access
 opened in small groups, nobody asked for money) beside the form, and links
-existing students to the app's sign-in.
+existing students to the app's sign-in, under the form and as the header's
+button on that page (where "join the waitlist" would point at itself).
 
 ```
 /waitlist → WaitlistForm (client)
@@ -139,7 +140,7 @@ Variables**.
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | client | Turnstile site key; renders the widget on the form. |
 | `NEXT_PUBLIC_CAREERS_URL` | client | `https://api.alutta.com` — recruitment-service public jobs. |
 | `NEXT_PUBLIC_ANALYTICS_URL` | client | `https://api.alutta.com` — analytics ingest (defaults to this if unset). |
-| `NEXT_PUBLIC_APP_URL` | client | The consumer app URL, for cross-links. |
+| `NEXT_PUBLIC_STUDENT_APP_URL` | client | The student app, `https://app.alutta.com` (the default). Sign-in links cross to it. Named for the student app because the older `NEXT_PUBLIC_APP_URL` was pointed at the workspace in one environment and sent students to a 404. |
 | `TURNSTILE_DISABLED` / `NEXT_PUBLIC_TURNSTILE_DISABLED` | both | `true` **only** in local dev to skip Turnstile; never set in production. |
 
 > There is **no** Supabase, Resend, or admin-password config any more — those were

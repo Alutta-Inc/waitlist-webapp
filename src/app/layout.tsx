@@ -5,7 +5,7 @@ import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
-import { APP_URL } from "@/lib/site";
+import { STUDENT_APP_URL } from "@/lib/site";
 
 const mierB = localFont({
   src: [
@@ -136,7 +136,7 @@ const jsonLd = {
       name: "Alutta",
       applicationCategory: "EducationalApplication",
       operatingSystem: "Web",
-      url: APP_URL,
+      url: STUDENT_APP_URL,
       description:
         "A study abroad platform for international students covering applications, payments, visas, housing, travel, and settlement support.",
       publisher: { "@id": `${siteUrl}/#organization` },

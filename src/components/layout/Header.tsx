@@ -3,8 +3,10 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { assetUrl } from "@/lib/assets";
+import { STUDENT_SIGNIN_URL } from "@/lib/site";
 
 // Anchors are written as /#section so they work from /waitlist and /careers
 // too, not only from the page that holds the section.
@@ -17,6 +19,12 @@ const navItems = [
 export default function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  // On the waitlist page the one button would point at the page it is on, so
+  // it becomes the other door: sign in, for a student who already has a place.
+  const onWaitlist = usePathname() === "/waitlist";
+  const cta = onWaitlist
+    ? { href: STUDENT_SIGNIN_URL, label: "Sign in", track: "cta-signin", external: true }
+    : { href: "/waitlist", label: "Join the waitlist", track: "cta-header", external: false };
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
@@ -50,13 +58,23 @@ export default function Header() {
           </nav>
 
           <div className="hidden lg:flex justify-end">
-            <Link
-              href="/waitlist"
-              data-track="cta-header"
-              className="bg-brand-dark text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark/90 transition-colors"
-            >
-              Join the waitlist
-            </Link>
+            {cta.external ? (
+              <a
+                href={cta.href}
+                data-track={cta.track}
+                className="bg-brand-dark text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark/90 transition-colors"
+              >
+                {cta.label}
+              </a>
+            ) : (
+              <Link
+                href={cta.href}
+                data-track={cta.track}
+                className="bg-brand-dark text-white px-5 py-2.5 rounded-full text-sm font-semibold hover:bg-brand-dark/90 transition-colors"
+              >
+                {cta.label}
+              </Link>
+            )}
           </div>
 
           <div className="flex lg:hidden justify-end">
@@ -76,10 +94,10 @@ export default function Header() {
                   {item.label}
                 </Link>
               ))}
-              <Link href="/waitlist" onClick={() => setIsMobileMenuOpen(false)} data-track="cta-header"
+              <a href={cta.href} onClick={() => setIsMobileMenuOpen(false)} data-track={cta.track}
                 className="inline-flex items-center justify-center bg-brand-dark text-white px-5 py-3 rounded-full text-sm font-semibold">
-                Join the waitlist
-              </Link>
+                {cta.label}
+              </a>
             </nav>
           </div>
         )}
