@@ -1,16 +1,11 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
-import { ChevronRight, Play } from "lucide-react";
-import VideoModal from "@/components/ui/VideoModal";
+import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 
-// Placeholder YouTube video ID - replace with actual explainer video
-const YOUTUBE_VIDEO_ID = "dQw4w9WgXcQ"; // Replace this with video ID
-
+// The "see how it works" film badge that sat on the photo opened a placeholder
+// video id. It returns with the real film; until then the section makes no
+// promise it cannot keep.
 export default function JourneySection() {
-  const [isVideoOpen, setIsVideoOpen] = useState(false);
-
   return (
     <>
       <section className="bg-[#E8F5F2]">
@@ -25,20 +20,7 @@ export default function JourneySection() {
               className="object-cover"
               priority
             />
-            
-            {/* Video Play Badge - Slimmer height, wider */}
-            <button
-              onClick={() => setIsVideoOpen(true)}
-              className="absolute bottom-6 left-6 bg-white/95 backdrop-blur-sm pl-5 pr-2.5 py-2 rounded-full shadow-lg flex items-center gap-3 hover:bg-white transition-colors group"
-            >
-              <span className="text-brand-dark text-sm font-semibold">
-                See how it works in 2 minutes
-              </span>
-              <div className="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center group-hover:bg-brand-accent/90 transition-colors">
-                <Play className="w-3.5 h-3.5 text-white ml-0.5 fill-white" />
-              </div>
-            </button>
-          </div>
+                      </div>
 
           {/* Right Side - Content */}
           <div className="px-4 md:px-6 lg:px-8">
@@ -67,24 +49,18 @@ export default function JourneySection() {
                 </p>
               </div>
 
-              <a
-                href="#journey-builder"
+              <Link
+                href="/waitlist"
+                data-track="cta-journey"
                 className="inline-flex items-center text-brand-dark font-semibold text-lg hover:text-brand-primary transition-colors"
               >
                 Start your journey
                 <ChevronRight className="w-5 h-5 ml-1" />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       </section>
-
-      {/* Video Modal */}
-      <VideoModal
-        isOpen={isVideoOpen}
-        onClose={() => setIsVideoOpen(false)}
-        videoId={YOUTUBE_VIDEO_ID}
-      />
     </>
   );
 }
