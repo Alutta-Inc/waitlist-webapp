@@ -191,7 +191,10 @@ export async function POST(req: NextRequest) {
       // tag was untidy — attribution lost is a rounding error, a lost signup
       // is the whole point of the page.
       referredBy = optional(body.referredBy, 16, REFERRAL).toUpperCase();
-      source = optional(body.source, 64) || "hero";
+      // The form on /waitlist is the only one the site has now, so a request
+      // that omits the field came from there. "hero" was the old default and
+      // mislabelled those rows as a section that no longer carries a form.
+      source = optional(body.source, 64) || "waitlist";
       const utm = (body.utm ?? {}) as Record<string, unknown>;
       utmSource = optional(utm.source, 64);
       utmMedium = optional(utm.medium, 64);
