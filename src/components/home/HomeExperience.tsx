@@ -10,7 +10,6 @@ import JourneyExplorer from "./JourneyExplorer";
 import DestinationShowcase from "./DestinationShowcase";
 import HomeClosing from "./HomeClosing";
 import WaitlistForm from "@/components/ui/WaitlistForm";
-import type { Showcase } from "@/lib/showcase";
 import "./home.css";
 
 const destinations = [
@@ -23,7 +22,7 @@ const destinations = [
 
 
 
-export default function HomeExperience({ showcase }: { showcase: Showcase }) {
+export default function HomeExperience() {
   const [destination, setDestination] = useState(0);
   const [stage, setStage] = useState(0);
   const [signupOpen, setSignupOpen] = useState(false);
@@ -63,7 +62,7 @@ export default function HomeExperience({ showcase }: { showcase: Showcase }) {
 
       <HomeBenefits />
 
-      <JourneyExplorer stage={stage} onStageChange={setStage} onQuiz={openPlanner} showcase={showcase} />
+      <JourneyExplorer stage={stage} onStageChange={setStage} onQuiz={openPlanner} />
 
       <DestinationShowcase onExplore={(code) => { setDestination(destinations.findIndex(country => country.code.toLowerCase() === code)); openPlanner(); }} />
 
