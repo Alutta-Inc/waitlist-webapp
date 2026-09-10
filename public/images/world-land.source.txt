@@ -1,0 +1,2 @@
+Natural Earth 1:110m land, public domain. Source: https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_land.geojson
+Equirectangular projection, Antarctica omitted.

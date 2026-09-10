@@ -1,11 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import Script from "next/script";
 import { useState, useEffect, useId, useMemo, useRef } from "react";
-import { Loader2, ArrowRight, Check, Copy, Share2, Search, ChevronDown } from "lucide-react";
+import { Loader2, ArrowRight, Check, Copy, Share2, Search, ChevronDown, UserRound, Mail, ShieldCheck } from "lucide-react";
 import { destinationCountries, sourceCountries } from "@/lib/journey-data";
 import { track } from "@/lib/analytics";
+import { TURNSTILE_ACTION, TURNSTILE_SCRIPT_URL } from "@/lib/turnstile";
 import { cn } from "@/lib/utils";
+import { HONEYPOT_FIELD } from "@/lib/waitlist-input";
 
 type FormVariant = "hero" | "cta";
 type TurnstileWidgetId = string;
@@ -17,9 +20,11 @@ declare global {
         element: HTMLElement,
         options: {
           sitekey: string;
+          action?: string;
           callback: (token: string) => void;
           "expired-callback": () => void;
           "error-callback": () => void;
+          "timeout-callback"?: () => void;
         }
       ) => TurnstileWidgetId;
       remove: (widgetId: TurnstileWidgetId) => void;
@@ -31,6 +36,9 @@ declare global {
 interface WaitlistFormProps {
   variant?: FormVariant;
   source?: string;
+  initialDestination?: string;
+  destinationNames?: string[];
+  onSuccess?: () => void;
 }
 
 type CountryChoice = {
@@ -60,8 +68,11 @@ function SearchableCountryField({
   onBlur,
 }: SearchableCountryFieldProps) {
   const listboxId = useId();
+  const selectedCode = options.find(option => option.name === value)?.code.toLowerCase().replace("uk", "gb");
+  const localFlag = selectedCode && ["ng", "gb", "us", "ca", "cn", "au"].includes(selectedCode);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [activeOption, setActiveOption] = useState(0);
   const visibleOptions = useMemo(() => {
     const normalizedQuery = query.trim().toLowerCase();
     if (!normalizedQuery) return options.slice(0, 8);
@@ -80,7 +91,7 @@ function SearchableCountryField({
           hasError ? "border-red-300 focus-within:border-red-400" : "border-gray-200 focus-within:border-brand-accent"
         )}
       >
-        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        {localFlag && !open ? <Image src={`/images/flag-${selectedCode}.svg`} alt="" width={23} height={16} className="absolute left-3 top-1/2 -translate-y-1/2 rounded-sm" /> : <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />}
         <input
           type="text"
           value={open ? query : value}
@@ -95,12 +106,24 @@ function SearchableCountryField({
           }}
           onChange={(event) => {
             setQuery(event.target.value);
+            setActiveOption(0);
             if (value) onChange("");
           }}
           placeholder={placeholder}
           disabled={disabled}
           autoComplete="off"
           className="w-full rounded-xl bg-transparent px-10 py-3 text-brand-dark outline-none placeholder:text-gray-400"
+          aria-label={label}
+          onKeyDown={(event) => {
+            if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+              event.preventDefault(); setOpen(true);
+              setActiveOption(index => Math.max(0, Math.min(visibleOptions.length - 1, index + (event.key === "ArrowDown" ? 1 : -1))));
+            } else if (event.key === "Enter" && open) {
+              event.preventDefault(); const choice = visibleOptions[activeOption];
+              if (choice) { onChange(choice.name); setQuery(choice.name); setOpen(false); }
+            } else if (event.key === "Escape" && open) { event.preventDefault(); event.stopPropagation(); setOpen(false); }
+          }}
+          aria-activedescendant={open && visibleOptions[activeOption] ? `${listboxId}-${activeOption}` : undefined}
           role="combobox"
           aria-expanded={open}
           aria-controls={listboxId}
@@ -121,10 +144,11 @@ function SearchableCountryField({
         >
           <div className="max-h-64 overflow-y-auto py-1">
             {visibleOptions.length > 0 ? (
-              visibleOptions.map((option) => (
+              visibleOptions.map((option, index) => (
                 <button
                   key={option.code}
                   type="button"
+                  id={`${listboxId}-${index}`}
                   role="option"
                   aria-selected={value === option.name}
                   onMouseDown={(event) => {
@@ -135,7 +159,7 @@ function SearchableCountryField({
                   }}
                   className={cn(
                     "flex w-full items-center justify-between px-4 py-3 text-left text-sm transition-colors hover:bg-brand-accent/10",
-                    value === option.name ? "bg-brand-accent/10 text-brand-dark" : "text-gray-600"
+                    (value === option.name || activeOption === index) ? "bg-brand-accent/10 text-brand-dark" : "text-gray-600"
                   )}
                 >
                   <span>{option.name}</span>
@@ -162,9 +186,12 @@ function getUtmParams() {
   };
 }
 
+/** The referral code in the URL, in the shape we issue them (alphanumeric,
+ *  4 to 16 characters) or nothing. Anything else is not a code of ours. */
 function getReferralCode() {
   if (typeof window === "undefined") return null;
-  return new URLSearchParams(window.location.search).get("ref");
+  const raw = (new URLSearchParams(window.location.search).get("ref") || "").trim().toUpperCase();
+  return /^[A-Z0-9]{4,16}$/.test(raw) ? raw : null;
 }
 
 function getLocaleCountryName() {
@@ -183,11 +210,11 @@ function getLocaleCountryName() {
   return null;
 }
 
-export default function WaitlistForm({ variant = "hero", source = "hero" }: WaitlistFormProps) {
+export default function WaitlistForm({ variant = "hero", source = "hero", initialDestination = "", destinationNames, onSuccess }: WaitlistFormProps) {
   const [firstName, setFirstName] = useState("");
   const [email, setEmail] = useState("");
   const [country, setCountry] = useState("");
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState(initialDestination);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState<{ referralCode: string; alreadySignedUp?: boolean } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -203,13 +230,37 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
   const turnstileWidgetId = useRef<TurnstileWidgetId | null>(null);
   const countryManuallyChanged = useRef(false);
   const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  const turnstileDisabled = process.env.NEXT_PUBLIC_TURNSTILE_DISABLED === "true";
+  // The bypass exists for local work only. NODE_ENV is inlined at build time,
+  // so a production build renders the widget whatever the variable says, the
+  // same rule the route applies server-side; a stray flag in a deploy's env
+  // cannot ship a form that sends a bypass token the server will refuse.
+  const turnstileDisabled = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_TURNSTILE_DISABLED === "true";
 
-  // Pre-fill from URL if user lands from a referral
+  // Pre-fill from URL if user lands from a referral, and ask customer-service
+  // (through /api/referral) whose code it is. A real code shows the
+  // referrer's first name; an unknown one shows nothing and is not sent, so
+  // a typo cannot be mistaken for a friend's invitation.
   const [referredBy, setReferredBy] = useState<string | null>(null);
+  const [referrerName, setReferrerName] = useState<string | null>(null);
   useEffect(() => {
-    setReferredBy(getReferralCode());
+    const code = getReferralCode();
+    if (!code) return;
+    let cancelled = false;
+    setReferredBy(code);
+    fetch(`/api/referral?code=${encodeURIComponent(code)}`)
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data: { valid?: boolean | null; referrerFirstName?: string } | null) => {
+        if (cancelled || !data) return;
+        if (data.valid === false) setReferredBy(null);
+        else if (data.valid === true && data.referrerFirstName) setReferrerName(data.referrerFirstName);
+      })
+      .catch(() => { /* an outage keeps the code; customer-service checks it again on signup */ });
+    return () => { cancelled = true; };
   }, []);
+
+  // The honeypot. A person never sees this field; a script that fills every
+  // input in the form does, and the route refuses the request.
+  const [honeypot, setHoneypot] = useState("");
 
   useEffect(() => {
     let isMounted = true;
@@ -250,6 +301,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
 
     turnstileWidgetId.current = window.turnstile?.render(turnstileRef.current, {
       sitekey: turnstileSiteKey,
+      action: TURNSTILE_ACTION,
       callback: (token) => {
         setTurnstileToken(token);
         setTurnstileError(null);
@@ -262,6 +314,10 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
         setTurnstileToken("");
         setTurnstileError("Security check failed to load. Please refresh and try again.");
       },
+      "timeout-callback": () => {
+        setTurnstileToken("");
+        setTurnstileError("The security check timed out. Please try again.");
+      },
     }) ?? null;
 
     return () => {
@@ -272,8 +328,10 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
     };
   }, [turnstileDisabled, turnstileLoaded, turnstileSiteKey]);
 
-  // Validation
-  const firstNameValid = firstName.trim().length >= 2 && /^[a-zA-Z\s'-]+$/.test(firstName.trim());
+  // Validation. The name rule is the server's (lib/waitlist-input.ts): any
+  // letter in any script, so Adéọlá and Ngozi pass here exactly as they pass
+  // there, rather than an ASCII-only check refusing a name the server accepts.
+  const firstNameValid = firstName.trim().length >= 2 && /^[\p{L}\p{M}][\p{L}\p{M}\s'’\-.]*$/u.test(firstName.trim());
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const countryValid = country.length > 0;
   const destinationValid = destination.length > 0;
@@ -286,13 +344,18 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
   const showDestinationError = destinationTouched && !destinationValid;
 
   const referralLink = submitted
-    ? `${typeof window !== "undefined" ? window.location.origin : "https://alutta.com"}?ref=${submitted.referralCode}`
+    ? `${typeof window !== "undefined" ? window.location.origin : "https://alutta.com"}${source === "nigeria-waitlist" ? "/ng/waitlist" : ""}?ref=${submitted.referralCode}`
     : "";
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(referralLink);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(referralLink);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      // No clipboard access (an insecure context, or permission refused): the
+      // link is printed above the button and can be selected by hand.
+    }
   };
 
   const handleCountryChange = (value: string) => {
@@ -303,13 +366,17 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
   const handleShare = async () => {
     track("share-referral");
     if (navigator.share) {
-      await navigator.share({
-        title: "Join me on Alutta",
-        text: "I just joined the Alutta waitlist — the platform for international students. Join using my link:",
-        url: referralLink,
-      });
+      try {
+        await navigator.share({
+          title: "Join me on Alutta",
+          text: "I just joined the Alutta waitlist, the platform for international students. Join using my link:",
+          url: referralLink,
+        });
+      } catch {
+        // The share sheet was dismissed, or the platform refused it. Nothing to do.
+      }
     } else {
-      handleCopy();
+      void handleCopy();
     }
   };
 
@@ -353,6 +420,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
           referredBy,
           source,
           utm: getUtmParams(),
+          [HONEYPOT_FIELD]: honeypot,
           turnstileToken: turnstileDisabled ? "local-bypass" : turnstileToken,
         }),
       });
@@ -371,6 +439,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
       // signups only, so re-submits by an existing email do not inflate the count.
       if (!data.alreadySignedUp) track("waitlist-signup", { source });
 
+      onSuccess?.();
       setSubmitted({
         referralCode: data.referralCode,
         alreadySignedUp: data.alreadySignedUp,
@@ -440,9 +509,9 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
     <form onSubmit={handleSubmit} className="space-y-4">
       {!turnstileDisabled && (
         <Script
-          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          src={TURNSTILE_SCRIPT_URL}
           strategy="afterInteractive"
-          onLoad={() => setTurnstileLoaded(true)}
+          onReady={() => setTurnstileLoaded(true)}
         />
       )}
 
@@ -457,8 +526,9 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
 
       <div>
         <label className="block text-sm font-medium text-brand-dark mb-1.5">First Name</label>
-        <input
+        <div className="waitlist-input-wrap"><UserRound className="waitlist-field-icon hidden" aria-hidden="true" /><input
           type="text"
+          aria-label="First name"
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           onBlur={() => setFirstNameTouched(true)}
@@ -466,7 +536,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
           disabled={isSubmitting}
           className={inputClass(!!showFirstNameError)}
           autoComplete="given-name"
-        />
+        /></div>
         {showFirstNameError && (
           <p className="mt-1 text-xs text-red-500">Please enter your first name (letters only)</p>
         )}
@@ -474,8 +544,9 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
 
       <div>
         <label className="block text-sm font-medium text-brand-dark mb-1.5">Email Address</label>
-        <input
+        <div className="waitlist-input-wrap"><Mail className="waitlist-field-icon hidden" aria-hidden="true" /><input
           type="email"
+          aria-label="Email address"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           onBlur={() => setEmailTouched(true)}
@@ -483,10 +554,26 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
           disabled={isSubmitting}
           className={inputClass(!!showEmailError)}
           autoComplete="email"
-        />
+        /></div>
         {showEmailError && (
           <p className="mt-1 text-xs text-red-500">Please enter a valid email address</p>
         )}
+      </div>
+
+      {/* The honeypot: off screen, unlabelled, skipped by the tab order and by
+          autofill. A person never reaches it; a script that fills every input
+          does, and the route refuses the request. */}
+      <div aria-hidden="true" style={{ position: "absolute", left: "-10000px", top: "auto", width: "1px", height: "1px", overflow: "hidden" }}>
+        <label htmlFor={`${HONEYPOT_FIELD}-field`}>Website</label>
+        <input
+          id={`${HONEYPOT_FIELD}-field`}
+          type="text"
+          name={HONEYPOT_FIELD}
+          value={honeypot}
+          onChange={(e) => setHoneypot(e.target.value)}
+          tabIndex={-1}
+          autoComplete="off"
+        />
       </div>
 
       <div className="grid sm:grid-cols-2 gap-4">
@@ -510,7 +597,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
           <SearchableCountryField
             label="Study Destination"
             value={destination}
-            options={destinationCountries}
+            options={destinationNames ? destinationNames.flatMap(name => destinationCountries.filter(country => country.name === name)) : destinationCountries}
             placeholder="Search destination"
             hasError={showDestinationError}
             disabled={isSubmitting}
@@ -560,8 +647,8 @@ export default function WaitlistForm({ variant = "hero", source = "hero" }: Wait
       </button>
 
       <p className="text-xs text-center text-gray-400">
-        No spam, ever. Unsubscribe anytime.
-        {referredBy && <span className="block mt-1 text-brand-accent">✓ Referred by a friend</span>}
+        <ShieldCheck className="waitlist-privacy-icon hidden" aria-hidden="true" /> No spam. Unsubscribe anytime.
+        {referredBy && <span className="block mt-1 text-brand-accent">✓ {referrerName ? `${referrerName} referred you` : "Referred by a friend"}</span>}
       </p>
     </form>
   );

@@ -105,14 +105,54 @@ live in `src/lib/waitlist-input.ts`:
 customer-service enforces the same rules again (`customers/safe_text.py`), because the
 endpoint is public and this site is not the only thing that can reach it.
 
+Beyond the field rules, the route (`src/app/api/waitlist/route.ts`) refuses, in order:
+a non-JSON content type; a browser `Origin` that is not this site; a body over 8 KB,
+before it is parsed; a filled **honeypot** (an off-screen field a person never sees);
+a **throw-away mailbox** (`lib/waitlist-input.ts` carries a short list of providers
+whose whole product is a disposable address); and a Turnstile token that is missing,
+absurdly long, fails `siteverify`, was solved for a different **action** than
+`waitlist`, or was solved on a **hostname** other than alutta.com / www.alutta.com
+(Vercel previews are exempt). Both upstream calls have an 8 s timeout. `GET` is 405.
+
+## Security headers
+
+`next.config.ts` sets a Content-Security-Policy, HSTS, `nosniff`, `X-Frame-Options:
+DENY`, a Referrer-Policy, a Permissions-Policy and `Cross-Origin-Opener-Policy` on
+every response, and `X-Robots-Tag: noindex` on `/api/*`. The CSP reaches only where
+the site does: Turnstile's script and frame, the analytics ingest origin, the CDN
+prefix and the explainer video origin when those are configured. `script-src`
+keeps `'unsafe-inline'` for Next's own bootstrap, the same trade-off the student
+app documents in shared-infrastructure's `app-headers.conf`: a per-request nonce
+forces every page dynamic, and this site is static by design. `next/image` accepts
+no remote hosts (the CDN prefix aside), so `/_next/image` cannot be used as a
+fetch-anything proxy. `npm test` runs the input-rule and market-route tests.
+
 ---
 
 ## Careers
 
-`/careers` renders open roles fetched from **recruitment-service**'s public,
-indexable endpoint (`${NEXT_PUBLIC_CAREERS_URL}/v1/recruitment/jobs/public/`). The
+`/careers` renders open roles fetched server-side from **recruitment-service**'s
+public, indexable endpoint (`${ALUTTA_API_URL}/v1/recruitment/jobs/public/`), and
+links each one to the job board (`${NEXT_PUBLIC_CAREERS_URL}/jobs/{id}`). The
 dedicated, SEO-optimised careers app is `careers.alutta.com`; this page is the
 marketing-site entry point to it.
+
+## Schools and programmes
+
+The homepage's school explorer and destination panels, and the Nigeria page's
+"participating institutions", read **institution-service**'s public showcase
+(`${ALUTTA_API_URL}/v1/institutions/public/showcase/`) server-side at render time,
+revalidated every five minutes (`src/lib/showcase.ts`). It carries only what a
+school prints in its own prospectus: school, city, country, programme, level and
+whether Alutta submits; no ids, no costs, no configuration. When the catalogue lists
+nothing for a country, or the gateway is unreachable, the sections show illustrative
+examples and say so; a well-known university is never presented as a partner.
+
+## Referral codes
+
+A `?ref=CODE` on the waitlist page is checked through `/api/referral`, which asks
+customer-service whose code it is and shows "Amara referred you" for a real one.
+An unknown code is dropped rather than shown as "referred by a friend".
 
 ---
 
@@ -135,13 +175,15 @@ Variables**.
 
 | Variable | Scope | Value / purpose |
 | --- | --- | --- |
-| `ALUTTA_API_URL` | server | `https://api.alutta.com` — the gateway the waitlist route forwards to. |
+| `ALUTTA_API_URL` | server | `https://api.alutta.com` — the gateway the server routes call: waitlist, referral check, careers, institution showcase. |
 | `TURNSTILE_SECRET_KEY` | server | Cloudflare Turnstile secret; the waitlist route verifies the token with it. **Required in production.** |
+| `TURNSTILE_ALLOWED_HOSTNAMES` | server | Optional. Hostnames a token may be solved on; defaults to `alutta.com,www.alutta.com`. Previews are exempt. |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | client | Turnstile site key; renders the widget on the form. |
-| `NEXT_PUBLIC_CAREERS_URL` | client | `https://api.alutta.com` — recruitment-service public jobs. |
-| `NEXT_PUBLIC_ANALYTICS_URL` | client | `https://api.alutta.com` — analytics ingest (defaults to this if unset). |
+| `NEXT_PUBLIC_CAREERS_URL` | client | `https://careers.alutta.com` — the job board each role links to. |
+| `NEXT_PUBLIC_ANALYTICS_URL` | client | `https://api.alutta.com` — analytics ingest (defaults to this if unset). Its origin is allowed in the CSP. |
+| `NEXT_PUBLIC_EXPLAINER_VIDEO_URL` / `NEXT_PUBLIC_EXPLAINER_CAPTIONS_URL` | client | Optional. The homepage explainer video and captions; their origins are allowed in the CSP. |
 | `NEXT_PUBLIC_STUDENT_APP_URL` | client | The student app, `https://app.alutta.com` (the default). Sign-in links cross to it. Named for the student app because the older `NEXT_PUBLIC_APP_URL` was pointed at the workspace in one environment and sent students to a 404. |
-| `TURNSTILE_DISABLED` / `NEXT_PUBLIC_TURNSTILE_DISABLED` | both | `true` **only** in local dev to skip Turnstile; never set in production. |
+| `TURNSTILE_DISABLED` / `NEXT_PUBLIC_TURNSTILE_DISABLED` | both | `true` **only** in local dev to skip Turnstile. Both sides ignore it in a production build, so it cannot disable the gate by accident. |
 
 > There is **no** Supabase, Resend, or admin-password config any more — those were
 > removed in the customer-service cutover.
@@ -180,12 +222,15 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 
 | Path | What |
 | --- | --- |
-| `/` | The company homepage: message, benefits, features, how it works, one CTA |
-| `/waitlist` | The waitlist form, and where every "join" link and shared referral link lands |
+| `/` | The global homepage: message, benefits, the school explorer and destination panels (from institution-service), questions |
+| `/ng` | Alutta Nigeria: postgraduate study at home and abroad, participating institutions (from institution-service) |
+| `/waitlist`, `/ng/waitlist` | The waitlist form, and where every "join" link and shared referral link lands |
 | `/careers` | Open roles (from recruitment-service) |
 | `/privacy`, `/terms` | Legal |
-| `/api/waitlist` | Server route: Turnstile verify → customer-service (`POST`). `GET` is a health ping. |
-| `/api/geo` | Client geo lookup for country pre-fill |
+| `/api/waitlist` | Server route: the door described above → customer-service (`POST` only; `GET` is 405) |
+| `/api/referral` | Server route: is `?code=` a real referral code, and whose (customer-service) |
+| `/api/geo` | Client geo lookup for the Nigeria suggestion and country pre-fill (edge country header only) |
+| `/api/health` | Liveness |
 
 ---
 
@@ -194,21 +239,32 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 ```text
 src/
 ├── app/
-│   ├── api/waitlist/route.ts   ← Turnstile verify → customer-service
+│   ├── api/waitlist/route.ts   ← the waitlist door → customer-service
+│   ├── api/referral/route.ts   ← referral code check → customer-service
+│   ├── api/geo/route.ts        ← visitor country from the edge header
 │   ├── careers/page.tsx        ← open roles
+│   ├── ng/                     ← Alutta Nigeria and its waitlist
 │   ├── waitlist/page.tsx       ← the waitlist form's page
+│   ├── privacy/, terms/        ← legal
 │   ├── layout.tsx, page.tsx    ← shell + homepage
+│   ├── not-found.tsx           ← the 404, in the site's own chrome
 │   ├── robots.ts, sitemap.ts
 ├── components/
 │   ├── Analytics.tsx           ← first-party analytics
 │   ├── careers/                ← roles list
-│   ├── layout/                 ← header, footer, homepage sections
+│   ├── home/                   ← header, footer, homepage sections
+│   ├── legal/                  ← the legal page layout
+│   ├── markets/                ← Global / Nigeria selector and suggestion
 │   ├── waitlist/WaitlistCard.tsx ← the form in its card
 │   └── ui/WaitlistForm.tsx     ← the waitlist form
 └── lib/
     ├── analytics.ts            ← analytics-service ingest
     ├── careers.ts              ← recruitment-service public jobs
+    ├── markets.ts              ← which market a URL belongs to
+    ├── showcase.ts             ← institution-service public showcase
     ├── site.ts                 ← where the app lives, as distinct from this site
+    ├── turnstile.ts            ← the action and script URL both sides share
+    ├── waitlist-input.ts       ← the input rules, honeypot and disposable-domain list
     └── utils.ts
 ```
 

@@ -5,20 +5,35 @@ import {
   InvalidInput,
   MAX_BODY_BYTES,
   REFERRAL,
+  assertDeliverableDomain,
   email as cleanEmail,
   fromList,
+  honeypotTripped,
   optional,
   personName,
   text,
 } from "@/lib/waitlist-input";
+import { SITE_URL } from "@/lib/site";
+import { TURNSTILE_ACTION } from "@/lib/turnstile";
 
 // The waitlist lives in Alutta's own customer-service (behind the API gateway),
 // not Supabase. This route is the only public write path the site has, so it
-// carries the whole door: a body-size cap, a per-IP rate limit, Turnstile, and
-// strict validation of every field, before anything is handed to
-// `POST /v1/customers/waitlist/` — which is idempotent by email, assigns the
-// referral code, and sends the confirmation email via the transactional outbox.
-// No database or email code here.
+// carries the whole door, in this order:
+//
+//   1. the request has to look like one the form sends: JSON, from this
+//      site's own origin when a browser says where it came from;
+//   2. a per-IP brake on this instance;
+//   3. a body-size cap, before the body is parsed;
+//   4. strict validation of every field, the honeypot, and a refusal of
+//      throw-away mailboxes;
+//   5. Turnstile, verified server-side and pinned to this form's action and
+//      this site's hostname, so a token minted for another widget or another
+//      site is worthless here;
+//
+// before anything is handed to `POST /v1/customers/waitlist/`, which is
+// idempotent by email, assigns the referral code, throttles again on its own
+// side, and sends the confirmation email via the transactional outbox. No
+// database or email code here.
 //
 // On validation: country and destination are checked AGAINST THE LIST rather
 // than inspected for danger, and their ISO codes are derived here rather than
@@ -27,11 +42,35 @@ import {
 // lib/waitlist-input.ts for why rejecting beats sanitising.
 const ALUTTA_API_URL = process.env.ALUTTA_API_URL || "http://localhost:8080";
 
-function isTurnstileDisabled() {
-  return process.env.NODE_ENV !== "production" && process.env.TURNSTILE_DISABLED === "true";
+/** Hostnames a Turnstile token may have been solved on. Production is the
+ *  apex and www; a Vercel preview has its own generated hostname, which is on
+ *  the Turnstile site key already, so the check is skipped there rather than
+ *  every preview needing an override. */
+const TURNSTILE_HOSTNAMES = (process.env.TURNSTILE_ALLOWED_HOSTNAMES || "alutta.com,www.alutta.com")
+  .split(",")
+  .map((h) => h.trim().toLowerCase())
+  .filter(Boolean);
+
+/** How long we wait on the two upstream calls. A stuck Turnstile or gateway
+ *  must fail the one request, not hold a serverless worker open. */
+const UPSTREAM_TIMEOUT_MS = 8_000;
+
+function isProduction() {
+  return process.env.NODE_ENV === "production";
 }
 
-async function verifyTurnstileToken(token: string, remoteIp: string | null) {
+function isTurnstileDisabled() {
+  return !isProduction() && process.env.TURNSTILE_DISABLED === "true";
+}
+
+type SiteVerify = {
+  success?: boolean;
+  action?: string;
+  hostname?: string;
+  "error-codes"?: string[];
+};
+
+async function verifyTurnstileToken(token: string, remoteIp: string | null): Promise<boolean> {
   if (isTurnstileDisabled()) {
     return true;
   }
@@ -48,14 +87,37 @@ async function verifyTurnstileToken(token: string, remoteIp: string | null) {
   const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
     method: "POST",
     body: formData,
+    signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
   });
 
   if (!response.ok) {
     return false;
   }
 
-  const result = (await response.json()) as { success?: boolean };
-  return result.success === true;
+  const result = (await response.json()) as SiteVerify;
+  if (result.success !== true) {
+    return false;
+  }
+
+  // A token is only good for THIS form. Cloudflare echoes the action the
+  // widget was rendered with and the hostname it was solved on; a token
+  // solved elsewhere, for something else, is refused even though it is
+  // genuine.
+  //
+  // Both checks bind only in a production build. Cloudflare's test keys (the
+  // "always passes" pair used for local work) echo neither the action nor a
+  // real hostname, so in development a mismatch is logged and let through.
+  const hostname = (result.hostname || "").toLowerCase();
+  const preview = process.env.VERCEL_ENV === "preview";
+  if (result.action !== TURNSTILE_ACTION) {
+    console.warn("turnstile: action mismatch", result.action);
+    if (isProduction()) return false;
+  }
+  if (!TURNSTILE_HOSTNAMES.includes(hostname)) {
+    console.warn("turnstile: hostname mismatch", hostname);
+    if (isProduction() && !preview) return false;
+  }
+  return true;
 }
 
 /** A per-IP brake, held in this instance's memory.
@@ -74,8 +136,8 @@ async function verifyTurnstileToken(token: string, remoteIp: string | null) {
  *
  *  Two honest limitations: a serverless deployment runs many instances, each
  *  with its own memory; and the client address comes from a header, which is
- *  trustworthy behind Cloudflare and spoofable if the origin is reached
- *  directly. Both are why this is a brake and Turnstile is the gate. */
+ *  trustworthy behind Vercel or Cloudflare and spoofable if the origin is
+ *  reached directly. Both are why this is a brake and Turnstile is the gate. */
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_REQUESTS = 60;
 const MAX_FAILURES = 15;
@@ -120,11 +182,42 @@ function refuse(ip: string | null, status: number, body: Record<string, unknown>
   return NextResponse.json(body, { status });
 }
 
-export async function POST(req: NextRequest) {
-  const ip =
+/** The client address. Vercel and Cloudflare each set their own header from
+ *  the connection they terminated; the first hop of x-forwarded-for is the
+ *  general case. */
+function clientIp(req: NextRequest): string | null {
+  return (
     req.headers.get("cf-connecting-ip") ||
+    req.headers.get("x-real-ip") ||
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
-    null;
+    null
+  );
+}
+
+/** A browser that names its origin must name THIS site.
+ *
+ *  A JSON POST from another site is already blocked by CORS (the content type
+ *  forces a preflight this route never answers), so this is defence in depth
+ *  against a misconfigured proxy, and it costs nothing. A request with no
+ *  Origin at all (a script, curl, an old browser) passes through to Turnstile,
+ *  which is the gate that actually decides. */
+function originAllowed(req: NextRequest): boolean {
+  const origin = req.headers.get("origin");
+  if (!origin) return true;
+  const own = new URL(req.url).origin;
+  if (origin === own || origin === SITE_URL || origin === SITE_URL.replace("https://", "https://www.")) {
+    return true;
+  }
+  // The site's own host as the platform sees it (a Vercel preview URL, or a
+  // local dev server on a different port than the request URL shows).
+  const host = req.headers.get("x-forwarded-host") || req.headers.get("host");
+  if (host && origin === `https://${host}`) return true;
+  if (!isProduction() && /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)) return true;
+  return false;
+}
+
+export async function POST(req: NextRequest) {
+  const ip = clientIp(req);
 
   try {
     // ── The door ────────────────────────────────────────────
@@ -132,10 +225,14 @@ export async function POST(req: NextRequest) {
       return refuse(ip, 415, { error: "Unsupported content type." });
     }
 
+    if (!originAllowed(req)) {
+      return refuse(ip, 403, { error: "Forbidden." });
+    }
+
     if (rateLimited(ip)) {
       return NextResponse.json(
         { error: "Too many attempts. Please try again in a few minutes." },
-        { status: 429 },
+        { status: 429, headers: { "Retry-After": "600" } },
       );
     }
 
@@ -155,6 +252,12 @@ export async function POST(req: NextRequest) {
       return refuse(ip, 400, { error: "Invalid request." });
     }
 
+    // A filled honeypot is a script, not a person. Same generic refusal as
+    // any other malformed request, so there is nothing to learn from it.
+    if (honeypotTripped(body)) {
+      return refuse(ip, 400, { error: "Invalid request." });
+    }
+
     // ── Validation ──────────────────────────────────────────
     // Every field goes through this; nothing reaches customer-service raw.
     let firstName: string;
@@ -171,6 +274,7 @@ export async function POST(req: NextRequest) {
     try {
       firstName = personName(body.firstName);
       addr = cleanEmail(body.email);
+      assertDeliverableDomain(addr);
       country = fromList(body.country, sourceCountries, "country", "Your country");
       destination = fromList(
         body.destination,
@@ -195,7 +299,7 @@ export async function POST(req: NextRequest) {
       // that omits the field came from there. "hero" was the old default and
       // mislabelled those rows as a section that no longer carries a form.
       source = optional(body.source, 64) || "waitlist";
-      const utm = (body.utm ?? {}) as Record<string, unknown>;
+      const utm = (body.utm && typeof body.utm === "object" && !Array.isArray(body.utm) ? body.utm : {}) as Record<string, unknown>;
       utmSource = optional(utm.source, 64);
       utmMedium = optional(utm.medium, 64);
       utmCampaign = optional(utm.campaign, 120);
@@ -207,11 +311,17 @@ export async function POST(req: NextRequest) {
     }
 
     const turnstileToken = body.turnstileToken;
-    if (!isTurnstileDisabled() && (!turnstileToken || typeof turnstileToken !== "string")) {
+    if (!isTurnstileDisabled() && (!turnstileToken || typeof turnstileToken !== "string" || turnstileToken.length > 2048)) {
       return refuse(ip, 400, { error: "Please complete the security check." });
     }
 
-    const turnstileValid = await verifyTurnstileToken(String(turnstileToken || ""), ip);
+    let turnstileValid: boolean;
+    try {
+      turnstileValid = await verifyTurnstileToken(String(turnstileToken || ""), ip);
+    } catch (e) {
+      console.error("turnstile unreachable:", e);
+      return NextResponse.json({ error: "The security check is unavailable. Please try again." }, { status: 503 });
+    }
     if (!turnstileValid) {
       return refuse(ip, 403, { error: "Security check failed. Please try again." });
     }
@@ -241,9 +351,10 @@ export async function POST(req: NextRequest) {
           program,
           referred_by: referredBy,
         }),
+        signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
       });
     } catch (e) {
-      console.error("customer-service unreachable:", e);
+      console.error("customer-service unreachable:", e instanceof Error ? e.message : e);
       return NextResponse.json({ error: "Failed to save your details. Please try again." }, { status: 502 });
     }
 
@@ -254,7 +365,7 @@ export async function POST(req: NextRequest) {
     };
 
     if (!res.ok) {
-      console.error("customer-service waitlist error:", res.status, data);
+      console.error("customer-service waitlist error:", res.status, data?.error?.message);
       return NextResponse.json(
         { error: data?.error?.message || "Failed to save your details. Please try again." },
         { status: 502 }
@@ -270,11 +381,12 @@ export async function POST(req: NextRequest) {
       message: alreadySignedUp ? "You are already on the waitlist!" : "You are on the waitlist!",
     });
   } catch (err) {
-    console.error("Waitlist API error:", err);
+    console.error("Waitlist API error:", err instanceof Error ? err.message : err);
     return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }
 }
 
-export async function GET() {
-  return NextResponse.json({ message: "Alutta waitlist API" });
+/** The route accepts a signup and nothing else. Liveness is `/api/health`. */
+export function GET() {
+  return NextResponse.json({ error: "Method not allowed." }, { status: 405, headers: { Allow: "POST" } });
 }

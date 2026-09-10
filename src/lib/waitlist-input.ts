@@ -201,3 +201,53 @@ export const REFERRAL = /^[A-Za-z0-9]{4,16}$/;
  *  A JSON parser will happily consume ten megabytes of nonsense and only then
  *  discover the name is too long, so the cap has to come first. */
 export const MAX_BODY_BYTES = 8 * 1024;
+
+// ── Spam and bot signals ──────────────────────────────────────────────────
+//
+// Turnstile is the gate; these are the cheap checks that run before it, so a
+// bot that has learned to solve a challenge still has to look like a person.
+
+/** The honeypot. A field a person never sees and never fills, rendered off
+ *  screen with no label, so a script that fills every input in the form
+ *  announces itself. Named for what a naive form-filler expects to find. */
+export const HONEYPOT_FIELD = "website";
+
+/** Throw-away mailbox providers. A waitlist address is used twice: once for
+ *  the confirmation and once for the invitation months later, and a mailbox
+ *  that expires in ten minutes receives neither. The list is deliberately
+ *  SHORT: only providers whose entire product is a disposable address. A
+ *  student's real domain must never be here, so nothing regional, nothing
+ *  that also sells real mailboxes, nothing guessed. */
+const DISPOSABLE_DOMAINS = new Set([
+  "10minutemail.com", "10minutemail.net", "20minutemail.com", "33mail.com",
+  "dispostable.com", "dropmail.me", "emailondeck.com", "fakeinbox.com",
+  "getnada.com", "guerrillamail.com", "guerrillamail.net", "guerrillamail.org",
+  "guerrillamailblock.com", "harakirimail.com", "inboxkitten.com", "mail-temp.com",
+  "mailcatch.com", "maildrop.cc", "mailinator.com", "mailinator.net", "mailnesia.com",
+  "mailsac.com", "minutemail.com", "mintemail.com", "mohmal.com", "moakt.com",
+  "mytemp.email", "nada.email", "sharklasers.com", "spam4.me", "spamgourmet.com",
+  "temp-mail.io", "temp-mail.org", "tempail.com", "tempmail.com", "tempmail.net",
+  "tempmailo.com", "tempr.email", "throwawaymail.com", "trashmail.com", "trashmail.me",
+  "yopmail.com", "yopmail.fr", "yopmail.net",
+]);
+
+/** Refuse an address at a throw-away provider. Runs AFTER `email`, so the
+ *  value is already lower-cased and known to have exactly one `@`. */
+export function assertDeliverableDomain(address: string, field = "email"): void {
+  const domain = address.slice(address.lastIndexOf("@") + 1);
+  // Match the registrable domain too, so `a.mailinator.com` is caught.
+  const parts = domain.split(".");
+  for (let i = 0; i < parts.length - 1; i++) {
+    if (DISPOSABLE_DOMAINS.has(parts.slice(i).join("."))) {
+      throw new InvalidInput(field, "Please use an email address you will still have next year, not a temporary one.");
+    }
+  }
+}
+
+/** The honeypot must be absent or empty. A filled honeypot is not a
+ *  validation error to explain to the caller; it is a bot, and the response
+ *  it gets is the same generic refusal as any other bad request. */
+export function honeypotTripped(body: Record<string, unknown>): boolean {
+  const value = body[HONEYPOT_FIELD];
+  return value !== undefined && value !== null && String(value).trim() !== "";
+}

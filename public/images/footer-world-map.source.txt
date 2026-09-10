@@ -1,0 +1,2 @@
+Natural Earth 1:110m land, public domain. https://www.naturalearthdata.com/
+Orthographic projection centred at 25 W, 30 N; vertically compressed for the footer.

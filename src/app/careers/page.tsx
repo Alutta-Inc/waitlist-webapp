@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Globe, HeartHandshake, Rocket, Sparkles, TrendingUp, Users } from "lucide-react";
-
+import Link from "next/link";
+import Image from "next/image";
+import { ArrowDown, ArrowUpRight, Compass, Globe2, HeartHandshake, Sparkles } from "lucide-react";
+import HomeHeader from "@/components/home/HomeHeader";
+import CareersFooter from "@/components/home/CareersFooter";
 import { CareersRoles } from "@/components/careers/CareersRoles";
 import { fetchRoles } from "@/lib/careers";
-
-// This is the canonical careers home, the page that should rank for "Alutta
-// careers". The job board's own root (careers.alutta.com) canonicalises here and
-// is noindex, so the two do not compete. Roles refresh via the fetch's revalidate.
+import "@/components/home/home.css";
+import "./careers.css";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
@@ -21,102 +22,26 @@ export const metadata: Metadata = {
   },
 };
 
-// Honest, mission-grounded perks. General and true of an early-stage team, with
-// no invented specifics. FOUNDER: sharpen these and add the real ones you can
-// stand behind, such as health cover, leave, and a learning budget.
-const PERKS = [
-  {
-    icon: Globe,
-    title: "Build for the world",
-    body: "Your work moves real people across real borders. There is no busywork here, only things that genuinely matter to someone.",
-  },
-  {
-    icon: Rocket,
-    title: "Real ownership",
-    body: "You will own problems from beginning to end. It is a small team with a big scope, so you will have the room to make real decisions.",
-  },
-  {
-    icon: TrendingUp,
-    title: "Grow quickly",
-    body: "Being early means the ceiling is high and close. You will stretch and learn faster here than you would in most other places.",
-  },
-  {
-    icon: Users,
-    title: "A team that cares",
-    body: "We keep egos low and the craft high. We build hard things together, and we genuinely look out for one another along the way.",
-  },
-  {
-    icon: HeartHandshake,
-    title: "Flexibility that respects you",
-    body: "We care about what you deliver, not the hours you keep. You are trusted to work in the way that brings out your very best.",
-  },
-  {
-    icon: Sparkles,
-    title: "A real stake",
-    body: "You will hold equity in what we are building, because the people who build something valuable should own a piece of it.",
-  },
+
+const values = [
+ {Icon: Compass, title: "Start with the student.", text: "Behind every application is a person making a big decision. Build with their needs, questions, and ambitions in mind."},
+ {Icon: Sparkles, title: "Make the complex feel simple.", text: "Bring clarity to the details. Thoughtful design and careful decisions can make a difficult journey easier."},
+ {Icon: HeartHandshake, title: "Go further, together.", text: "Share what you know. Listen to a different perspective. The best work comes from people who care about the outcome."},
 ];
-
 export default async function CareersPage() {
-  const { roles, teams, failed } = await fetchRoles();
-
-  return (
-    <main className="bg-white">
-      {/* ── Hero ── continues the ivory header, then eases into a soft green. */}
-      <section
-        style={{
-          background:
-            "linear-gradient(180deg, #FFFFEB 0%, #FFFFEB 32%, rgba(19,202,88,0.10) 100%)",
-        }}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-10 pt-20 pb-20 md:pt-28 md:pb-28 text-center">
-          <span className="inline-block text-sm font-semibold text-brand-dark bg-brand-turbo/50 rounded-full px-4 py-1.5 mb-6">
-            Careers
-          </span>
-          <h1 className="font-display font-bold text-brand-dark text-4xl md:text-6xl leading-[1.05] tracking-tight max-w-4xl mx-auto">
-            Come build the future of{" "}
-            <span className="text-brand-primary">moving countries</span>.
-          </h1>
-          <p className="mt-6 text-lg md:text-xl text-brand-iridium/80 max-w-3xl mx-auto leading-relaxed font-medium">
-            We are a team on a mission to make relocation and studying abroad feel
-            simple, honest, and within reach for millions of people. If that sounds like
-            work worth doing, we would love to meet you.
-          </p>
-        </div>
-      </section>
-
-      {/* ── Roles (floating search + table) ── */}
-      <section className="max-w-7xl mx-auto px-6 md:px-10">
-        <CareersRoles roles={roles} teams={teams} failed={failed} />
-      </section>
-
-      {/* ── Perks ── */}
-      <section className="max-w-7xl mx-auto px-6 md:px-10 pt-28 pb-28 md:pb-36">
-        <h2 className="font-display font-bold text-brand-dark text-3xl md:text-5xl max-w-2xl">
-          Perks of being on the team
-        </h2>
-        <p className="mt-5 text-lg md:text-xl text-brand-iridium/80 font-medium">
-          Beyond a competitive salary, here is some of what you get when you join us.
-        </p>
-        <div className="mt-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PERKS.map((perk) => (
-            <div
-              key={perk.title}
-              className="bg-brand-bg-alt rounded-3xl p-8 border border-brand-iridium/8"
-            >
-              <div className="w-12 h-12 rounded-2xl bg-brand-turbo/25 flex items-center justify-center mb-5">
-                <perk.icon className="w-6 h-6 text-brand-dark" />
-              </div>
-              <h3 className="font-display font-bold text-brand-dark text-xl mb-2.5">
-                {perk.title}
-              </h3>
-              <p className="text-base text-brand-iridium/80 leading-relaxed font-medium">
-                {perk.body}
-              </p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </main>
-  );
+ const { roles, teams, failed } = await fetchRoles();
+ return <div className="atlas-home careers-home">
+  <HomeHeader />
+  <section className="careers-hero atlas-container" aria-labelledby="careers-heading">
+   <div className="careers-hero-copy"><span className="careers-kicker"><span /> CAREERS AT ALUTTA</span><h1 id="careers-heading">Build something<br />that takes people<br /><em>places.</em></h1><p>Big dreams deserve a clear path. Help us make studying, moving, and starting a new life abroad feel a little more possible.</p><div className="careers-hero-actions"><a href="#roles" className="atlas-button">Find your next role <ArrowUpRight size={20} /></a><a href="#our-purpose" className="careers-link">Meet the mission <ArrowDown size={18} /></a></div><span className="careers-hero-footnote">Your next chapter could change someone else’s.</span></div>
+   <div className="careers-visual"><div className="careers-image-halo" /><div className="careers-main-photo"><Image src="/images/journey-graduates.jpg" alt="Graduates celebrating a new chapter together" fill priority sizes="(max-width: 760px) 90vw, 50vw" /></div><div className="careers-photo-label"><Globe2 size={22} /><span>Different perspectives.<strong>One shared purpose.</strong></span></div><span className="careers-photo-sticker">A WORLD OF<br />POSSIBILITY <ArrowUpRight size={27} /></span><div className="careers-image-caption"><span>FOR THE JOURNEYS AHEAD</span><span>↗</span></div></div>
+  </section>
+  <div className="careers-belief-strip"><span>Thoughtful by design.</span><i /><span>Human at heart.</span><i /><span>Global in ambition.</span></div>
+  <section id="our-purpose" className="careers-purpose atlas-container"><div><span className="careers-kicker">THE WORK THAT MATTERS</span><h2>A brighter future.<br /><em>Built by us.</em></h2></div><div><p>Moving abroad is a big life moment. The school search, the paperwork, the payments, the first day in a new city. Too often, people have to figure it all out alone.</p><p>We’re bringing those steps together. At Alutta, the work is about helping people move forward with more clarity, confidence, and a sense of belonging.</p><Link className="careers-link" href="/#how-it-works">See what we’re building <ArrowUpRight size={20} /></Link></div></section>
+  <section className="careers-values"><div className="atlas-container"><div className="careers-section-heading"><div><span className="careers-kicker">HOW WE BUILD</span><h2>Good people.<br />Work with purpose.</h2></div><p>A few ideas that guide the way we think, create, and move forward.</p></div><div className="careers-values-grid">{values.map(({Icon,title,text},i)=><article key={title}><div className="careers-value-top"><span><Icon size={26}/></span><small>0{i+1}</small></div><h3>{title}</h3><p>{text}</p></article>)}</div></div></section>
+  <section className="careers-impact atlas-container"><div className="careers-impact-photo"><Image src="/images/campus-friends.png" alt="Students connecting on a university campus" fill sizes="(max-width: 760px) 90vw, 45vw" /></div><div className="careers-impact-copy"><span className="careers-kicker">MORE THAN A PRODUCT</span><h2>On the other side<br />of your work?<br /><em>A new beginning.</em></h2><p>A first acceptance. A journey planned. A place that starts to feel like home. That’s the bigger picture behind the details we build.</p><a href="#roles" className="careers-link">Be part of the story <ArrowUpRight size={20} /></a></div></section>
+  <section className="careers-opportunities atlas-container" aria-labelledby="opportunities-heading"><div className="careers-section-heading"><div><span className="careers-kicker">YOUR NEXT CHAPTER</span><h2 id="opportunities-heading">Find your place<br /><em>in what’s next.</em></h2></div><p>Bring your curiosity, your perspective, and the things you do best. Explore opportunities to build with us.</p></div><CareersRoles roles={roles} teams={teams} failed={failed}/></section>
+  <section className="careers-closing atlas-container"><Globe2 size={38} aria-hidden="true"/><h2>Big dreams need<br /><em>thoughtful people.</em></h2><p>There’s a whole world ahead. Let’s make it easier to reach.</p><a href="#roles" className="atlas-button lime">Explore opportunities <ArrowUpRight size={21}/></a><span className="careers-closing-orbit" aria-hidden="true"/></section>
+  <CareersFooter />
+ </div>;
 }

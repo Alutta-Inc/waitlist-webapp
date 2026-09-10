@@ -1,9 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import AnnouncementBanner from "@/components/layout/AnnouncementBanner";
-import Header from "@/components/layout/Header";
-import Footer from "@/components/layout/Footer";
 import { Analytics } from "@/components/Analytics";
 import { STUDENT_APP_URL } from "@/lib/site";
 
@@ -154,14 +151,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" data-scroll-behavior="smooth">
       <head>
-        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        {/* `<` is escaped so no value that ever reaches this object (an env
+            var, say) can close the tag early; JSON stays valid either way. */}
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\u003c") }} />
       </head>
       <body className={mierB.variable} suppressHydrationWarning>
         <Analytics />
-        <AnnouncementBanner />
-        <Header />
         <main>{children}</main>
-        <Footer />
       </body>
     </html>
   );
