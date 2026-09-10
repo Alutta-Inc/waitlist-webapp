@@ -139,14 +139,17 @@ marketing-site entry point to it.
 
 ## Schools and programmes
 
-The homepage's school explorer and destination panels, and the Nigeria page's
-"participating institutions", read **institution-service**'s public showcase
-(`${ALUTTA_API_URL}/v1/institutions/public/showcase/`) server-side at render time,
-revalidated every five minutes (`src/lib/showcase.ts`). It carries only what a
-school prints in its own prospectus: school, city, country, programme, level and
-whether Alutta submits; no ids, no costs, no configuration. When the catalogue lists
-nothing for a country, or the gateway is unreachable, the sections show illustrative
-examples and say so; a well-known university is never presented as a partner.
+The homepage's "Find your fit" panel is a **curated demo** of a shortlist: five
+example institutions, one per launch destination, each with that destination's own
+photo, a country menu, and a heart to save. It is labelled as examples, has no search
+and no programme list, and reads no live data, so nothing on it can lead to a school
+Alutta has no relationship with. Nothing on the site names a partner until a
+partnership is closed.
+
+For the day the site does list real partners, **institution-service** exposes a
+public showcase (`${ALUTTA_API_URL}/v1/institutions/public/showcase/`: school, city,
+country, programme, level, whether Alutta submits; no ids, costs or configuration)
+and `src/lib/showcase.ts` is the server-side client for it. No page reads it today.
 
 ## Referral codes
 
@@ -222,8 +225,8 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 
 | Path | What |
 | --- | --- |
-| `/` | The global homepage: message, benefits, the school explorer and destination panels (from institution-service), questions |
-| `/ng` | Alutta Nigeria: postgraduate study at home and abroad, participating institutions (from institution-service) |
+| `/` | The global homepage: message, benefits, the shortlist demo and destination panels, questions |
+| `/ng` | Alutta Nigeria: postgraduate study at home and abroad, and its own waitlist |
 | `/waitlist`, `/ng/waitlist` | The waitlist form, and where every "join" link and shared referral link lands |
 | `/careers` | Open roles (from recruitment-service) |
 | `/privacy`, `/terms` | Legal |
@@ -261,7 +264,7 @@ src/
     ├── analytics.ts            ← analytics-service ingest
     ├── careers.ts              ← recruitment-service public jobs
     ├── markets.ts              ← which market a URL belongs to
-    ├── showcase.ts             ← institution-service public showcase
+    ├── showcase.ts             ← institution-service public showcase (client; unused today)
     ├── site.ts                 ← where the app lives, as distinct from this site
     ├── turnstile.ts            ← the action and script URL both sides share
     ├── waitlist-input.ts       ← the input rules, honeypot and disposable-domain list

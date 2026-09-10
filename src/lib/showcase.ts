@@ -109,16 +109,3 @@ export async function fetchShowcase(opts: { countries?: string[]; limit?: number
     return { ...EMPTY_SHOWCASE, failed: true };
   }
 }
-
-/** The file under /public/images for a destination's photo, by ISO code.
- *  Schools in a country without a photo share the graduates picture. */
-export function destinationImage(countryCode: string): string {
-  const file: Record<string, string> = {
-    US: "destination-usa.jpg",
-    GB: "destination-uk.jpg",
-    CA: "destination-canada.jpg",
-    AU: "destination-australia.jpg",
-    CN: "destination-china.jpg",
-  };
-  return `/images/${file[countryCode.toUpperCase()] ?? "journey-graduates.jpg"}`;
-}

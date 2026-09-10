@@ -16,10 +16,3 @@
 @media(prefers-reduced-motion:reduce){.ng-profile-motion{transform:none}}
 
 .ng-flight-map>svg{margin-bottom:18px}
-.ng-partners{padding-block:0 110px}
-.ng-partner-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
-.ng-partner-list li{border:1px solid #e1ead9;border-radius:16px;padding:22px 20px;display:grid;gap:6px;background:#fff}
-.ng-partner-list strong{font-size:18px;line-height:1.25;letter-spacing:-.03em}
-.ng-partner-list span{font-size:12px;color:#91a580}
-.ng-partner-list p{margin:6px 0 0;font-size:14px;line-height:1.55;color:#798a75}
-.ng-partner-list small{margin-top:8px;font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#699058}
