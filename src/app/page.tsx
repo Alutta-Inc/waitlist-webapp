@@ -9,6 +9,6 @@ export default async function Home() {
   // institution-service's public showcase, read here at render time and
   // revalidated every five minutes. An empty or unreachable catalogue leaves
   // the illustrative examples in place, labelled as such.
-  const showcase = await fetchShowcase();
+  const showcase = await fetchShowcase({ limit: 200 });
   return <HomeExperience showcase={showcase} />;
 }

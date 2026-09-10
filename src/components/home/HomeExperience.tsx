@@ -65,7 +65,7 @@ export default function HomeExperience({ showcase }: { showcase: Showcase }) {
 
       <JourneyExplorer stage={stage} onStageChange={setStage} onQuiz={openPlanner} showcase={showcase} />
 
-      <DestinationShowcase showcase={showcase} onExplore={(code) => { setDestination(destinations.findIndex(country => country.code.toLowerCase() === code)); openPlanner(); }} />
+      <DestinationShowcase onExplore={(code) => { setDestination(destinations.findIndex(country => country.code.toLowerCase() === code)); openPlanner(); }} />
 
       <section className="atlas-manifesto" id="features" aria-labelledby="life-after-arrival-heading">
         <div className="atlas-arrival-wave atlas-arrival-wave-left" aria-hidden="true" />

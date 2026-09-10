@@ -3,34 +3,54 @@
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ArrowLeft, ArrowRight, Check, CreditCard, GraduationCap, Heart, MapPin, Plane, Search, ShieldCheck, SlidersHorizontal, Users } from "lucide-react";
-import { destinationImage, type Showcase } from "@/lib/showcase";
+import type { Showcase } from "@/lib/showcase";
 
 const chapters = [
   { title: "Find your fit", text: "Find schools and programmes.", Icon: GraduationCap },
   { title: "Make it official", text: "Keep your school fees organised.", Icon: CreditCard },
   { title: "Get ready to go", text: "Plan your travel and arrival.", Icon: Plane },
 ];
-type ExplorerSchool = { name: string; image: string; imageAlt: string; city: string; country: string; tag: string; programmes: string[]; live: boolean };
+type ExplorerSchool = { name: string; image: string; imageAlt: string; city: string; country: string; countryCode: string; tag: string; programmes: string[]; live: boolean };
+
+/** Flags the site ships under /public/images. Anything else shows no flag. */
+const FLAGS = new Set(["au", "ca", "cn", "de", "fr", "gb", "ie", "ng", "nz", "us"]);
+
+/** A school's initials, for the card tile: "University of Lagos" reads UL,
+ *  "RWTH Aachen University" reads RA. Small words are skipped. */
+function initials(name: string): string {
+  const words = name.split(/[\s-]+/).filter((w) => w && !/^(of|the|and|de|du|la|le|for|at|in)$/i.test(w));
+  return words.slice(0, 2).map((w) => w[0].toUpperCase()).join("") || name.slice(0, 2).toUpperCase();
+}
+
+/** A stable hue per school name, so two schools never share a tile colour by
+ *  accident and the same school always looks the same. */
+function hue(name: string): number {
+  let h = 0;
+  for (const ch of name) h = (h * 31 + ch.charCodeAt(0)) % 360;
+  return h;
+}
 
 // Illustrative cards, shown only while the catalogue has nothing to show.
 // They are labelled as samples on the page, so a visitor is never told these
 // three are partners.
 const samples: ExplorerSchool[] = [
-  { name: "University of Toronto", image: "/images/school-toronto.jpg", imageAlt: "Illustrative red-brick university campus", city: "Toronto, Canada", country: "Canada", tag: "Business", programmes: ["Management", "Computer Science", "Engineering"], live: false },
-  { name: "University of Oxford", image: "/images/campus-friends.png", imageAlt: "Illustrative historic university courtyard", city: "Oxford, United Kingdom", country: "United Kingdom", tag: "Humanities", programmes: ["History", "Philosophy", "Computer Science"], live: false },
-  { name: "University of Melbourne", image: "/images/hero-campus.png", imageAlt: "Student on a university campus", city: "Melbourne, Australia", country: "Australia", tag: "Science", programmes: ["Science", "Commerce", "Design"], live: false },
+  { name: "University of Toronto", image: "/images/school-toronto.jpg", imageAlt: "Illustrative red-brick university campus", city: "Toronto, Canada", country: "Canada", countryCode: "CA", tag: "Business", programmes: ["Management", "Computer Science", "Engineering"], live: false },
+  { name: "University of Oxford", image: "/images/campus-friends.png", imageAlt: "Illustrative historic university courtyard", city: "Oxford, United Kingdom", country: "United Kingdom", countryCode: "GB", tag: "Humanities", programmes: ["History", "Philosophy", "Computer Science"], live: false },
+  { name: "University of Melbourne", image: "/images/hero-campus.png", imageAlt: "Student on a university campus", city: "Melbourne, Australia", country: "Australia", countryCode: "AU", tag: "Science", programmes: ["Science", "Commerce", "Design"], live: false },
 ];
 
 /** The catalogue's schools as explorer cards. The tag is the programme level
- *  (the catalogue has no field-of-study axis), and the photo is the
- *  destination's, since the catalogue carries no imagery. */
+ *  (the catalogue has no field-of-study axis). The catalogue carries no
+ *  imagery, so a live card gets a monogram tile in the school's own colour
+ *  with its country's flag, rather than one stock photo repeated per country. */
 function fromShowcase(showcase: Showcase): ExplorerSchool[] {
-  return showcase.schools.slice(0, 12).map((school) => ({
+  return showcase.schools.map((school) => ({
     name: school.name,
-    image: destinationImage(school.countryCode),
-    imageAlt: `${school.country}`,
+    image: "",
+    imageAlt: "",
     city: [school.city, school.country].filter(Boolean).join(", "),
     country: school.country,
+    countryCode: school.countryCode,
     tag: school.levels[0] ?? "",
     programmes: school.programmes,
     live: true,
@@ -65,7 +85,11 @@ export default function JourneyExplorer({ stage, onStageChange, onQuiz, showcase
   const [expanded, setExpanded] = useState<string | null>(null);
   const [done, setDone] = useState<string[]>([]);
   const active = Math.min(stage, 2);
-  const filtered = schools.filter(s => (!country || s.country === country) && (!field || s.tag === field) && `${s.name} ${s.city} ${s.programmes.join(' ')}`.toLowerCase().includes(search.toLowerCase()));
+  // Search runs as you type, over everything a card shows: school, city,
+  // country, level and every programme. The form's submit is kept only so
+  // Enter does not reload the page.
+  const needle = search.trim().toLowerCase();
+  const filtered = schools.filter(s => (!country || s.country === country) && (!field || s.tag === field) && (!needle || `${s.name} ${s.city} ${s.country} ${s.tag} ${s.programmes.join(' ')}`.toLowerCase().includes(needle)));
   useEffect(() => {
     const track = schoolTrack.current;
     if (!track) return;
@@ -84,12 +108,12 @@ export default function JourneyExplorer({ stage, onStageChange, onQuiz, showcase
         <div className="journey-panel" key={active} role="tabpanel" id="journey-panel" aria-labelledby={`journey-tab-${active}`}>
           <div className="journey-panel-heading"><div><h3>{['Find your fit, at your own pace.', 'Your fees. A little more clarity.', 'A new chapter, a clearer plan.'][active]}</h3></div><p>{['Search schools, explore programmes, and save your favourites.', 'See what needs paying and keep every next step together.', 'Bring the essentials for your big move into one simple checklist.'][active]}</p></div>
           {active === 0 ? <div className="journey-search-window">
-            <div className="journey-search-body"><form onSubmit={event => { event.preventDefault(); setSearch(query.trim()); }}><label className="journey-search-input"><Search size={18} /><input aria-label={live ? "Search schools on Alutta" : "Search sample schools"} placeholder="Search schools, programmes or cities" value={query} onChange={event => setQuery(event.target.value)} /></label><button className="journey-search-submit" type="submit">Search</button></form>
-              <div className="journey-search-tools"><button className="journey-filter-toggle" aria-expanded={showFilters} aria-controls="journey-filters" onClick={() => setShowFilters(!showFilters)}><SlidersHorizontal size={14} />Filters{(country || field) && <span className="journey-filter-dot" />}</button><span aria-live="polite">{saved.length ? `${saved.length} saved to your shortlist` : live ? "Schools on Alutta today." : "Example schools, to show how it works."}</span></div>
+            <div className="journey-search-body"><form onSubmit={event => { event.preventDefault(); setSearch(query); }}><label className="journey-search-input"><Search size={18} /><input type="search" aria-label={live ? "Search schools on Alutta" : "Search sample schools"} placeholder="Search schools, programmes or cities" value={query} onChange={event => { setQuery(event.target.value); setSearch(event.target.value); }} /></label><button className="journey-search-submit" type="submit">Search</button></form>
+              <div className="journey-search-tools"><button className="journey-filter-toggle" aria-expanded={showFilters} aria-controls="journey-filters" onClick={() => setShowFilters(!showFilters)}><SlidersHorizontal size={14} />Filters{(country || field) && <span className="journey-filter-dot" />}</button><span aria-live="polite">{saved.length ? `${saved.length} saved to your shortlist` : live ? `${filtered.length === schools.length ? schools.length : `${filtered.length} of ${schools.length}`} schools on Alutta today.` : "Example schools, to show how it works."}</span></div>
               {showFilters && <div className="journey-filters" id="journey-filters"><label><span className="sr-only">Country</span><select aria-label="Country" value={country} onChange={event => setCountry(event.target.value)}><option value="">Country</option>{countries.map(c => <option key={c}>{c}</option>)}</select></label><label><span className="sr-only">{tagLabel}</span><select aria-label={tagLabel} value={field} onChange={event => setField(event.target.value)}><option value="">{tagLabel}</option>{tags.map(t => <option key={t}>{t}</option>)}</select></label><button onClick={() => { setCountry(''); setField(''); setQuery(''); setSearch(''); }}>Clear all</button></div>}
               
               {active === 0 && <div className="journey-slider-controls" aria-label="School carousel controls"><button aria-label="Previous schools" aria-controls="selected-school-carousel" disabled={scrollBounds.start} onClick={() => slideSchools(-1)}><ArrowLeft size={18} /></button><button aria-label="Next schools" aria-controls="selected-school-carousel" disabled={scrollBounds.end || filtered.length === 0} onClick={() => slideSchools(1)}><ArrowRight size={18} /></button></div>}
-              <div className="journey-school-grid journey-school-carousel" id="selected-school-carousel" role="region" aria-label="Selected schools" aria-roledescription="carousel" ref={schoolTrack} onScroll={updateScrollBounds} tabIndex={0}>{filtered.map((school) => <article className="journey-school" key={`${school.country}-${school.name}`}><div className={`journey-school-photo ${school.live ? "live" : school.country === "United Kingdom" ? "school-courtyard" : ""}`}><Image src={school.image} alt={school.imageAlt} fill sizes="(max-width: 600px) 80vw, 240px" /><button aria-label={`Save ${school.name}`} aria-pressed={saved.includes(school.name)} onClick={() => toggle(school.name)}><Heart size={17} fill={saved.includes(school.name) ? 'currentColor' : 'none'} /></button></div><div className="journey-school-copy"><h4>{school.name}</h4><p><MapPin size={12} />{school.city}</p><button className="journey-programme-link" aria-expanded={expanded === school.name} onClick={() => setExpanded(expanded === school.name ? null : school.name)}>View programmes <ArrowRight size={14} /></button>{expanded === school.name && <div className="journey-programmes"><small>{school.live ? "Programmes" : "Programme examples"}</small>{school.programmes.map(p => <span key={p}>{p}</span>)}</div>}</div></article>)}</div>
+              <div className="journey-school-grid journey-school-carousel" id="selected-school-carousel" role="region" aria-label="Selected schools" aria-roledescription="carousel" ref={schoolTrack} onScroll={updateScrollBounds} tabIndex={0}>{filtered.map((school) => <article className="journey-school" key={`${school.country}-${school.name}`}><div className={`journey-school-photo ${school.live ? "live" : school.country === "United Kingdom" ? "school-courtyard" : ""}`}>{school.live ? <div className="journey-school-tile" style={{ "--tile-hue": hue(school.name) } as React.CSSProperties} aria-hidden="true"><span>{initials(school.name)}</span>{FLAGS.has(school.countryCode.toLowerCase()) && <Image src={`/images/flag-${school.countryCode.toLowerCase()}.svg`} alt="" width={26} height={18} />}</div> : <Image src={school.image} alt={school.imageAlt} fill sizes="(max-width: 600px) 80vw, 240px" />}<button aria-label={`Save ${school.name}`} aria-pressed={saved.includes(school.name)} onClick={() => toggle(school.name)}><Heart size={17} fill={saved.includes(school.name) ? 'currentColor' : 'none'} /></button></div><div className="journey-school-copy"><h4>{school.name}</h4><p><MapPin size={12} />{school.city}</p><button className="journey-programme-link" aria-expanded={expanded === school.name} onClick={() => setExpanded(expanded === school.name ? null : school.name)}>View programmes <ArrowRight size={14} /></button>{expanded === school.name && <div className="journey-programmes"><small>{school.live ? "Programmes" : "Programme examples"}</small>{school.programmes.map(p => <span key={p}>{p}</span>)}</div>}</div></article>)}</div>
 
               {filtered.length === 0 && <div className="journey-empty"><Search /><strong>{live ? "No schools match yet." : "No sample schools match yet."}</strong><p>Try a different search or clear your filters.</p></div>}
               <div className="journey-quiz"><Users /><div><strong>Not sure where to start?</strong><p>Find a starting point based on your goals.</p></div><button onClick={onQuiz}>Join the waitlist <ArrowRight size={16} /></button></div>
