@@ -632,9 +632,6 @@ body:has(.explainer-dialog[open]){overflow:hidden}
 @media(max-width:760px){.waitlist-planner .planner-layout{grid-template-columns:1fr;min-height:0}.waitlist-planner .signup-story{display:none}.waitlist-planner .signup-body{padding:48px 27px 25px}.signup-body form input{font-size:16px}.signup-heading p br{display:none}}
 @media(max-width:450px){.waitlist-planner .signup-body{padding:46px 21px 22px}.atlas-home .signup-heading h2{font-size:32px!important}.signup-heading p{font-size:14px}.signup-body form .grid{grid-template-columns:1fr}}
 
-/* A catalogue card's tile: the school's initials on its own hue, with its flag. The catalogue carries no photos, and one stock image repeated per country read as the same school over and over. */
-.journey-school-photo.live { background: hsl(var(--tile-hue, 150) 30% 92%); }
-.journey-school-tile { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, hsl(var(--tile-hue) 38% 88%), hsl(calc(var(--tile-hue) + 30) 34% 74%)); color: hsl(var(--tile-hue) 45% 22%); }
-.journey-school-tile span { font-family: var(--font-mierb), sans-serif; font-weight:600; font-size:34px; letter-spacing:-.04em; }
-.journey-school-tile img { position:absolute; left:10px; bottom:10px; width:26px; height:18px; border-radius:3px; box-shadow:0 1px 3px #0003; }
-.journey-school-photo.live img { width:26px !important; height:18px !important; }
+/* A catalogue card shows its city: the city's own photo where the site has one, else the country's, uncropped, and the city named on the card. */
+.journey-school-photo.live img { width:100% !important; height:100% !important; left:0 !important; object-position:center; }
+.journey-school-city { position:absolute; left:8px; bottom:8px; display:inline-flex; align-items:center; gap:4px; padding:4px 8px; border-radius:999px; background:#ffffffe6; color:#054538; font-size:10px; font-weight:600; letter-spacing:.01em; }
