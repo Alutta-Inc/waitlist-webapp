@@ -97,6 +97,12 @@ const nextConfig: NextConfig = {
       : [],
   },
 
+  async redirects() {
+    // The old build linked /manifest.json. An installed app or a cached page
+    // may still ask for it; send it to the manifest that says "browser".
+    return [{ source: "/manifest.json", destination: "/manifest.webmanifest", permanent: true }];
+  },
+
   async headers() {
     return [
       { source: "/:path*", headers: securityHeaders },
