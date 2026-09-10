@@ -20,3 +20,6 @@
     display: none;
   }
 }
+
+/* Section anchors sit below the sticky header when a nav link scrolls to them. */
+#about, #destinations, #features, #how-it-works, #profile, #questions, #roles, #global-journey { scroll-margin-top: 110px; }

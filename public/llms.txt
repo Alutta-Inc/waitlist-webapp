@@ -5,6 +5,10 @@
 ## Core Pages
 
 - [Home](https://alutta.com/): Overview of Alutta and the early access waitlist.
+- [Join the waitlist](https://alutta.com/waitlist): The waitlist form for early access.
+- [Alutta Nigeria](https://alutta.com/ng): Postgraduate study in Nigeria and beyond, with one reusable profile.
+- [Alutta Nigeria waitlist](https://alutta.com/ng/waitlist): The Nigeria waitlist form.
+- [Careers](https://alutta.com/careers): Open roles at Alutta.
 - [Privacy Policy](https://alutta.com/privacy): How Alutta handles waitlist, referral, usage, and anti-spam data.
 - [Terms of Service](https://alutta.com/terms): Terms for using Alutta's website and waitlist.
 
@@ -17,4 +21,4 @@
 
 ## Product Summary
 
-Alutta is built for international students who need a clearer, more coordinated way to manage study abroad decisions and logistics. The platform focuses on application planning, payment coordination, visa and document readiness, accommodation, travel, airport arrival, and settlement support.
+Alutta is built for international students who need a clearer, more coordinated way to manage study abroad decisions and logistics. The platform focuses on application planning, payment coordination, visa and document readiness, accommodation, travel, airport arrival, and settlement support. The student app lives at https://app.alutta.com and is currently in private beta.

@@ -3,19 +3,20 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "node scripts/check-encoding.mjs && next dev",
+    "build": "node scripts/check-encoding.mjs && next build",
     "start": "next start",
-    "lint": "eslint src"
+    "lint": "node scripts/check-encoding.mjs && eslint src",
+    "check:encoding": "node scripts/check-encoding.mjs",
+    "test": "node --test scripts/",
+    "probe": "node scripts/probe-public-surface.mjs"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "lucide-react": "^0.561.0",
-    "nanoid": "^5.0.7",
-    "next": "16.0.10",
+    "next": "^16.3.4",
     "react": "19.2.1",
     "react-dom": "19.2.1",
-    "resend": "^3.3.0",
     "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
@@ -26,7 +27,7 @@
     "babel-plugin-react-compiler": "1.0.0",
     "baseline-browser-mapping": "^2.10.27",
     "eslint": "^9",
-    "eslint-config-next": "16.0.10",
+    "eslint-config-next": "^16.3.4",
     "tailwindcss": "^4",
     "typescript": "^5"
   }

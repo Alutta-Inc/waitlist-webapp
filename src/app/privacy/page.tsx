@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
+import LegalPage from "@/components/legal/LegalPage";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
@@ -70,44 +70,4 @@ const sections = [
   },
 ];
 
-export default function PrivacyPage() {
-  return (
-    <main className="bg-brand-bg">
-      <section className="px-4 md:px-6 lg:px-8 py-16 lg:py-24">
-        <div className="max-w-3xl mx-auto">
-          <Link href="/" className="text-sm font-medium text-brand-accent hover:text-brand-dark transition-colors">
-            Back to Alutta
-          </Link>
-
-          <div className="mt-8 mb-10">
-            <p className="text-sm text-gray-500 mb-3">Last updated: May 13, 2026</p>
-            <h1 className="font-display font-medium text-4xl sm:text-5xl text-brand-dark mb-5">
-              Privacy Policy
-            </h1>
-            <p className="text-lg text-gray-600 leading-relaxed">
-              This Privacy Policy explains how Alutta collects, uses, stores, and protects information
-              when you visit our website or join the early access waitlist.
-            </p>
-          </div>
-
-          <div className="space-y-9">
-            {sections.map((section) => (
-              <section key={section.title}>
-                <h2 className="font-display font-medium text-2xl text-brand-dark mb-3">
-                  {section.title}
-                </h2>
-                <div className="space-y-3">
-                  {section.body.map((paragraph) => (
-                    <p key={paragraph} className="text-gray-600 leading-relaxed">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-              </section>
-            ))}
-          </div>
-        </div>
-      </section>
-    </main>
-  );
-}
+export default function Page() { return <LegalPage kind="privacy" sections={sections} />; }

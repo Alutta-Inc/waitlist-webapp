@@ -61,14 +61,19 @@ export function SelectMenu({
     };
   }, [open]);
 
-  // When it opens, focus the search box and reset the highlighted row.
-  useEffect(() => {
-    if (open) {
-      setQuery("");
-      setActiveIdx(0);
-      if (showSearch) requestAnimationFrame(() => searchRef.current?.focus());
-    }
-  }, [open, showSearch]);
+  // Opening resets the search and the highlighted row, and focuses the search
+  // box. Done in the event that opens it rather than in an effect, so there is
+  // no second render after the first.
+  const toggle = () => {
+    setOpen((was) => {
+      if (!was) {
+        setQuery("");
+        setActiveIdx(0);
+        if (showSearch) requestAnimationFrame(() => searchRef.current?.focus());
+      }
+      return !was;
+    });
+  };
 
   const commit = (v: string) => {
     onChange(v);
@@ -96,7 +101,7 @@ export function SelectMenu({
         aria-haspopup="listbox"
         aria-expanded={open}
         aria-label={ariaLabel}
-        onClick={() => setOpen((o) => !o)}
+        onClick={toggle}
         className="w-full h-14 px-5 rounded-2xl bg-brand-bg-alt text-base text-brand-dark flex items-center justify-between gap-2 outline-none focus-visible:ring-2 focus-visible:ring-brand-primary/40 hover:bg-brand-bg-alt/70 transition-colors"
       >
         <span className={selected ? "text-brand-dark truncate" : "text-brand-iridium/60 truncate"}>

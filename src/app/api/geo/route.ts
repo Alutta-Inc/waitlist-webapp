@@ -5,7 +5,6 @@ const COUNTRY_HEADER_NAMES = [
   "cf-ipcountry",
   "x-vercel-ip-country",
   "cloudfront-viewer-country",
-  "x-country-code",
 ];
 
 function findCountryName(countryCode: string | null) {
@@ -20,10 +19,10 @@ function findCountryName(countryCode: string | null) {
 export async function GET(req: NextRequest) {
   const countryCode = COUNTRY_HEADER_NAMES
     .map((headerName) => req.headers.get(headerName))
-    .find(Boolean) ?? null;
+    .find(Boolean)?.trim().toUpperCase() ?? null;
 
   return NextResponse.json({
     countryCode,
     countryName: findCountryName(countryCode),
-  });
+  }, { headers: { "Cache-Control": "private, no-store", "Vary": COUNTRY_HEADER_NAMES.join(", ") } });
 }

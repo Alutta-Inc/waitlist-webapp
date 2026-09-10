@@ -6,6 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
   return [
+    { url: `${siteUrl}/ng`, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${siteUrl}/ng/waitlist`, changeFrequency: "weekly", priority: 0.8 },
     {
       url: siteUrl,
       lastModified: now,

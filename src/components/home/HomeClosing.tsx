@@ -1,0 +1,30 @@
+"use client";
+import MarketSelector from "@/components/markets/MarketSelector";
+import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { ArrowUp, ArrowUpRight, ChevronDown, Instagram, Linkedin, Plane } from "lucide-react";
+
+const questions = [
+  ["What is Alutta?", "Alutta helps students turn their study abroad ambitions into real plans. We bring together school research, application planning, payments, travel, and settling support in one place."],
+  ["Can I use Alutta right now?", "Alutta is currently in private beta. Join the waitlist for free and we’ll email you when your place is ready. Already have an account? Use Sign in at the top of the page."],
+  ["Do I need to have a university offer?", "No. You can start while you’re exploring destinations and schools. Your plan can grow with you, from your first shortlist to your first week abroad."],
+  ["How do payments work?", "Each fee shows who collects it. Depending on the school, you may pay through a licensed payment partner, on the school’s website, or by following the school’s instructions. Alutta is not a bank."],
+  ["Can Alutta help with travel and settling in?", "Alutta helps you organise travel plans, accommodation, and arrival essentials, so you can keep track of the practical steps for your new life abroad. Available services will be introduced during the beta."],
+];
+const columns = [
+  { title: "Explore", links: [["The Alutta way", "#about"], ["Destinations", "#destinations"], ["Your journey", "#how-it-works"], ["Questions", "#questions"]] },
+  { title: "Company", links: [["About us", "#about"], ["Careers", "/careers"], ["Join the waitlist", "/waitlist"], ["Contact", "mailto:hello@alutta.com"]] },
+  { title: "Legal", links: [["Privacy", "/privacy"], ["Terms", "/terms"]] },
+];
+export default function HomeClosing({ onJoin }: { onJoin: () => void }) {
+  const [open, setOpen] = useState<number | null>(0);
+  return <div className="closing-home">
+    <section className="closing-questions" id="questions" aria-labelledby="closing-questions-title">
+      <div className="closing-questions-copy"><h2 id="closing-questions-title">A little clarity<br /><em>goes a long way.</em></h2><p>Here are answers to some of the most common questions about Alutta.</p><span className="closing-handwriting">Same dreams.<br />More answers.</span></div>
+      <div className="closing-accordion">{questions.map(([question, answer],index) => <article key={question} className={open === index ? 'is-open' : ''}><h3><button id={`closing-question-${index}`} aria-expanded={open === index} aria-controls={`closing-answer-${index}`} onClick={() => setOpen(open === index ? null : index)}>{question}<ChevronDown size={20} aria-hidden="true" /></button></h3><div id={`closing-answer-${index}`} role="region" aria-labelledby={`closing-question-${index}`} hidden={open !== index}><p>{answer}</p></div></article>)}</div>
+    </section>
+    <section className="closing-invitation" aria-labelledby="closing-invitation-title"><div className="closing-invitation-copy"><h2 id="closing-invitation-title">That “one day”?<br /><em>Let’s make it real.</em></h2><p>Turn your global ambitions into real plans with Alutta. Your next chapter starts with one small step.</p><div className="closing-invitation-actions"><button onClick={onJoin} className="atlas-button lime">Join the waitlist <ArrowUpRight size={22} /></button><a href="#about">Learn more</a></div></div><div className="closing-invitation-art"><div className="closing-photo"><Image src="/images/hero-campus.png" alt="Student holding a laptop on campus, looking ahead to her next chapter" fill sizes="(max-width: 700px) 85vw, 400px" /></div><div className="closing-travel-note"><Plane size={22} /><span>New places.<br />Brighter futures.</span></div><span className="closing-handwriting closing-photo-note">A brighter<br />you, anywhere.</span><div className="closing-community"><span className="closing-community-dot" /><span>Your next chapter.<small>A world of possibility.</small></span></div></div></section>
+    <footer className="closing-footer"><div className="closing-footer-inner"><div className="closing-footer-grid"><div className="closing-brand"><Link href="/" aria-label="Alutta home"><Image src="/brand/logo-horizontal-coloured.svg" alt="Alutta" width={132} height={39} /></Link><p>A brighter you, anywhere.</p><p>We help you study, pay, travel and settle abroad in one place.</p><div className="closing-socials"><a href="https://linkedin.com/company/alutta" target="_blank" rel="noopener noreferrer" aria-label="Alutta on LinkedIn"><Linkedin size={17} /></a><a href="https://twitter.com/aluttahq" target="_blank" rel="noopener noreferrer" aria-label="Alutta on X"><svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M4 3h4l12 18h-4L4 3Zm16 0L4 21" fill="none" stroke="currentColor" strokeWidth="1.6" /></svg></a><a href="https://instagram.com/aluttahq" target="_blank" rel="noopener noreferrer" aria-label="Alutta on Instagram"><Instagram size={17} /></a></div></div>{columns.map(column => <nav key={column.title} aria-label={`${column.title} footer links`}><h3>{column.title}</h3>{column.links.map(([label, href]) => <Link key={label} href={href}>{label}</Link>)}</nav>)}<div className="closing-globe" aria-hidden="true"><span>More stories<br />across borders.</span><Image className="closing-world-map" src="/images/footer-world-map.svg" alt="" width={660} height={400} /></div></div><div className="market-footer"><MarketSelector /></div><div className="closing-footer-bottom"><span>© {new Date().getFullYear()} Alutta Inc. All rights reserved.</span><div><span>Students today. A brighter tomorrow.</span><a href="#atlas-heading" aria-label="Back to top"><ArrowUp size={18} /></a></div></div><p className="closing-legal-note">Alutta is not a bank. Payment services are provided through licensed partners. Admission and visa decisions rest with universities and the relevant authorities.</p></div></footer>
+  </div>;
+}
