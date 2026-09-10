@@ -63,10 +63,11 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  // Favicon and the icon iOS uses for a bookmark. There is deliberately no web
-  // app manifest: alutta.com is the company's website, and the student product
-  // is a separate app on its own host. A manifest here made browsers offer to
-  // "install" the marketing site as if it were that app.
+  // Favicon and the icon iOS uses for a bookmark. alutta.com is the company's
+  // website, and the student product is a separate app on its own host. The
+  // manifest Next links from app/manifest.ts says `display: browser` for
+  // exactly that reason: it un-installs the old build's standalone app for
+  // visitors who still have it, and never offers an install prompt.
   icons: {
     icon: [
       { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
