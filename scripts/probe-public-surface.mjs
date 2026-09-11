@@ -144,7 +144,7 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
   const p = await fetch(`${base}/package.json`);
   check('package.json not served', p.status === 404);
   const nf = await fetch(`${base}/definitely-not-a-page`);
-  check('404 is branded and noindex', nf.status === 404 && /moved on/.test(await nf.text()));
+  check('404 is branded and noindex', nf.status === 404 && /A little off course/.test(await nf.text()));
 }
 
 const failed = results.filter((r) => !r.ok);
