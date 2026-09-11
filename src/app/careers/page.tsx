@@ -6,8 +6,6 @@ import HomeHeader from "@/components/home/HomeHeader";
 import CareersFooter from "@/components/home/CareersFooter";
 import { CareersRoles } from "@/components/careers/CareersRoles";
 import { fetchRoles } from "@/lib/careers";
-import "@/components/home/home.css";
-import "./careers.css";
 export const revalidate = 60;
 
 export const metadata: Metadata = {

@@ -5,8 +5,6 @@ import { ArrowUpRight, Globe2, Mail, Sparkles, Users } from "lucide-react";
 import WaitlistCard from "@/components/waitlist/WaitlistCard";
 import HomeHeader from "@/components/home/HomeHeader";
 import CareersFooter from "@/components/home/CareersFooter";
-import "@/components/home/home.css";
-import "./waitlist.css";
 export const metadata: Metadata = {
   title: "Join the waitlist",
   description:

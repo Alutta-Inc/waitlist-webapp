@@ -10,7 +10,6 @@ import JourneyExplorer from "./JourneyExplorer";
 import DestinationShowcase from "./DestinationShowcase";
 import HomeClosing from "./HomeClosing";
 import WaitlistForm from "@/components/ui/WaitlistForm";
-import "./home.css";
 
 const destinations = [
   { name: "United Kingdom", short: "UK", city: "London, Manchester & beyond", theme: "A little history. A whole new future.", detail: "Explore your university options, organise your application, and start making a place for yourself.", code: "GB", university: "Your UK university" },

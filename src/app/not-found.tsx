@@ -3,8 +3,6 @@ import Link from "next/link";
 import { ArrowUpRight, Compass } from "lucide-react";
 import HomeHeader from "@/components/home/HomeHeader";
 import CareersFooter from "@/components/home/CareersFooter";
-import "@/components/home/home.css";
-import "@/app/careers/careers.css";
 
 export const metadata: Metadata = { title: "Page not found", robots: { index: false, follow: false } };
 

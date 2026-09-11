@@ -17,9 +17,9 @@ export default function HomeHeader({ onJoin, home = false }: { onJoin?: () => vo
           <Link className="atlas-brand" href={base || "/"} aria-label="Alutta home"><Image src="/brand/logo-horizontal-coloured.svg" alt="Alutta" width={130} height={38} priority /></Link>
           <nav aria-label="Main navigation" className={mobile ? "atlas-nav open" : "atlas-nav"}>
             {(nigeria ? [['The Alutta way', '#about'], ['Your profile', '#profile'], ['Your journey', '#how-it-works'], ['Questions?', '#questions']] : [['The Alutta way', '#about'], ['Explore destinations', '#destinations'], ['Your journey', '#how-it-works'], ['Questions?', '#questions']]).map(([label, href]) => <a key={href} href={home ? href : `${base}/${href}`.replace("/ng/#", "/ng#")} onClick={() => setMobile(false)}>{label}</a>)}
-            <div className="market-mobile"><MarketSelector /></div><a className="atlas-mobile-signin" href={STUDENT_SIGNIN_URL}>Sign in <ArrowUpRight size={15} /></a>
+            <a className="atlas-mobile-signin" href={STUDENT_SIGNIN_URL}>Sign in <ArrowUpRight size={15} /></a>
           </nav>
-          <div className="atlas-nav-actions"><div className="market-desktop"><MarketSelector /></div><a className="atlas-signin" href={STUDENT_SIGNIN_URL}>Sign in</a>{onJoin ? <button className="atlas-button compact" onClick={onJoin}>Join the waitlist <ArrowUpRight size={17} /></button> : <Link className="atlas-button compact" href={`${base}/waitlist`}>Join the waitlist <ArrowUpRight size={17} /></Link>}<button className="atlas-menu-button" aria-label={mobile ? "Close menu" : "Open menu"} aria-expanded={mobile} onClick={() => setMobile(!mobile)}>{mobile ? <X /> : <Menu />}</button></div>
+          <div className="atlas-nav-actions"><div className="header-market"><MarketSelector /></div><a className="atlas-signin" href={STUDENT_SIGNIN_URL}>Sign in</a>{onJoin ? <button className="atlas-button compact" onClick={onJoin}>Join the waitlist <ArrowUpRight size={17} /></button> : <Link className="atlas-button compact" href={`${base}/waitlist`}>Join the waitlist <ArrowUpRight size={17} /></Link>}<button className="atlas-menu-button" aria-label={mobile ? "Close menu" : "Open menu"} aria-expanded={mobile} onClick={() => setMobile(!mobile)}>{mobile ? <X /> : <Menu />}</button></div>
         </div>
       </header><MarketSuggestion /></>;
 }

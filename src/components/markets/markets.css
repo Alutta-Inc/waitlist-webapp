@@ -1,3 +1,34 @@
-.market-selector{position:relative}.market-selector>button{display:flex;align-items:center;gap:7px;min-height:40px;font-size:12px;color:#234f3f;padding:8px;border-radius:8px}.market-selector>button:hover{background:#f0f5eb}.market-options{position:absolute;top:calc(100% + 8px);right:0;width:290px;background:#fff;border:1px solid #dfe8d9;border-radius:15px;padding:7px;box-shadow:0 18px 50px #123d3220;z-index:50}.market-options a{display:flex;align-items:center;gap:12px;padding:13px 10px;border-radius:9px;color:#24523f}.market-options a:hover,.market-options a[aria-current]{background:#edf4e7}.market-options strong{display:block;font-size:14px;font-weight:500}.market-options small{display:block;font-size:11px;color:#7b8c7d;margin-top:3px}.market-options a>span{flex:1}.market-mobile{display:none}.market-footer{display:flex;justify-content:flex-end;position:relative;z-index:5;margin-top:15px}.market-footer .market-options{top:auto;bottom:calc(100% + 8px)}.market-suggestion{position:fixed;right:24px;bottom:24px;width:min(390px,calc(100vw - 32px));padding:25px;border:1px solid #d8e6cd;border-radius:20px;box-shadow:0 18px 60px #163e3225;background:#fff;z-index:70}.atlas-home .market-suggestion h2{font-family:var(--font-mierb),sans-serif;font-size:23px;line-height:1.2;letter-spacing:-.035em;margin:15px 0 10px}.market-suggestion p{font-size:14px;line-height:1.6;color:#6e8074}.market-suggestion>div{display:flex;flex-direction:column;gap:8px;margin-top:18px}.market-suggestion>div>button{display:flex;justify-content:center;align-items:center;gap:10px;padding:13px;font-size:13px;border-radius:9px}.market-suggestion>div>button:first-child{background:#164c37;color:white}.market-suggestion>div>button:last-child{color:#476b4e}.market-dismiss{position:absolute;right:13px;top:13px;padding:7px;color:#748971}.atlas-nav-wrap{gap:18px}.atlas-nav-actions{gap:15px}
+.market-selector{position:relative}.market-selector>button{display:flex;align-items:center;gap:7px;min-height:40px;font-size:12px;color:#234f3f;padding:8px;border-radius:8px}.market-selector>button:hover{background:#f0f5eb}.market-options{position:absolute;top:calc(100% + 8px);right:0;width:290px;background:#fff;border:1px solid #dfe8d9;border-radius:15px;padding:7px;box-shadow:0 18px 50px #123d3220;z-index:50}.market-options a{display:flex;align-items:center;gap:12px;padding:13px 10px;border-radius:9px;color:#24523f}.market-options a:hover,.market-options a[aria-current]{background:#edf4e7}.market-options strong{display:block;font-size:14px;font-weight:500}.market-options small{display:block;font-size:11px;color:#7b8c7d;margin-top:3px}.market-options a>span{flex:1}.market-mobile{display:none}.market-footer{display:flex;justify-content:flex-end;position:relative;z-index:5;margin-top:15px}.market-footer .market-options{top:auto;bottom:calc(100% + 8px);display:grid;align-items:stretch;gap:0}.market-footer .market-options a{width:100%;color:#24523f;font-size:inherit}.market-footer .market-options a:hover{text-decoration:none}.market-suggestion{position:fixed;right:24px;bottom:24px;width:min(390px,calc(100vw - 32px));padding:25px;border:1px solid #d8e6cd;border-radius:20px;box-shadow:0 18px 60px #163e3225;background:#fff;z-index:70}.atlas-home .market-suggestion h2{font-family:var(--font-mierb),sans-serif;font-size:23px;line-height:1.2;letter-spacing:-.035em;margin:15px 0 10px}.market-suggestion p{font-size:14px;line-height:1.6;color:#6e8074}.market-suggestion>div{display:flex;flex-direction:column;gap:8px;margin-top:18px}.market-suggestion>div>button{display:flex;justify-content:center;align-items:center;gap:10px;padding:13px;font-size:13px;border-radius:9px}.market-suggestion>div>button:first-child{background:#164c37;color:white}.market-suggestion>div>button:last-child{color:#476b4e}.market-dismiss{position:absolute;right:13px;top:13px;padding:7px;color:#748971}.atlas-nav-wrap{gap:18px}.atlas-nav-actions{gap:15px}
 @media(min-width:901px) and (max-width:1200px){.atlas-nav{gap:14px;font-size:12px}.atlas-nav-actions{gap:8px}.market-selector>button{font-size:11px;padding:6px}.atlas-nav-wrap{width:calc(100% - 40px)}}
 @media(max-width:900px){.market-desktop{display:none}.market-mobile{display:block;padding-block:8px}.market-mobile .market-options{position:static;box-shadow:none;width:100%;margin-top:7px}.market-suggestion{right:16px;bottom:16px}.atlas-nav.open{max-height:calc(100dvh - 120px);overflow:auto}}
+
+/* One visible region trigger beside the waitlist action at every size. */
+@media(max-width:900px){
+ .atlas-header .atlas-nav-wrap{position:relative;column-gap:10px;row-gap:0;padding-block:10px}
+ .atlas-header .atlas-nav-actions{gap:8px;flex-shrink:0}
+ .atlas-header .atlas-signin{display:none}
+ .header-market .market-selector{position:static}
+ .header-market .market-selector>button{min-height:40px;gap:5px;padding:6px;background:#f1f6ed;border:1px solid #e2ebdc;border-radius:9px;font-size:12px;white-space:nowrap}
+ .header-market .market-options{top:calc(100% + 5px);right:0;width:min(290px,100%)}
+ .atlas-header .atlas-nav.open{order:3;max-height:calc(100dvh - 120px)}
+}
+@media(max-width:540px){
+ .atlas-header .atlas-nav-wrap{width:calc(100% - 24px);column-gap:6px;min-height:64px}
+ .atlas-header .atlas-nav-actions{gap:4px}
+ .atlas-header .atlas-nav-actions>.atlas-button.compact{padding-inline:8px;font-size:11px;min-height:40px;white-space:nowrap}
+ .atlas-header .atlas-nav-actions>.atlas-button.compact>svg{display:none}
+ .header-market .market-selector>button{font-size:11px;padding-inline:5px;gap:4px}
+ .header-market .market-selector>button>svg:first-child{width:16px;height:16px}
+ .header-market .market-selector>button>img{width:17px;height:12px}
+ .atlas-header .atlas-menu-button{width:30px;min-height:40px}
+}
+@media(max-width:360px){.atlas-header .atlas-brand img{width:68px}}
+
+@media(max-width:360px){
+ .atlas-header .atlas-brand img{width:60px}
+ .atlas-header .atlas-nav-wrap{column-gap:4px}
+ .atlas-header .atlas-nav-actions{gap:3px}
+ .atlas-header .atlas-nav-actions>.atlas-button.compact{font-size:10px;padding-inline:6px}
+ .header-market .market-selector>button{font-size:10px;padding-inline:4px;gap:3px}
+ .atlas-header .atlas-menu-button{width:26px}
+}
