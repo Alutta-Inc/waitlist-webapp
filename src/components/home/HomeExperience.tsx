@@ -69,7 +69,10 @@ export default function HomeExperience() {
         <div className="atlas-arrival-wave atlas-arrival-wave-left" aria-hidden="true" />
         <div className="atlas-arrival-wave atlas-arrival-wave-right" aria-hidden="true" />
         <div className="atlas-container">
-          <span className="atlas-manifesto-star" aria-hidden="true">&#10035;</span>
+          {/* Drawn, not typed: the ✳ character is an emoji on phones, which
+              rendered it as a green tile. The same eight-spoked star is now
+              an inline drawing in the text colour, identical on every device. */}
+          <span className="atlas-manifesto-star" aria-hidden="true"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">{[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => <path key={angle} d="M12 12C10.7 9.6 10.7 5.2 12 1.6C13.3 5.2 13.3 9.6 12 12Z" transform={`rotate(${angle} 12 12)`} />)}</svg></span>
           <h2 id="life-after-arrival-heading">Go for the degree.<br /><em>Grow into your next chapter.</em></h2>
           <p>New friends, new routines, and a place that starts to feel like home. Alutta helps with the practical steps so you can focus on building your life abroad.</p>
           <button className="atlas-button lime" onClick={openPlanner}>Start your next chapter <ArrowUpRight size={20} /></button>

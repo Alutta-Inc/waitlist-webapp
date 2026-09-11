@@ -332,7 +332,7 @@
 /* Life after arrival */
 .atlas-manifesto { padding:70px 0 80px; background:radial-gradient(ellipse at 95% 25%,#416d3d77 0,transparent 24%),radial-gradient(ellipse at 15% 80%,#17634d44,transparent 42%),#0c3b31; isolation:isolate; }
 .atlas-manifesto > .atlas-container { position:relative; z-index:1; width:min(1360px,calc(100% - 80px)); }
-.atlas-manifesto-star { display:block; font-size:55px; line-height:1; color:#dceb9d; font-weight:300; }
+.atlas-manifesto-star { display:block; font-size:55px; line-height:1; color:#dceb9d; font-weight:300; }.atlas-manifesto-star svg { display:block; margin:0 auto; }
 .atlas-manifesto .atlas-eyebrow { margin:22px 0 35px; color:#c4d6ca; font-size:10px; letter-spacing:.2em; }
 .atlas-manifesto h2 { font-size:clamp(42px,4.6vw,76px); line-height:1.08; letter-spacing:-.055em; color:#fff; margin:0; }
 .atlas-manifesto h2 em { display:inline-block; color:#dcec95; line-height:1.15; }
