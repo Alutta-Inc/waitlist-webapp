@@ -10,6 +10,7 @@ import "./globals.css";
 // and home.css's header rules are meant to win over the selector's.
 import "@/components/markets/markets.css";
 import "@/components/home/home.css";
+import "@/components/home/not-found.css";
 import "@/app/careers/careers.css";
 import "@/app/waitlist/waitlist.css";
 import "@/app/ng/nigeria.css";
