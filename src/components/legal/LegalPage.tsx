@@ -5,8 +5,6 @@ import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, FileText, Mail, Printer, ShieldCheck } from "lucide-react";
 import HomeHeader from "@/components/home/HomeHeader";
 import CareersFooter from "@/components/home/CareersFooter";
-import "@/components/home/home.css";
-import "./legal.css";
 
 type Section = { title: string; body: string[] };
 const sectionId = (title: string) => title.toLowerCase().replace(/[^a-z0-9]+/g, "-");

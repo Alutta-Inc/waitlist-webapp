@@ -5,7 +5,6 @@ import Image from "next/image";
 import { Globe2, ChevronDown, Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { markets, marketForPath, marketPath, type Market } from "@/lib/markets";
-import "./markets.css";
 
 export function rememberMarket(market: Market) {
   try { localStorage.setItem("alutta-market-choice", JSON.stringify({ market, expires: Date.now() + 180 * 86400000 })); } catch {}

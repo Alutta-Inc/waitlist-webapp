@@ -1,6 +1,19 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+// Every stylesheet the site uses, imported ONCE here in cascade order, so
+// each route ships the same stylesheet set. Importing them per page and per
+// component produced route-specific merged CSS chunks; after a client-side
+// navigation the dev hot-reload runtime could no longer find the chunk it
+// was asked to refresh ("No link element found for chunk ...css").
+// markets.css before home.css: that is the order the pages loaded them in,
+// and home.css's header rules are meant to win over the selector's.
+import "@/components/markets/markets.css";
+import "@/components/home/home.css";
+import "@/app/careers/careers.css";
+import "@/app/waitlist/waitlist.css";
+import "@/app/ng/nigeria.css";
+import "@/components/legal/legal.css";
 import { Analytics } from "@/components/Analytics";
 import { STUDENT_APP_URL } from "@/lib/site";
 

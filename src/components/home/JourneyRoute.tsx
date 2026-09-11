@@ -18,9 +18,10 @@ export default function JourneyRoute() {
     const update = () => {
       frame = 0;
       const rect = element.getBoundingClientRect();
-      // Scrub all four legs while the strip moves through the visible viewport.
-      const start = window.innerHeight * 0.85;
-      const end = Math.max(150, window.innerHeight * 0.25);
+      // Spread the four legs across more of the viewport for a gentler scroll pace.
+      // Progress remains directly tied to scroll, so stopping and reversing stay exact.
+      const start = window.innerHeight * 0.92;
+      const end = Math.max(120, window.innerHeight * 0.18);
       const progress = clamp((start - (rect.top + rect.height / 2)) / Math.max(1, start - end)) * (steps.length - 1);
       stops.forEach((stop, index) => {
         const leg = clamp(progress - index);
