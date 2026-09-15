@@ -4,11 +4,11 @@ import {
   UPSTREAM_TIMEOUT_MS,
   clientIp,
   createBrake,
-  isProduction,
   isTurnstileDisabled,
   originAllowed,
   verifyTurnstileToken,
 } from "@/lib/public-door";
+import { supervisorMock } from "@/lib/confirm-door";
 import { TURNSTILE_REMOVAL_ACTION } from "@/lib/turnstile";
 import {
   InvalidInput,
@@ -32,6 +32,9 @@ import {
 //     holds, so nobody can remove a colleague by typing their name;
 //   * the answer is the same whether or not the person is listed, so this
 //     form can never be used to find out who is in the directory.
+//
+// Locally, SUPERVISOR_FINDER_MOCK=true skips the upstream call (never in a
+// production build).
 //
 // This route keeps that second promise too. Every request that passes
 // validation and the security check gets the same success body; only a
@@ -70,12 +73,6 @@ function profileUrl(value: unknown): string {
   return parsed.toString();
 }
 
-/** Local work only: answer as if the service accepted the request. The
- *  endpoint is built in supervisor-service; until a local stack runs it, this
- *  lets the page be walked end to end. Never honoured by a production build. */
-function mocked() {
-  return !isProduction() && process.env.RESEARCHER_REMOVAL_MOCK === "true";
-}
 
 export async function POST(req: NextRequest) {
   const ip = clientIp(req);
@@ -145,7 +142,7 @@ export async function POST(req: NextRequest) {
       return refuse(ip, 403, { error: "Security check failed. Please try again." });
     }
 
-    if (!mocked()) {
+    if (!supervisorMock()) {
       let res: Response;
       try {
         res = await fetch(`${ALUTTA_API_URL}/v1/supervisors/removal/`, {

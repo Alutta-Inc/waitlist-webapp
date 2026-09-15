@@ -16,3 +16,6 @@ export const TURNSTILE_REMOVAL_ACTION = "researcher_removal";
 
 /** The widget script, loaded on demand by the form and allowed by the CSP. */
 export const TURNSTILE_SCRIPT_URL = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+
+/** The site block form's action (alutta.com/bot). Its own, like the others. */
+export const TURNSTILE_SITE_BLOCK_ACTION = "bot_site_block";

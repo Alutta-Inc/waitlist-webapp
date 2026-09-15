@@ -1,10 +1,11 @@
 "use client";
 
 import Script from "next/script";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ArrowRight, Check, Loader2, ShieldCheck } from "lucide-react";
 
 import { TURNSTILE_REMOVAL_ACTION, TURNSTILE_SCRIPT_URL } from "@/lib/turnstile";
+import { useTurnstile } from "@/lib/use-turnstile";
 import { cn } from "@/lib/utils";
 import { HONEYPOT_FIELD } from "@/lib/waitlist-input";
 
@@ -29,53 +30,21 @@ export default function RemovalForm() {
   const [sent, setSent] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const [turnstileLoaded, setTurnstileLoaded] = useState(false);
-  const [turnstileToken, setTurnstileToken] = useState("");
-  const [turnstileError, setTurnstileError] = useState<string | null>(null);
-  const turnstileRef = useRef<HTMLDivElement>(null);
-  const widgetId = useRef<string | null>(null);
-  const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
-  // Local work only, and inlined at build time: a production build renders the
-  // widget whatever the variable says, the same rule the route applies.
-  const turnstileDisabled = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_TURNSTILE_DISABLED === "true";
-
-  useEffect(() => {
-    if (turnstileDisabled || !turnstileLoaded || !turnstileRef.current || !siteKey || widgetId.current) return;
-    widgetId.current = window.turnstile?.render(turnstileRef.current, {
-      sitekey: siteKey,
-      action: TURNSTILE_REMOVAL_ACTION,
-      callback: (token) => { setTurnstileToken(token); setTurnstileError(null); },
-      "expired-callback": () => { setTurnstileToken(""); setTurnstileError("Security check expired. Please verify again."); },
-      "error-callback": () => { setTurnstileToken(""); setTurnstileError("Security check failed to load. Please refresh and try again."); },
-      "timeout-callback": () => { setTurnstileToken(""); setTurnstileError("The security check timed out. Please try again."); },
-    }) ?? null;
-    return () => {
-      if (widgetId.current && window.turnstile) {
-        window.turnstile.remove(widgetId.current);
-        widgetId.current = null;
-      }
-    };
-  }, [turnstileDisabled, turnstileLoaded, siteKey]);
+  const turnstile = useTurnstile(TURNSTILE_REMOVAL_ACTION);
 
   // The server's rules, checked early so a mistake is caught before the
   // security check is spent on it (lib/waitlist-input.ts is the authority).
   const nameValid = name.trim().length >= 2 && /^[\p{L}\p{M}][\p{L}\p{M}\s'’\-.]*$/u.test(name.trim());
   const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const profileValid = !profileUrl.trim() || /^https?:\/\/\S+\.\S+/i.test(profileUrl.trim());
-  const turnstileReady = turnstileDisabled || (!!turnstileToken && !!siteKey);
-  const canSubmit = nameValid && emailValid && profileValid && turnstileReady && !submitting;
-
-  const resetTurnstile = () => {
-    setTurnstileToken("");
-    if (widgetId.current) window.turnstile?.reset(widgetId.current);
-  };
+  const canSubmit = nameValid && emailValid && profileValid && turnstile.ready && !submitting;
 
   const submit = async (event: React.FormEvent) => {
     event.preventDefault();
     setTouched({ name: true, email: true, profileUrl: true });
     if (!nameValid || !emailValid || !profileValid) return;
-    if (!turnstileDisabled && !siteKey) { setError("Security check is not configured. Please try again later."); return; }
-    if (!turnstileDisabled && !turnstileToken) { setTurnstileError("Please complete the security check."); return; }
+    if (!turnstile.disabled && !turnstile.siteKey) { setError("Security check is not configured. Please try again later."); return; }
+    if (!turnstile.ready) { turnstile.setError("Please complete the security check."); return; }
 
     setSubmitting(true);
     setError(null);
@@ -88,19 +57,19 @@ export default function RemovalForm() {
           email: email.trim().toLowerCase(),
           profileUrl: profileUrl.trim(),
           [HONEYPOT_FIELD]: honeypot,
-          turnstileToken: turnstileDisabled ? "local-bypass" : turnstileToken,
+          turnstileToken: turnstile.submitToken,
         }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) {
         setError(data.error || "Something went wrong. Please try again.");
-        resetTurnstile();
+        turnstile.reset();
         return;
       }
       setSent(true);
     } catch {
       setError("Connection error. Please check your internet and try again.");
-      resetTurnstile();
+      turnstile.reset();
     } finally {
       setSubmitting(false);
     }
@@ -128,8 +97,8 @@ export default function RemovalForm() {
 
   return (
     <form onSubmit={submit} className="space-y-4" noValidate>
-      {!turnstileDisabled && (
-        <Script src={TURNSTILE_SCRIPT_URL} strategy="afterInteractive" onReady={() => setTurnstileLoaded(true)} />
+      {!turnstile.disabled && (
+        <Script src={TURNSTILE_SCRIPT_URL} strategy="afterInteractive" onReady={turnstile.onScriptReady} />
       )}
 
       <div>
@@ -193,10 +162,10 @@ export default function RemovalForm() {
 
       {error && <p className="text-sm text-red-600 bg-red-50 px-4 py-2.5 rounded-lg border border-red-100" role="alert">{error}</p>}
 
-      {!turnstileDisabled && (
+      {!turnstile.disabled && (
         <div className="min-h-[65px]">
-          {siteKey ? <div ref={turnstileRef} /> : <p className="text-sm text-red-600 bg-red-50 px-4 py-2.5 rounded-lg border border-red-100">Security check is not configured.</p>}
-          {turnstileError && <p className="mt-1 text-xs text-red-500">{turnstileError}</p>}
+          {turnstile.siteKey ? <div ref={turnstile.ref} /> : <p className="text-sm text-red-600 bg-red-50 px-4 py-2.5 rounded-lg border border-red-100">Security check is not configured.</p>}
+          {turnstile.error && <p className="mt-1 text-xs text-red-500">{turnstile.error}</p>}
         </div>
       )}
 

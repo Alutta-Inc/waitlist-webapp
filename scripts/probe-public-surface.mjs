@@ -180,6 +180,26 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
   check('removal confirm refuses a malformed token before upstream', r.status === 404, `status ${r.status}`);
   r = await fetch(confirmUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example', 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: 'a'.repeat(40) }) });
   check('removal confirm foreign Origin is 403', r.status === 403, `status ${r.status}`);
+  // The site block door and its confirmation: same checks, its own action.
+  const blockUrl = `${base}/api/bot/block`;
+  const block = { domain: 'example.ac.uk', email: 'webmaster@example.ac.uk', name: 'Web team', turnstileToken: 'x'.repeat(40) };
+  const sendBlock = (body, headers = {}) => fetch(blockUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp(), ...headers }, body: JSON.stringify(body) });
+  r = await fetch(blockUrl);
+  check('GET site block is 405', r.status === 405, `status ${r.status}`);
+  r = await sendBlock(block, { origin: 'https://evil.example' });
+  check('site block foreign Origin is 403', r.status === 403, `status ${r.status}`);
+  r = await sendBlock({ ...block, email: 'someone@gmail.com' });
+  let bb = await json(r);
+  check('site block refuses an email not at the site', r.status === 400 && bb.field === 'email', JSON.stringify(bb));
+  r = await sendBlock({ ...block, domain: 'javascript:alert(1)' });
+  check('site block refuses a domain that is not a website', r.status === 400, `status ${r.status}`);
+  r = await sendBlock(block);
+  check('site block bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status}`);
+  r = await fetch(`${base}/api/bot/block/confirm`);
+  check('GET site block confirm is 405', r.status === 405, `status ${r.status}`);
+  const botConfirmPage = await fetch(`${base}/bot/confirm`);
+  check('site block confirm page is noindex', botConfirmPage.status === 200 && /noindex/.test(await botConfirmPage.text()), `status ${botConfirmPage.status}`);
+
   const confirmPage = await fetch(`${base}/researchers/confirm`);
   check('confirm page is noindex', confirmPage.status === 200 && /noindex/.test(await confirmPage.text()), `status ${confirmPage.status}`);
 }

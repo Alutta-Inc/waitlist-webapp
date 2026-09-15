@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { ArrowDown, ArrowRight, ArrowUpRight, Check, Mail, ScanSearch } from "lucide-react";
 
 import HomeHeader from "@/components/home/HomeHeader";
+import SiteBlockForm from "@/components/bot/SiteBlockForm";
 import CareersFooter from "@/components/home/CareersFooter";
 
 /** alutta.com/bot: AluttaBot, for the people who find it in their logs.
@@ -55,7 +56,7 @@ const sections: Section[] = [
     id: "how-often",
     title: "How hard it pushes",
     body: [
-      "No more than one page a second from any website, and no more than 60 pages in a single visit to a university.",
+      "No more than one page a second from any website, and no more than 60 pages in a single visit to a university. If your robots.txt sets a Crawl-delay for AluttaBot, it waits at least that long between pages, up to a minute.",
       "A university is visited when a student starts looking for researchers there. What AluttaBot reads is reused for other students rather than fetched again, so repeat visits are infrequent.",
     ],
   },
@@ -67,7 +68,9 @@ const sections: Section[] = [
       { code: "User-agent: AluttaBot\nDisallow: /", label: "robots.txt lines that block AluttaBot" },
       "To keep it out of one part of a site, disallow only that path, for example:",
       { code: "User-agent: AluttaBot\nDisallow: /staff/private/", label: "robots.txt lines that block one path" },
-      "It checks robots.txt again at least once a day, so a change applies within 24 hours. If you would rather we stopped visiting a site altogether, write to us and we will.",
+      "To slow it down rather than keep it out, set a delay in seconds between pages:",
+      { code: "User-agent: AluttaBot\nCrawl-delay: 10", label: "robots.txt lines that slow AluttaBot down" },
+      "It checks robots.txt again at least once a day, so a change applies within 24 hours. To stop it visiting your site altogether without editing robots.txt, use the form below.",
     ],
   },
   {
@@ -92,7 +95,7 @@ function Render({ block }: { block: Block }) {
 }
 
 export default function BotPage() {
-  const stops = [...sections.map((s) => ({ id: s.id, title: s.title })), { id: "contact", title: "Contact" }];
+  const stops = [...sections.map((s) => ({ id: s.id, title: s.title })), { id: "stop", title: "Stop it visiting your site" }, { id: "contact", title: "Contact" }];
   const [active, setActive] = useState(0);
   useEffect(() => {
     const update = () => {
@@ -169,9 +172,21 @@ export default function BotPage() {
             </section>
           ))}
 
+          <section id="stop" className="researchers-remove" aria-labelledby="stop-heading">
+            <div className="researchers-remove-copy">
+              <div className="legal-section-title"><span>{String(sections.length + 1).padStart(2, "0")}</span><h2 id="stop-heading">Stop it visiting your site</h2></div>
+              <p>For your university’s web team. We email a link to an address at your website, and AluttaBot stops once you confirm. Nothing changes until then.</p>
+              <p>Researchers can still appear in Supervisor Finder from their public publication record. Each can ask to be left out on <Link href="/researchers">our page for researchers</Link>.</p>
+            </div>
+            {/* `signup-body`: the site's form skin, the same as the other forms. */}
+            <div className="researchers-remove-card signup-body">
+              <SiteBlockForm />
+            </div>
+          </section>
+
           <section id="contact" className="legal-section">
             <div className="legal-section-title"><span>{String(stops.length).padStart(2, "0")}</span><h2>Contact</h2></div>
-            <p>Write to <a href={`mailto:${EMAIL}?subject=AluttaBot`}>{EMAIL}</a> with “AluttaBot” in the subject. Tell us the website, roughly when, and what you saw. We read every message, and we can stop visiting a site on request.</p>
+            <p>Write to <a href={`mailto:${EMAIL}?subject=AluttaBot`}>{EMAIL}</a> with “AluttaBot” in the subject. Tell us the website, roughly when, and what you saw. We read every message.</p>
           </section>
 
           <div className="legal-related">

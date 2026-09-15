@@ -126,7 +126,7 @@ It hands the request to supervisor-service at `POST /v1/supervisors/removal/`, w
 sends a confirmation link only to an address at a university domain it holds. Every
 request that passes the checks gets the same `202 {success: true}` whatever the service
 found, so the form can never reveal who is listed; only failing to reach the service is
-reported (502). `RESEARCHER_REMOVAL_MOCK=true` skips the upstream call in local work
+reported (502). `SUPERVISOR_FINDER_MOCK=true` skips the upstream call in local work
 while supervisor-service is not running; a production build ignores it.
 
 **The confirmation door** (`src/app/api/researchers/removal/confirm/route.ts`, page
@@ -139,8 +139,18 @@ university mail scanners open every link in an email. The route is POST only (GE
 405), refuses a token that is not URL-safe and 20 to 200 characters before calling the
 service, and maps `POST /v1/supervisors/removal/confirm/` to removed (200), expired
 (410) or not valid (404). No Turnstile: the token is a long secret only the inbox holds.
-With `RESEARCHER_REMOVAL_MOCK=true` locally, a token containing `expired` or `unknown`
-shows those states.
+With `SUPERVISOR_FINDER_MOCK=true` locally, a token containing `expired` or `unknown`
+shows those states. The page and the route are built from `components/confirm/ConfirmLink.tsx`
+and `lib/confirm-door.ts`, shared with the site block confirmation below.
+
+**The site block door** (`src/app/api/bot/block/route.ts`, the form on `/bot`, and
+`/bot/confirm` with `src/app/api/bot/block/confirm/route.ts`). A university web team asks
+AluttaBot to stop visiting their site without editing robots.txt: the website and an
+email address at it, Turnstile action `bot_site_block`, the same checks as the other doors,
+then `POST /v1/supervisors/site-block/`. The email must be at the site (checked here for a
+clear message, and again by the service on the registrable domain); the answer is the same
+202 whether or not AluttaBot visits that site. Confirmation works exactly like the removal
+confirmation (fragment token, one button, `POST /v1/supervisors/site-block/confirm/`).
 
 ## Security headers
 
@@ -260,10 +270,12 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 | `/privacy`, `/terms` | Legal |
 | `/researchers` | For researchers: what Supervisor Finder shows about researchers, where it comes from, and the removal form |
 | `/researchers/confirm` | Where the removal email's link lands: one button, then removed, expired or not valid (noindex) |
+| `/bot/confirm` | Where the site block email's link lands: one button, then blocked, expired or not valid (noindex) |
 | `/bot` | AluttaBot, for website teams: the exact user agent (AluttaBot's info URL), what it reads, its rate, robots.txt lines to block it, contact. Every number on it is a promise supervisor-service keeps |
 | `/api/waitlist` | Server route: the door described above → customer-service (`POST` only; `GET` is 405) |
 | `/api/researchers/removal` | Server route: the removal door → supervisor-service (`POST` only; `GET` is 405) |
 | `/api/researchers/removal/confirm` | Server route: confirm a removal from the emailed link → supervisor-service (`POST` only) |
+| `/api/bot/block`, `/api/bot/block/confirm` | Server routes: a web team's request to stop AluttaBot, and its confirmation → supervisor-service (`POST` only) |
 | `/api/referral` | Server route: is `?code=` a real referral code, and whose (customer-service) |
 | `/api/geo` | Client geo lookup for the Nigeria suggestion and country pre-fill (edge country header only) |
 | `/api/health` | Liveness |
