@@ -1,11 +1,19 @@
 /** The server side of an emailed confirmation link.
  *
  *  Two links confirm something through supervisor-service: a researcher's
- *  removal and a web team's site block. Their routes do the same thing, so it
- *  lives here once: POST only (a link must never act on its own), a token that
- *  is not URL-safe and 20 to 200 characters never reaches the service, a tight
- *  per-IP brake, and the service's answer mapped to confirmed (200), expired
- *  (410) or not valid (404). No Turnstile: the token is a long secret only the
+ *  removal and a web team's site block. Each has two routes, and they share the
+ *  rules here:
+ *
+ *   * CHECK, called when the page opens: is this token still good, already
+ *     used, expired or unknown? It changes nothing, which is what makes it safe
+ *     to call on arrival even though mail scanners open every link.
+ *   * CONFIRM, called only when the person presses the button: it acts.
+ *
+ *  Both are POST only (a link must never do anything by itself), refuse a token
+ *  that is not URL-safe and 20 to 200 characters before calling the service,
+ *  share one per-IP brake per door (checking a link does not buy extra guesses
+ *  at confirming one), and map the service's answer to 200, expired (410) or
+ *  not valid (404). No Turnstile: the token is a long secret only the
  *  recipient's inbox holds.
  *
  *  Server-only. */
@@ -20,25 +28,35 @@ const TOKEN = /^[A-Za-z0-9_-]{20,200}$/;
 
 /** Local work only, never in a production build: answer as the service would,
  *  so every state of a confirmation page can be seen without supervisor-service
- *  running. A token containing "expired" is expired, one containing "unknown"
- *  is not found, anything else confirms with `sample`. */
+ *  running. In a mock token, "expired" means expired, "unknown" means not
+ *  found and "used" means already confirmed; anything else is good. */
 export function supervisorMock(): boolean {
   return !isProduction() && process.env.SUPERVISOR_FINDER_MOCK === "true";
 }
 
-const UNAVAILABLE = { code: "unavailable", error: "We could not confirm this right now. Please try again." };
+type Mocked = { status: number; data?: Record<string, unknown> };
 
-export function confirmDoor({ upstreamPath, sample, label }: {
-  /** e.g. `/v1/supervisors/removal/confirm/` */
+const UNAVAILABLE = { code: "unavailable", error: "We could not reach Alutta right now. Please try again." };
+
+/** One brake per door, shared by its check and confirm routes (a confirmation
+ *  is sent once, perhaps twice; many tries from one address is guessing). */
+const brakes = new Map<string, ReturnType<typeof createBrake>>();
+function brakeFor(door: string) {
+  let brake = brakes.get(door);
+  if (!brake) {
+    brake = createBrake({ windowMs: 10 * 60 * 1000, maxRequests: 30, maxFailures: 10 });
+    brakes.set(door, brake);
+  }
+  return brake;
+}
+
+function tokenRoute({ door, upstreamPath, label, mock }: {
+  door: string;
   upstreamPath: string;
-  /** What the local mock answers on success, shaped like the service's body. */
-  sample: Record<string, unknown>;
-  /** For logs. */
   label: string;
+  mock: (token: string) => Mocked;
 }) {
-  // A confirmation is sent once, perhaps twice. Many tries from one address is
-  // someone guessing tokens.
-  const brake = createBrake({ windowMs: 10 * 60 * 1000, maxRequests: 20, maxFailures: 10 });
+  const brake = brakeFor(door);
   const refuse = (ip: string | null, status: number, body: Record<string, unknown>) => {
     brake.noteFailure(ip);
     return NextResponse.json(body, { status });
@@ -73,8 +91,7 @@ export function confirmDoor({ upstreamPath, sample, label }: {
       let status: number;
       let data: Record<string, unknown> = {};
       if (supervisorMock()) {
-        status = token.includes("expired") ? 410 : token.includes("unknown") ? 404 : 200;
-        data = status === 200 ? sample : {};
+        ({ status, data = {} } = mock(token));
       } else {
         let res: Response;
         try {
@@ -104,10 +121,62 @@ export function confirmDoor({ upstreamPath, sample, label }: {
     }
   }
 
-  /** Confirmation is a POST behind a button, never a link. */
+  /** POST only: a link must never do anything on its own. */
   function GET() {
     return NextResponse.json({ error: "Method not allowed." }, { status: 405, headers: { Allow: "POST" } });
   }
 
   return { POST, GET };
+}
+
+function mockOutcome(token: string): "expired" | "unknown" | "used" | "good" {
+  if (token.includes("expired")) return "expired";
+  if (token.includes("unknown")) return "unknown";
+  if (token.includes("used")) return "used";
+  return "good";
+}
+
+function inAWeek(): string {
+  return new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+}
+
+/** The confirm route for a door: acts when the button is pressed. `sample` is
+ *  what the local mock answers on success, shaped like the service's body. */
+export function confirmDoor({ door, upstreamPath, sample, label }: {
+  door: string;
+  upstreamPath: string;
+  sample: Record<string, unknown>;
+  label: string;
+}) {
+  return tokenRoute({
+    door, upstreamPath, label,
+    mock: (token) => {
+      const outcome = mockOutcome(token);
+      if (outcome === "expired") return { status: 410 };
+      if (outcome === "unknown") return { status: 404 };
+      return { status: 200, data: sample };
+    },
+  });
+}
+
+/** The check route for a door: read-only, called when the page opens. The
+ *  service answers `{status: "valid", expires_on}` or `{status: "confirmed"}`
+ *  (the site block door adds `domain`), expired (410) or not found (404).
+ *  `extra` is added to the local mock's 200 bodies. */
+export function checkDoor({ door, upstreamPath, extra = {}, label }: {
+  door: string;
+  upstreamPath: string;
+  extra?: Record<string, unknown>;
+  label: string;
+}) {
+  return tokenRoute({
+    door, upstreamPath, label,
+    mock: (token) => {
+      const outcome = mockOutcome(token);
+      if (outcome === "expired") return { status: 410 };
+      if (outcome === "unknown") return { status: 404 };
+      if (outcome === "used") return { status: 200, data: { status: "confirmed", ...extra } };
+      return { status: 200, data: { status: "valid", expires_on: inAWeek(), ...extra } };
+    },
+  });
 }

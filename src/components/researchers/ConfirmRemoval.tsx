@@ -7,6 +7,7 @@ import ConfirmLink, { type ConfirmCopy } from "@/components/confirm/ConfirmLink"
 const copy: ConfirmCopy = {
   eyebrow: "SUPERVISOR FINDER",
   heading: "Confirm your removal.",
+  alreadyBody: () => "You confirmed this already. Students no longer see you in Supervisor Finder, and we will not list you again.",
   body: "Once you confirm, students will no longer see you in Supervisor Finder, and we will not list you again.",
   button: "Remove me from Supervisor Finder",
   quiet: "Did not ask for this? Close this page and nothing will change.",
@@ -18,5 +19,5 @@ const copy: ConfirmCopy = {
 };
 
 export default function ConfirmRemoval() {
-  return <ConfirmLink endpoint="/api/researchers/removal/confirm" copy={copy} successKey="removed" />;
+  return <ConfirmLink endpoint="/api/researchers/removal/confirm" checkEndpoint="/api/researchers/removal/check" copy={copy} successKey="removed" />;
 }

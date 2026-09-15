@@ -5,6 +5,7 @@ import { confirmDoor } from "@/lib/confirm-door";
 // here only when the researcher presses the button (lib/confirm-door.ts has the
 // rules). supervisor-service answers {removed: true}, expired or not found.
 const door = confirmDoor({
+  door: "removal",
   upstreamPath: "/v1/supervisors/removal/confirm/",
   sample: { removed: true },
   label: "removal confirm",

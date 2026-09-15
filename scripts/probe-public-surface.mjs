@@ -200,6 +200,14 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
   const botConfirmPage = await fetch(`${base}/bot/confirm`);
   check('site block confirm page is noindex', botConfirmPage.status === 200 && /noindex/.test(await botConfirmPage.text()), `status ${botConfirmPage.status}`);
 
+  // The read-only check routes behind both confirmation pages.
+  for (const path of ['/api/researchers/removal/check', '/api/bot/block/check']) {
+    r = await fetch(`${base}${path}`);
+    check(`GET ${path} is 405`, r.status === 405, `status ${r.status}`);
+    r = await fetch(`${base}${path}`, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: '../../etc' }) });
+    check(`${path} refuses a malformed token before upstream`, r.status === 404, `status ${r.status}`);
+  }
+
   const confirmPage = await fetch(`${base}/researchers/confirm`);
   check('confirm page is noindex', confirmPage.status === 200 && /noindex/.test(await confirmPage.text()), `status ${confirmPage.status}`);
 }

@@ -6,6 +6,7 @@ import { confirmDoor } from "@/lib/confirm-door";
 // has the rules). supervisor-service answers {blocked: true, domain, schools},
 // expired or not found.
 const door = confirmDoor({
+  door: "site-block",
   upstreamPath: "/v1/supervisors/site-block/confirm/",
   sample: { blocked: true, domain: "example.ac.uk", schools: ["Example University"] },
   label: "site block confirm",

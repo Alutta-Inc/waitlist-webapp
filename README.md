@@ -133,9 +133,12 @@ while supervisor-service is not running; a production build ignores it.
 `/researchers/confirm`, noindex). supervisor-service emails a link to
 `/researchers/confirm#token=...`: the token is in the fragment, so it never reaches a
 server log, a Referer or analytics (`lib/analytics.ts` also strips fragments and any
-`token` parameter from every URL it sends). The page takes the token, clears it from
-the address bar, and sends it only when the researcher presses the button, because
-university mail scanners open every link in an email. The route is POST only (GET is
+`token` parameter from every URL it sends). The page takes the token and clears it from
+the address bar. It asks the read-only check route (`/api/researchers/removal/check` →
+`POST /v1/supervisors/removal/check/`) what state the link is in, and opens on confirm
+(with the expiry date), already done, expired or not valid; a visit with no token is not
+valid without asking anyone. Only the button acts, because university mail scanners open
+every link in an email (and the check changes nothing, so a scanner calling it is harmless). The route is POST only (GET is
 405), refuses a token that is not URL-safe and 20 to 200 characters before calling the
 service, and maps `POST /v1/supervisors/removal/confirm/` to removed (200), expired
 (410) or not valid (404). No Turnstile: the token is a long secret only the inbox holds.
@@ -275,6 +278,7 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 | `/api/waitlist` | Server route: the door described above → customer-service (`POST` only; `GET` is 405) |
 | `/api/researchers/removal` | Server route: the removal door → supervisor-service (`POST` only; `GET` is 405) |
 | `/api/researchers/removal/confirm` | Server route: confirm a removal from the emailed link → supervisor-service (`POST` only) |
+| `/api/researchers/removal/check`, `/api/bot/block/check` | Server routes: read-only state of a confirmation link, called when its page opens (`POST` only) |
 | `/api/bot/block`, `/api/bot/block/confirm` | Server routes: a web team's request to stop AluttaBot, and its confirmation → supervisor-service (`POST` only) |
 | `/api/referral` | Server route: is `?code=` a real referral code, and whose (customer-service) |
 | `/api/geo` | Client geo lookup for the Nigeria suggestion and country pre-fill (edge country header only) |
