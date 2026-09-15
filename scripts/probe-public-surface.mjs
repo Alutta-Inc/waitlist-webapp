@@ -170,6 +170,18 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
 
   r = await send(removal);
   check('removal bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status}`);
+
+  // The confirmation door: POST only, and a token that is not one of ours never
+  // reaches the service.
+  const confirmUrl = `${base}/api/researchers/removal/confirm`;
+  r = await fetch(confirmUrl);
+  check('GET removal confirm is 405 (a link must never remove anyone)', r.status === 405, `status ${r.status}`);
+  r = await fetch(confirmUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: '<script>' }) });
+  check('removal confirm refuses a malformed token before upstream', r.status === 404, `status ${r.status}`);
+  r = await fetch(confirmUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example', 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: 'a'.repeat(40) }) });
+  check('removal confirm foreign Origin is 403', r.status === 403, `status ${r.status}`);
+  const confirmPage = await fetch(`${base}/researchers/confirm`);
+  check('confirm page is noindex', confirmPage.status === 200 && /noindex/.test(await confirmPage.text()), `status ${confirmPage.status}`);
 }
 
 // ── Rate limit: failures are budgeted at 15 per 10 minutes ──────────────
