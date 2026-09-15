@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ArrowDown, ArrowUpRight, BookOpen, Check, Mail } from "lucide-react";
 
@@ -16,9 +17,8 @@ import RemovalForm from "@/components/researchers/RemovalForm";
  *  legal pages do not have is the removal form, which sits at the end of the
  *  document where "Your choice" leads to it.
  *
- *  The crawler section's anchor (#aluttabot) is the address in AluttaBot's user
- *  agent, so a university's web team following it lands on the paragraph that
- *  answers their question. */
+ *  Website teams have their own page, /bot, which is the address in
+ *  AluttaBot's user agent; the crawler section here links to it. */
 
 type Section = { id: string; title: string; body: string[] };
 
@@ -41,11 +41,11 @@ const sections: Section[] = [
     ],
   },
   {
-    id: "aluttabot",
+    id: "where-it-comes-from",
     title: "Where it comes from",
     body: [
       "Your publication record comes from OpenAlex, an open index of scholarly works and the people who write them. We then read your university’s own website to confirm that you work there and to find your profile page.",
-      "Our crawler identifies itself as AluttaBot. It reads only university websites, follows each site’s robots.txt, and fetches no more than one page a second from any site. To keep it off a website, disallow AluttaBot in that site’s robots.txt.",
+      "Our crawler identifies itself as AluttaBot. It reads only university websites, follows each site’s robots.txt, and fetches no more than one page a second from any site. To keep it off a website, disallow AluttaBot in that site’s robots.txt. Website teams can read more on the AluttaBot page.",
     ],
   },
   {
@@ -76,7 +76,15 @@ const sections: Section[] = [
 
 const EMAIL = "hello@alutta.com";
 
+/** The two things a paragraph here can link: our address, and the AluttaBot
+ *  page for the website teams who land on this section by mistake. */
+const BOT_PAGE = "the AluttaBot page";
+
 function Paragraph({ text }: { text: string }) {
+  if (text.includes(BOT_PAGE)) {
+    const [before, after] = text.split(BOT_PAGE);
+    return <p>{before}<Link href="/bot">{BOT_PAGE}</Link>{after}</p>;
+  }
   if (!text.includes(EMAIL)) return <p>{text}</p>;
   const [before, after] = text.split(EMAIL);
   return <p>{before}<a href={`mailto:${EMAIL}`}>{EMAIL}</a>{after}</p>;

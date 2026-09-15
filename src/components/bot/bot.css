@@ -1,0 +1,7 @@
+/* alutta.com/bot. The page is the legal page's parts (legal.css); this adds the
+   one thing a website team needs that a legal page never has: lines they can
+   copy exactly. Monospace, on the pale green the legal related-card uses. */
+.bot-code{margin-top:14px;background:#f4f8ef;border:1px solid #e3eadd;border-radius:12px;padding:16px 20px;overflow-x:auto;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:14px;line-height:1.7;color:#1f4a38;white-space:pre}
+.bot-code code{font:inherit}
+@media(max-width:760px){.bot-code{font-size:13px;padding:14px 16px}}
+@media print{.bot-code{background:none;border-color:#999;color:black}}

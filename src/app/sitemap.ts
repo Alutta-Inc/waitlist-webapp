@@ -44,6 +44,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
     {
+      // AluttaBot, for the website teams who find it in their logs.
+      url: `${siteUrl}/bot`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
       url: `${siteUrl}/terms`,
       lastModified: now,
       changeFrequency: "yearly",

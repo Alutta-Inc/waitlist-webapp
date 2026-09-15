@@ -15,7 +15,7 @@ const questions = [
 const columns = [
   { title: "Explore", links: [["The Alutta way", "#about"], ["Destinations", "#destinations"], ["Your journey", "#how-it-works"], ["Questions", "#questions"]] },
   { title: "Company", links: [["About us", "#about"], ["Careers", "/careers"], ["Join the waitlist", "/waitlist"], ["Contact", "mailto:hello@alutta.com"]] },
-  { title: "Legal", links: [["Privacy", "/privacy"], ["Terms", "/terms"]] },
+  { title: "Legal", links: [["Privacy", "/privacy"], ["Terms", "/terms"], ["For researchers", "/researchers"], ["AluttaBot", "/bot"]] },
 ];
 export default function HomeClosing({ onJoin }: { onJoin: () => void }) {
   const [open, setOpen] = useState<number | null>(0);

@@ -245,7 +245,8 @@ cutover deploy, or the live waitlist breaks (Turnstile-required / wrong API URL)
 | `/waitlist`, `/ng/waitlist` | The waitlist form, and where every "join" link and shared referral link lands |
 | `/careers` | Open roles (from recruitment-service) |
 | `/privacy`, `/terms` | Legal |
-| `/researchers` | For researchers: what Supervisor Finder shows about researchers, where it comes from (the `#aluttabot` anchor is AluttaBot's info URL), and the removal form |
+| `/researchers` | For researchers: what Supervisor Finder shows about researchers, where it comes from, and the removal form |
+| `/bot` | AluttaBot, for website teams: the exact user agent (AluttaBot's info URL), what it reads, its rate, robots.txt lines to block it, contact. Every number on it is a promise supervisor-service keeps |
 | `/api/waitlist` | Server route: the door described above → customer-service (`POST` only; `GET` is 405) |
 | `/api/researchers/removal` | Server route: the removal door → supervisor-service (`POST` only; `GET` is 405) |
 | `/api/referral` | Server route: is `?code=` a real referral code, and whose (customer-service) |
@@ -262,6 +263,7 @@ src/
 │   ├── api/waitlist/route.ts   ← the waitlist door → customer-service
 │   ├── api/researchers/removal/route.ts ← the researcher removal door → supervisor-service
 │   ├── researchers/page.tsx    ← for researchers, and the removal form
+│   ├── bot/page.tsx            ← AluttaBot, for website teams
 │   ├── api/referral/route.ts   ← referral code check → customer-service
 │   ├── api/geo/route.ts        ← visitor country from the edge header
 │   ├── careers/page.tsx        ← open roles

@@ -134,6 +134,10 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
   const page = await fetch(`${base}/researchers`);
   check('researchers page is 200 with CSP', page.status === 200 && !!page.headers.get('content-security-policy'), `status ${page.status}`);
 
+  const bot = await fetch(`${base}/bot`);
+  const botHtml = await bot.text();
+  check('bot page is 200 and names the exact user agent', bot.status === 200 && botHtml.includes('AluttaBot/1.0 (+https://alutta.com/bot)'), `status ${bot.status}`);
+
   let r = await fetch(`${base}/api/researchers/removal`);
   check('GET removal is 405', r.status === 405, `status ${r.status}`);
 
