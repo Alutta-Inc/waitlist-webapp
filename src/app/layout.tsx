@@ -15,6 +15,8 @@ import "@/app/careers/careers.css";
 import "@/app/waitlist/waitlist.css";
 import "@/app/ng/nigeria.css";
 import "@/components/legal/legal.css";
+// After legal.css: the researchers page is built on the legal page's parts.
+import "@/components/researchers/researchers.css";
 import { Analytics } from "@/components/Analytics";
 import { STUDENT_APP_URL } from "@/lib/site";
 

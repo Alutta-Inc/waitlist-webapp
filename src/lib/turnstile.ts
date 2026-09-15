@@ -9,5 +9,10 @@
  *  widget (or on a copy of ours) cannot be replayed into the waitlist door. */
 export const TURNSTILE_ACTION = "waitlist";
 
+/** The researcher removal form's action. Its own, for the same reason: a
+ *  token solved on the waitlist must not be replayable into this door, and one
+ *  solved here must not open the waitlist. */
+export const TURNSTILE_REMOVAL_ACTION = "researcher_removal";
+
 /** The widget script, loaded on demand by the form and allowed by the CSP. */
 export const TURNSTILE_SCRIPT_URL = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";

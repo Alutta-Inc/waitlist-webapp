@@ -124,6 +124,50 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
   check('bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status} ${JSON.stringify(b)}`);
 }
 
+// ── The researcher removal door ──────────────────────────────────────────
+// The same checks as the waitlist, its own Turnstile action and a tighter
+// budget. Never reaches supervisor-service: the token is never genuine.
+{
+  const removal = { name: 'Adaeze Okonkwo', email: 'a.okonkwo@example.ac.uk', profileUrl: 'https://example.ac.uk/people/okonkwo', turnstileToken: 'x'.repeat(40) };
+  const send = (body, headers = {}, raw = false) => fetch(`${base}/api/researchers/removal`, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp(), ...headers }, body: raw ? body : JSON.stringify(body) });
+
+  const page = await fetch(`${base}/researchers`);
+  check('researchers page is 200 with CSP', page.status === 200 && !!page.headers.get('content-security-policy'), `status ${page.status}`);
+
+  let r = await fetch(`${base}/api/researchers/removal`);
+  check('GET removal is 405', r.status === 405, `status ${r.status}`);
+
+  r = await send(removal, { 'content-type': 'text/plain' });
+  check('removal wrong content-type is 415', r.status === 415, `status ${r.status}`);
+
+  r = await send(removal, { origin: 'https://evil.example' });
+  check('removal foreign Origin is 403', r.status === 403, `status ${r.status}`);
+
+  r = await send('{"name":"' + 'a'.repeat(9000) + '"}', {}, true);
+  check('removal oversized body is 413', r.status === 413, `status ${r.status}`);
+
+  r = await send({ ...removal, website: 'http://spam.example' });
+  check('removal honeypot filled is refused', r.status === 400, `status ${r.status}`);
+
+  r = await send({ ...removal, name: '<img src=x onerror=alert(1)>' });
+  let b = await json(r);
+  check('removal XSS in name refused', r.status === 400 && b.field === 'name', JSON.stringify(b));
+
+  r = await send({ ...removal, profileUrl: 'javascript:alert(1)' });
+  b = await json(r);
+  check('removal script URL refused', r.status === 400 && b.field === 'profileUrl', JSON.stringify(b));
+
+  r = await send({ ...removal, email: 'a@example.ac.uk\r\nBcc: x@example.com' });
+  check('removal header injection in email refused', r.status === 400);
+
+  r = await send({ ...removal, turnstileToken: undefined });
+  b = await json(r);
+  check('removal missing Turnstile token refused', r.status === 400 && /security check/i.test(b.error || ''), JSON.stringify(b));
+
+  r = await send(removal);
+  check('removal bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status}`);
+}
+
 // ── Rate limit: failures are budgeted at 15 per 10 minutes ──────────────
 {
   let last = 0;
