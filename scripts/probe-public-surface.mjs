@@ -124,6 +124,94 @@ const json = async (r) => { try { return await r.json(); } catch { return {}; } 
   check('bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status} ${JSON.stringify(b)}`);
 }
 
+// ── The researcher removal door ──────────────────────────────────────────
+// The same checks as the waitlist, its own Turnstile action and a tighter
+// budget. Never reaches supervisor-service: the token is never genuine.
+{
+  const removal = { name: 'Adaeze Okonkwo', email: 'a.okonkwo@example.ac.uk', profileUrl: 'https://example.ac.uk/people/okonkwo', turnstileToken: 'x'.repeat(40) };
+  const send = (body, headers = {}, raw = false) => fetch(`${base}/api/researchers/removal`, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp(), ...headers }, body: raw ? body : JSON.stringify(body) });
+
+  const page = await fetch(`${base}/researchers`);
+  check('researchers page is 200 with CSP', page.status === 200 && !!page.headers.get('content-security-policy'), `status ${page.status}`);
+
+  const bot = await fetch(`${base}/bot`);
+  const botHtml = await bot.text();
+  check('bot page is 200 and names the exact user agent', bot.status === 200 && botHtml.includes('AluttaBot/1.0 (+https://alutta.com/bot)'), `status ${bot.status}`);
+
+  let r = await fetch(`${base}/api/researchers/removal`);
+  check('GET removal is 405', r.status === 405, `status ${r.status}`);
+
+  r = await send(removal, { 'content-type': 'text/plain' });
+  check('removal wrong content-type is 415', r.status === 415, `status ${r.status}`);
+
+  r = await send(removal, { origin: 'https://evil.example' });
+  check('removal foreign Origin is 403', r.status === 403, `status ${r.status}`);
+
+  r = await send('{"name":"' + 'a'.repeat(9000) + '"}', {}, true);
+  check('removal oversized body is 413', r.status === 413, `status ${r.status}`);
+
+  r = await send({ ...removal, website: 'http://spam.example' });
+  check('removal honeypot filled is refused', r.status === 400, `status ${r.status}`);
+
+  r = await send({ ...removal, name: '<img src=x onerror=alert(1)>' });
+  let b = await json(r);
+  check('removal XSS in name refused', r.status === 400 && b.field === 'name', JSON.stringify(b));
+
+  r = await send({ ...removal, profileUrl: 'javascript:alert(1)' });
+  b = await json(r);
+  check('removal script URL refused', r.status === 400 && b.field === 'profileUrl', JSON.stringify(b));
+
+  r = await send({ ...removal, email: 'a@example.ac.uk\r\nBcc: x@example.com' });
+  check('removal header injection in email refused', r.status === 400);
+
+  r = await send({ ...removal, turnstileToken: undefined });
+  b = await json(r);
+  check('removal missing Turnstile token refused', r.status === 400 && /security check/i.test(b.error || ''), JSON.stringify(b));
+
+  r = await send(removal);
+  check('removal bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status}`);
+
+  // The confirmation door: POST only, and a token that is not one of ours never
+  // reaches the service.
+  const confirmUrl = `${base}/api/researchers/removal/confirm`;
+  r = await fetch(confirmUrl);
+  check('GET removal confirm is 405 (a link must never remove anyone)', r.status === 405, `status ${r.status}`);
+  r = await fetch(confirmUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: '<script>' }) });
+  check('removal confirm refuses a malformed token before upstream', r.status === 404, `status ${r.status}`);
+  r = await fetch(confirmUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: 'https://evil.example', 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: 'a'.repeat(40) }) });
+  check('removal confirm foreign Origin is 403', r.status === 403, `status ${r.status}`);
+  // The site block door and its confirmation: same checks, its own action.
+  const blockUrl = `${base}/api/bot/block`;
+  const block = { domain: 'example.ac.uk', email: 'webmaster@example.ac.uk', name: 'Web team', turnstileToken: 'x'.repeat(40) };
+  const sendBlock = (body, headers = {}) => fetch(blockUrl, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp(), ...headers }, body: JSON.stringify(body) });
+  r = await fetch(blockUrl);
+  check('GET site block is 405', r.status === 405, `status ${r.status}`);
+  r = await sendBlock(block, { origin: 'https://evil.example' });
+  check('site block foreign Origin is 403', r.status === 403, `status ${r.status}`);
+  r = await sendBlock({ ...block, email: 'someone@gmail.com' });
+  let bb = await json(r);
+  check('site block refuses an email not at the site', r.status === 400 && bb.field === 'email', JSON.stringify(bb));
+  r = await sendBlock({ ...block, domain: 'javascript:alert(1)' });
+  check('site block refuses a domain that is not a website', r.status === 400, `status ${r.status}`);
+  r = await sendBlock(block);
+  check('site block bogus Turnstile token is 403 (real siteverify)', r.status === 403 || r.status === 503, `status ${r.status}`);
+  r = await fetch(`${base}/api/bot/block/confirm`);
+  check('GET site block confirm is 405', r.status === 405, `status ${r.status}`);
+  const botConfirmPage = await fetch(`${base}/bot/confirm`);
+  check('site block confirm page is noindex', botConfirmPage.status === 200 && /noindex/.test(await botConfirmPage.text()), `status ${botConfirmPage.status}`);
+
+  // The read-only check routes behind both confirmation pages.
+  for (const path of ['/api/researchers/removal/check', '/api/bot/block/check']) {
+    r = await fetch(`${base}${path}`);
+    check(`GET ${path} is 405`, r.status === 405, `status ${r.status}`);
+    r = await fetch(`${base}${path}`, { method: 'POST', headers: { 'content-type': 'application/json', origin: base, 'x-forwarded-for': freshIp() }, body: JSON.stringify({ token: '../../etc' }) });
+    check(`${path} refuses a malformed token before upstream`, r.status === 404, `status ${r.status}`);
+  }
+
+  const confirmPage = await fetch(`${base}/researchers/confirm`);
+  check('confirm page is noindex', confirmPage.status === 200 && /noindex/.test(await confirmPage.text()), `status ${confirmPage.status}`);
+}
+
 // ── Rate limit: failures are budgeted at 15 per 10 minutes ──────────────
 {
   let last = 0;

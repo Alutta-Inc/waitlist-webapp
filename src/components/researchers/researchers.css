@@ -1,0 +1,26 @@
+/* alutta.com/researchers. Everything shared with the legal pages comes from
+   legal.css; this adds only the removal form's section, card and sent state,
+   in the same palette and on the same scale as the waitlist card. */
+.researchers-remove{isolation:isolate;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr);gap:40px;align-items:start;padding-top:45px;scroll-margin-top:125px}
+.researchers-remove-copy>p{font-size:16px;line-height:1.8;color:#566d69;margin-top:12px;max-width:340px}.researchers-remove-copy a{color:#285c3e;text-decoration:underline;text-underline-offset:3px}
+.researchers-remove-card{position:relative;border:1px solid #dfe9da;border-radius:25px;padding:32px;background:#fff;box-shadow:0 18px 65px #2a4f2110}
+.researchers-remove-card::before{content:"";position:absolute;inset:12px -13px -12px 13px;border:1px solid #e7eedf;border-radius:25px;background:#f4f8ee;z-index:-1;transform:rotate(2deg)}
+.researchers-form-note{display:flex;align-items:flex-start;justify-content:center;gap:6px;font-size:11px;line-height:1.6;color:#7b8d7b;margin-top:4px}.researchers-form-note>svg{flex-shrink:0;margin-top:2px}.researchers-form-note a{text-decoration:underline;text-underline-offset:3px;color:#42684c}
+.researchers-sent{text-align:center;padding-block:10px}.researchers-sent-icon{display:grid;place-items:center;width:60px;height:60px;border-radius:18px;background:#edf4e4;color:#406d4d;margin:0 auto 20px}
+.legal-home .researchers-sent h3{font-family:var(--font-mierb),sans-serif;font-weight:600;font-size:26px;line-height:1.15;letter-spacing:-.04em;color:#133d36;margin-bottom:12px}
+.researchers-sent p{font-size:14px;line-height:1.7;color:#6b7e76;margin-top:8px}.researchers-sent a{color:#285c3e;text-decoration:underline;text-underline-offset:3px}
+@media(max-width:1050px){.researchers-remove{grid-template-columns:1fr;gap:24px}.researchers-remove-copy>p{max-width:none}}
+@media(max-width:760px){.researchers-remove{padding-top:32px}.researchers-remove-card{padding:26px 20px}.researchers-remove-card::before{inset:10px -8px -10px 8px}.researchers-remove-card form input{font-size:16px}}
+@media print{.researchers-remove{display:none!important}}
+/* /researchers/confirm: one card, centred, the removal card's skin. */
+.researchers-confirm{isolation:isolate;display:grid;place-items:center;padding-block:80px 100px}
+.researchers-confirm-card{width:min(560px,100%);text-align:center;padding:44px 40px}
+.researchers-confirm-card .legal-eyebrow{justify-content:center;margin-bottom:16px}
+.legal-home .researchers-confirm-card h1{font-size:clamp(32px,4vw,42px);margin-bottom:14px}
+.researchers-confirm-card>p{font-size:16px;line-height:1.7;color:#566d69;margin:0 auto 24px;max-width:430px}
+.researchers-confirm-card .atlas-button{width:auto;margin-inline:auto;gap:14px;font-size:14px}
+.researchers-confirm-card .atlas-button:disabled{opacity:.6;cursor:progress;transform:none}
+.researchers-confirm-card>p.researchers-confirm-quiet{font-size:13px;color:#7b8d7b;margin:22px auto 0}
+.researchers-confirm-quiet a{color:#285c3e;text-decoration:underline;text-underline-offset:3px}
+.researchers-confirm-error{font-size:14px;color:#b42318;background:#fef3f2;border:1px solid #fee4e2;border-radius:10px;padding:10px 14px}
+@media(max-width:760px){.researchers-confirm{padding-block:40px 60px}.researchers-confirm-card{padding:32px 22px}}

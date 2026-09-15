@@ -50,14 +50,32 @@ function sessionId(): string {
   }
 }
 
+/** A URL as analytics may keep it: no fragment, and no `token` parameter.
+ *
+ *  Some links carry a secret (the researcher removal confirmation link has its
+ *  token in the fragment), and a pageview must never copy one into the
+ *  analytics store. The fragment is never needed for a pageview; `token` is
+ *  dropped from the query too, in case a link ever puts one there. */
+export function analyticsSafeUrl(raw: string): string {
+  if (!raw) return "";
+  try {
+    const url = new URL(raw);
+    url.hash = "";
+    url.searchParams.delete("token");
+    return url.toString();
+  } catch {
+    return "";
+  }
+}
+
 function emit(type: EventType, extra: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
   const payload = {
     events: [
       {
         type,
-        url: window.location.href,
-        referrer: document.referrer || "",
+        url: analyticsSafeUrl(window.location.href),
+        referrer: analyticsSafeUrl(document.referrer || ""),
         anonymous_id: anonymousId(),
         session_id: sessionId(),
         ts: Date.now(),

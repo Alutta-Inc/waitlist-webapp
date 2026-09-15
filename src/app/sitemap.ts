@@ -36,6 +36,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.4,
     },
     {
+      // What Supervisor Finder shows about researchers and how to be removed.
+      // Indexed on purpose: a researcher searching their own name should find it.
+      url: `${siteUrl}/researchers`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.4,
+    },
+    {
+      // AluttaBot, for the website teams who find it in their logs.
+      url: `${siteUrl}/bot`,
+      lastModified: now,
+      changeFrequency: "yearly",
+      priority: 0.3,
+    },
+    {
       url: `${siteUrl}/terms`,
       lastModified: now,
       changeFrequency: "yearly",
