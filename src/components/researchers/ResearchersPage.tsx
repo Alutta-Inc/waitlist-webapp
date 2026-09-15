@@ -167,7 +167,10 @@ export default function ResearchersPage() {
               <div className="legal-section-title"><span>{String(stops.length).padStart(2, "0")}</span><h2 id="remove-heading">Ask to be removed</h2></div>
               <p>It takes a minute. We will email your university address a link to confirm, and nothing changes until you open it.</p>
             </div>
-            <div className="researchers-remove-card">
+            {/* `signup-body` is the site's form skin, the waitlist card's too: one
+                1px field border that turns green on focus, in place of the
+                page-wide focus ring, which drew a second outline around it. */}
+            <div className="researchers-remove-card signup-body">
               <RemovalForm />
             </div>
           </section>
