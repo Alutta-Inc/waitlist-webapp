@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { ArrowRight, Check, Clock, Link2Off, Loader2 } from "lucide-react";
 
 import HomeHeader from "@/components/home/HomeHeader";
@@ -19,6 +19,11 @@ import CareersFooter from "@/components/home/CareersFooter";
  *   * nothing happens until the person presses the button, because university
  *     mail scanners open every link in an email, and a page that acted on load
  *     would act for them unasked;
+ *   * a visit with no token, or one that is not shaped like ours, says at once
+ *     that the link is not valid, as sign-in and verification pages everywhere
+ *     do, instead of offering a button that can only fail. Whether a well-formed
+ *     token has expired is only known once it is sent, so that answer waits for
+ *     the button;
  *   * the answer is one of four states: confirmed, expired, not valid, or a
  *     failure to reach us, which offers the button again. */
 
@@ -38,6 +43,10 @@ export type ConfirmCopy = {
   askAgainLabel: string;
 };
 
+/** Our tokens are URL-safe random strings, 20 to 200 characters (the route
+ *  refuses anything else before calling the service). */
+const TOKEN_SHAPE = /^[A-Za-z0-9_-]{20,200}$/;
+
 function takeToken(): string {
   const params = new URLSearchParams(window.location.hash.replace(/^#/, ""));
   const token = params.get("token") || "";
@@ -47,22 +56,37 @@ function takeToken(): string {
   return token;
 }
 
+/** The token this page arrived with, read once per page and kept here, because
+ *  the address bar is cleared the moment it is read. Keyed on the path so the
+ *  two confirmation pages never share one. */
+let arrival: { path: string; token: string } | null = null;
+
+function arrivalToken(): string {
+  const path = window.location.pathname;
+  if (!arrival || arrival.path !== path) arrival = { path, token: takeToken() };
+  return arrival.token;
+}
+
+const noSubscription = () => () => {};
+
 export default function ConfirmLink({ endpoint, copy, successKey }: { endpoint: string; copy: ConfirmCopy; successKey: string }) {
   const [state, setState] = useState<State>("ready");
   const [error, setError] = useState<string | null>(null);
   const [doneBody, setDoneBody] = useState("");
 
-  // A ref, not state: read once on arrival, and nothing on screen depends on it
-  // until the button is pressed. Once only, because React runs effects twice in
-  // development and a second read would find the fragment already gone.
-  const token = useRef<string | null>(null);
-  useEffect(() => {
-    if (token.current !== null) return;
-    token.current = takeToken();
-  }, []);
+  // Whether this visit brought a link at all. "checking" is the static HTML,
+  // before the browser can read the fragment: the card keeps its size and shows
+  // nothing, so a visit with no link never flashes a button it cannot use.
+  const arrived = useSyncExternalStore(
+    noSubscription,
+    () => (TOKEN_SHAPE.test(arrivalToken()) ? "link" : "no-link"),
+    () => "checking",
+  );
+  const shown: State = state === "ready" && arrived === "no-link" ? "invalid" : state;
 
   const confirm = async () => {
-    if (!token.current) {
+    const token = arrivalToken();
+    if (!TOKEN_SHAPE.test(token)) {
       setState("invalid");
       return;
     }
@@ -72,7 +96,7 @@ export default function ConfirmLink({ endpoint, copy, successKey }: { endpoint: 
       const res = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ token: token.current }),
+        body: JSON.stringify({ token }),
       });
       const data = (await res.json().catch(() => ({}))) as Record<string, unknown>;
       if (res.ok && data[successKey]) {
@@ -94,8 +118,13 @@ export default function ConfirmLink({ endpoint, copy, successKey }: { endpoint: 
     <div className="atlas-home legal-home researchers-home">
       <HomeHeader />
       <section className="legal-container researchers-confirm" aria-labelledby="confirm-heading">
-        <div className="researchers-remove-card researchers-confirm-card" aria-live="polite">
-          {state === "done" ? (
+        <div
+          className="researchers-remove-card researchers-confirm-card"
+          aria-live="polite"
+          aria-busy={arrived === "checking"}
+          style={arrived === "checking" ? { visibility: "hidden" } : undefined}
+        >
+          {shown === "done" ? (
             <>
               <span className="researchers-sent-icon"><Check size={26} /></span>
               <span className="legal-eyebrow"><span /> {copy.doneEyebrow}</span>
@@ -103,7 +132,7 @@ export default function ConfirmLink({ endpoint, copy, successKey }: { endpoint: 
               <p>{doneBody}</p>
               <p className="researchers-confirm-quiet">Changed your mind, or have a question? Write to <a href="mailto:hello@alutta.com">hello@alutta.com</a>.</p>
             </>
-          ) : state === "expired" ? (
+          ) : shown === "expired" ? (
             <>
               <span className="researchers-sent-icon"><Clock size={26} /></span>
               <span className="legal-eyebrow"><span /> LINK EXPIRED</span>
@@ -111,7 +140,7 @@ export default function ConfirmLink({ endpoint, copy, successKey }: { endpoint: 
               <p>Confirmation links work for 7 days. Ask again and we will send you a new one.</p>
               <Link className="atlas-button" href={copy.askAgainHref}>{copy.askAgainLabel} <ArrowRight size={18} /></Link>
             </>
-          ) : state === "invalid" ? (
+          ) : shown === "invalid" ? (
             <>
               <span className="researchers-sent-icon"><Link2Off size={26} /></span>
               <span className="legal-eyebrow"><span /> LINK NOT RECOGNISED</span>
@@ -125,8 +154,8 @@ export default function ConfirmLink({ endpoint, copy, successKey }: { endpoint: 
               <h1 id="confirm-heading">{copy.heading}</h1>
               <p>{copy.body}</p>
               {error && <p className="researchers-confirm-error" role="alert">{error}</p>}
-              <button type="button" className="atlas-button" onClick={confirm} disabled={state === "confirming"}>
-                {state === "confirming" ? <><Loader2 size={18} className="animate-spin" /> Confirming</> : <>{copy.button} <ArrowRight size={18} /></>}
+              <button type="button" className="atlas-button" onClick={confirm} disabled={shown === "confirming" || arrived !== "link"}>
+                {shown === "confirming" ? <><Loader2 size={18} className="animate-spin" /> Confirming</> : <>{copy.button} <ArrowRight size={18} /></>}
               </button>
               <p className="researchers-confirm-quiet">{copy.quiet}</p>
             </>
