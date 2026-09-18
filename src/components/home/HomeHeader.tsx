@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import MarketSelector from "@/components/markets/MarketSelector";
 import MarketSuggestion from "@/components/markets/MarketSuggestion";
+import { AnnouncementStrip } from "@/components/waitlist/AnnouncementStrip";
 import { useState } from "react";
 import { ArrowUpRight, Menu, X } from "lucide-react";
 import { STUDENT_SIGNIN_URL } from "@/lib/site";
@@ -11,7 +12,7 @@ export default function HomeHeader({ onJoin, home = false }: { onJoin?: () => vo
  const nigeria = usePathname().startsWith("/ng");
  const base = nigeria ? "/ng" : "";
  const [mobile, setMobile] = useState(false);
- return <>      <div className="atlas-announcement"><span className="atlas-status-dot" />Your next chapter is calling. <Link href={`${base}/waitlist`}>Private beta is open <ArrowUpRight size={13} /></Link></div>
+ return <>      <AnnouncementStrip joinHref={`${base}/waitlist`} onJoin={onJoin} />
       <header className="atlas-header">
         <div className="atlas-nav-wrap">
           <Link className="atlas-brand" href={base || "/"} aria-label="Alutta home"><Image src="/brand/logo-horizontal-coloured.svg" alt="Alutta" width={130} height={38} priority /></Link>
