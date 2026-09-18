@@ -40,7 +40,7 @@ export default function HomeExperience() {
           <p className="atlas-eyebrow"><span /> A BRIGHTER YOU, ANYWHERE</p>
           <h1 id="atlas-heading"><span className="atlas-title-line">Big dreams.</span><span className="atlas-title-line">New borders.</span><em className="atlas-title-line">One clear path.</em></h1>
           <p className="atlas-hero-intro">Alutta helps students discover schools, prepare applications, plan travel, and settle into a new city with more clarity.</p>
-          <div className="atlas-hero-buttons"><button className="atlas-button" onClick={openPlanner}>Join the waitlist <ArrowUpRight size={21} /></button><ExplainerModal onJoin={openPlanner} /></div>
+          <div className="atlas-hero-buttons"><button className="atlas-button" onClick={openPlanner} data-track="join-hero">Join the waitlist <ArrowUpRight size={21} /></button><ExplainerModal onJoin={openPlanner} /></div>
           <div className="atlas-small-promise"><ShieldCheck size={17} /><span>From your first idea to your first day there.</span></div>
         </div>
         <div className="atlas-hero-visual" ref={heroVisual}
@@ -66,7 +66,7 @@ export default function HomeExperience() {
 
       <DestinationShowcase onExplore={(code) => { setDestination(destinations.findIndex(country => country.code.toLowerCase() === code)); openPlanner(); }} />
 
-      <section className="atlas-manifesto" id="features" aria-labelledby="life-after-arrival-heading">
+      <section className="atlas-manifesto" id="features" aria-labelledby="life-after-arrival-heading" data-track-view="seen-arrival">
         <div className="atlas-arrival-wave atlas-arrival-wave-left" aria-hidden="true" />
         <div className="atlas-arrival-wave atlas-arrival-wave-right" aria-hidden="true" />
         <div className="atlas-container">
@@ -76,7 +76,7 @@ export default function HomeExperience() {
           <span className="atlas-manifesto-star" aria-hidden="true"><svg width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor">{[0, 45, 90, 135, 180, 225, 270, 315].map((angle) => <path key={angle} d="M12 12C10.7 9.6 10.7 5.2 12 1.6C13.3 5.2 13.3 9.6 12 12Z" transform={`rotate(${angle} 12 12)`} />)}</svg></span>
           <h2 id="life-after-arrival-heading">Go for the degree.<br /><em>Grow into your next chapter.</em></h2>
           <p>New friends, new routines, and a place that starts to feel like home. Alutta helps with the practical steps so you can focus on building your life abroad.</p>
-          <button className="atlas-button lime" onClick={openPlanner}>Start your next chapter <ArrowUpRight size={20} /></button>
+          <button className="atlas-button lime" onClick={openPlanner} data-track="join-arrival">Start your next chapter <ArrowUpRight size={20} /></button>
           <div className="atlas-arrival-cards">
             <div><span><House aria-hidden="true" /></span><strong>Settle in</strong></div>
             <div><span><Users aria-hidden="true" /></span><strong>Find your people</strong></div>

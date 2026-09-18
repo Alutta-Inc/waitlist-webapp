@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useState } from "react";
 import { ArrowRight, Check, Loader2, ShieldCheck } from "lucide-react";
 
+import { track } from "@/lib/analytics";
 import { TURNSTILE_SCRIPT_URL, TURNSTILE_SITE_BLOCK_ACTION } from "@/lib/turnstile";
 import { useTurnstile } from "@/lib/use-turnstile";
 import { cn } from "@/lib/utils";
@@ -71,6 +72,7 @@ export default function SiteBlockForm() {
         turnstile.reset();
         return;
       }
+      track("bot-block-submit");
       setSentTo(email.trim().toLowerCase());
     } catch {
       setError("Connection error. Please check your internet and try again.");

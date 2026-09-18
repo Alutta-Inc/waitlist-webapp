@@ -144,8 +144,8 @@ export default function PackPage({ pack }: { pack: Pack }) {
           <h1 id="pack-heading"><span className="atlas-title-line">{pack.heading[0]}</span><span className="atlas-title-line">{pack.heading[1]}</span><em className="atlas-title-line">{pack.heading[2]}</em></h1>
           <p className="atlas-hero-intro">{pack.intro}</p>
           <div className="atlas-hero-buttons">
-            <a className="atlas-button" href={call}>Arrange a call <ArrowUpRight size={21} /></a>
-            <a className="pack-hero-read" href="#pack-document">Read the {pack.document.title.toLowerCase()} <ArrowDown size={18} /></a>
+            <a className="atlas-button" href={call} data-track="pack-arrange-call">Arrange a call <ArrowUpRight size={21} /></a>
+            <a className="pack-hero-read" href="#pack-document" data-track="pack-read-document">Read the {pack.document.title.toLowerCase()} <ArrowDown size={18} /></a>
           </div>
           <div className="atlas-small-promise"><ShieldCheck size={17} /><span>{pack.promise}</span></div>
         </div>
@@ -217,7 +217,7 @@ export default function PackPage({ pack }: { pack: Pack }) {
           <h2>{pack.contact.heading[0]}<br /><em>{pack.contact.heading[1]}</em></h2>
           <p>{pack.contact.body}</p>
         </div>
-        <a className="atlas-button lime" href={call}>{EMAIL} <ArrowUpRight size={20} /></a>
+        <a className="atlas-button lime" href={call} data-track="pack-arrange-call">{EMAIL} <ArrowUpRight size={20} /></a>
       </section>
 
       <CareersFooter topId="pack-heading" />
