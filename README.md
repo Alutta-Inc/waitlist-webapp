@@ -327,7 +327,7 @@ src/
 
 Questions: `hello@alutta.com`.
 
-## The packs, "Who it's for", and the email signature
+## The packs, "Who it's for", and the signature's image
 
 **`/institutions` and `/funding-bodies`** are the packs: the documents the partnerships
 desk sends to the people on the other side of a student's application. Both are one
@@ -363,12 +363,8 @@ the admissions officer or scholarship manager who looks us up after our email.
 `/researchers` is deliberately not in it: that page is not an offer, it tells
 researchers what we show about them and how to be left out, so it stays under Legal.
 
-**`/brand/signature.html`** (a static file, `noindex`) is the team's email signature
-and the page a person installs it from: choose the desk, copy, paste into Gmail's
-signature box. The signature is live text beside one small image,
-`/brand/email-mark.png` (the mark, 3x of its 44 by 40 display size). It is
-deliberately not one big image: that is a blank box wherever images are blocked
-(Outlook, most university mail), cannot be clicked or read aloud, and makes a short
-email mostly-image, which spam filters mark down. It uses the mark and not the
-wordmark because the wordmark's dark text disappears in dark mode. Do not move or
-rename `email-mark.png`: every signature already pasted into a mailbox points at it.
+**`/brand/email-mark.png`** is the mark in the team's email signature (3x of its 44 by
+40 display size). The signature itself is built and installed in the workspace
+(Profile), because it is a staff tool; only this image is public, because a
+recipient's mail client has to fetch it. Do not move or rename it: every signature
+already pasted into a mailbox points at it.
