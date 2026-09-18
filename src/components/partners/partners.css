@@ -37,9 +37,30 @@
 .partners-asked dd{margin:0}
 .legal-section .partners-asked dd p{margin-top:6px}
 .partners-print-contact{display:none}
+/* The hero is the home page's (home.css). Only what differs is here: this
+   photo is framed for itself (the home rule over-scales its own), the top
+   label keeps a slow float after it settles, and the card holds one changing line. */
+.partners-hero .atlas-image-arch img{width:100%!important;left:0!important;object-position:64% center}
+.partners-hero-read{display:inline-flex;align-items:center;gap:12px;font-size:15px;color:#1f5d43;padding:8px 4px}
+.partners-hero .atlas-orbit-label{animation:atlas-label-settle 3.8s ease-in-out,partners-float 7s 3.8s ease-in-out infinite}
+/* The home page retired this label; here it carries the second half of the offer. */
+.partners-hero .atlas-flight-label{display:flex;min-width:0;left:-46px;top:44%;padding-right:26px;animation:atlas-rise-in 1s .35s both,partners-float 8s 1.4s ease-in-out infinite}
+.partners-hero-card .atlas-destination-question{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7b8d7b}
+.partners-hero-line{min-height:62px;margin-top:12px}
+.partners-hero-line>span{display:block;font-size:13px;color:#6a7c7b;animation:partners-line .6s both cubic-bezier(.2,.75,.3,1)}
+.partners-hero-line strong{display:block;font-family:var(--font-mierb),sans-serif;font-weight:600;font-size:24px;line-height:1.15;letter-spacing:-.03em;color:#133d36;margin-top:4px}
+.partners-hero-dots{display:flex;gap:6px;margin-top:14px}
+.partners-hero-dots i{width:18px;height:4px;border-radius:4px;background:#e3ebdc;transition:background .4s,width .4s}
+.partners-hero-dots i[data-on="true"]{width:30px;background:#13ca58}
+@keyframes partners-float{0%,100%{translate:0 0}50%{translate:0 -7px}}
+@keyframes partners-line{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.partners-hero .atlas-flight-label,.partners-hero .atlas-orbit-label,.partners-hero-line>span{animation:none}}
+@media(max-width:1050px){.partners-hero .atlas-flight-label{left:-14px}}
+@media(max-width:760px){.partners-hero .atlas-flight-label{left:-8px;top:24%;padding:11px 16px 11px 11px}.partners-hero-line strong{font-size:20px}.partners-hero-line{min-height:54px}}
 @media(max-width:900px){.partners-terms{grid-template-columns:repeat(2,minmax(0,1fr))}.partners-terms>div:nth-child(3){border-left:0}.partners-terms>div:nth-child(n+3){border-top:1px solid #e8eee3}}
 @media(max-width:760px){.partners-ways{grid-template-columns:1fr}.partners-way{padding:22px 20px}.partners-terms dd{font-size:19px}.partners-terms>div{padding:18px 16px}}
 @media print{
+  .partners-hero{display:none!important}
   .partners-list li,.partners-steps span,.partners-way li,.legal-section .partners-way p{color:#000;font-size:11pt}
   .partners-way,.partners-terms,.partners-terms>div:last-child,.partners-way:first-child{background:#fff!important}
   .partners-ways,.partners-terms,.partners-steps li,.partners-asked>div{break-inside:avoid}

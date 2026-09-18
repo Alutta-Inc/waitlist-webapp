@@ -331,7 +331,12 @@ Questions: `hello@alutta.com`.
 
 **`/partners`** (`src/components/partners/PartnersPage.tsx`) is the partnership pack,
 the document the partnerships desk sends an admissions office. It is built from the
-legal page's parts and prints to a clean PDF from its own Print button. **Every
+legal page's parts and prints to a clean PDF from its own Print button. Its hero is
+the home page's (arch, halo, floating labels), carrying the offer itself, and its
+card cycles the same four cost facts the pack states. **A partnership is a technical
+connection between two systems**, so the page never offers a "no technical work"
+route; submitting on the school's own page is described only as what happens until
+the connection is live. Both footers link it under Company as "For institutions". **Every
 sentence on it is something the product does today, or is marked as something we
 build with the partner**: a registrar will hold us to it on the first call. It states
 no student numbers, no partner names and no commission rate (the desk confirms those
