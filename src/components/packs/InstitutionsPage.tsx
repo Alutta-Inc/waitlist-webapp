@@ -49,9 +49,9 @@ const sections: Section[] = [
         ways: [
           {
             tag: "From Alutta to you",
-            title: "Applications arrive in your system",
-            body: "A complete application, with its documents, is delivered into the admissions system your office already works in, so nobody retypes anything and nothing arrives by email.",
-            points: ["Built for the system you use: a national or shared portal, a commercial admissions system, or your own", "Planned and tested with your team before any real applicant is involved", "We are building the first of these connections now, with our first partners"],
+            title: "Applications will arrive in your system",
+            body: "This is the part we build with you. A complete application, with its documents, will be delivered into the admissions system your office already works in, so nobody retypes anything and nothing arrives by email.",
+            points: ["Built for the system you use: a national or shared portal, a commercial admissions system, or your own", "Planned and tested with your team before any real applicant is involved", "Not live yet for any institution. We are building the first of these connections with our first partners"],
           },
           {
             tag: "From you to Alutta",

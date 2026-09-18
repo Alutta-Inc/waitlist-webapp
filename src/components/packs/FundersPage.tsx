@@ -83,8 +83,8 @@ const sections: Section[] = [
           },
           {
             tag: "From Alutta to you",
-            title: "Applications arrive in your system",
-            body: "A student applies for your award from the profile they have already built, and the application is delivered into the system your team works in.",
+            title: "Applications will arrive in your system",
+            body: "This is the part we have not built yet. A student will apply for your award from the profile they have already built, and the application will be delivered into the system your team works in.",
             points: ["Built for the system you use, with your team", "Not live yet for any funder", "Until it is, students apply on your own application page, prepared by your listing"],
           },
         ],
