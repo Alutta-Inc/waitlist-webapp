@@ -11,6 +11,7 @@ import "./globals.css";
 import "@/components/markets/markets.css";
 import "@/components/home/home.css";
 import "@/components/home/not-found.css";
+import "@/components/home/audiences.css";
 import "@/app/careers/careers.css";
 import "@/app/waitlist/waitlist.css";
 import "@/app/ng/nigeria.css";
@@ -18,8 +19,8 @@ import "@/components/legal/legal.css";
 // After legal.css: the researchers page is built on the legal page's parts.
 import "@/components/researchers/researchers.css";
 import "@/components/bot/bot.css";
-// The partnership pack, on the legal page's parts too.
-import "@/components/partners/partners.css";
+// The packs (/institutions, /funding-bodies), on the legal page's parts too.
+import "@/components/packs/packs.css";
 import { Analytics } from "@/components/Analytics";
 import { STUDENT_APP_URL } from "@/lib/site";
 

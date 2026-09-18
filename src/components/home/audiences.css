@@ -1,0 +1,29 @@
+/* "Who Alutta is for", on both home pages. Its own colours, not the home
+   page's variables: the Nigeria page does not define them. */
+.audiences{background:#f4f6ec;padding:100px 0 110px;font-family:var(--font-mierb),sans-serif;color:#233d34}
+.audiences-inner{width:min(1360px,calc(100% - 80px));margin:auto}
+.audiences-heading{display:grid;grid-template-columns:1.1fr 1fr;gap:30px 80px;align-items:end;margin-bottom:50px}
+.audiences-eyebrow{grid-column:1/-1;display:flex;align-items:center;gap:9px;font-size:10px;font-weight:600;letter-spacing:.15em;color:#607064}
+.audiences-eyebrow i{width:6px;height:6px;border-radius:50%;background:#7d9864}
+.audiences h2{font-weight:600;font-size:clamp(38px,4.2vw,62px);line-height:1.06;letter-spacing:-.055em;color:#153e32;margin:0}
+.audiences h2 em{font-style:normal;color:#416f47}
+.audiences-heading>p{font-size:17px;line-height:1.7;color:#6b786d;max-width:470px;margin:0 0 6px}
+.audiences-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.audience-card{display:flex;flex-direction:column;align-items:flex-start;padding:32px 30px 28px;border:1px solid #e0e6d6;border-radius:22px;background:#fffefb;text-decoration:none;color:inherit;transition:transform .35s cubic-bezier(.2,.75,.3,1),box-shadow .35s,border-color .35s}
+.audience-card:hover{transform:translateY(-6px);box-shadow:0 26px 55px -30px #234a3855;border-color:#cfdcc2}
+.audience-card:focus-visible{outline:3px solid #779455;outline-offset:3px}
+.audience-card:nth-child(2){background:#153e32;border-color:#153e32;color:#f4f7ea}
+.audience-icon{display:grid;place-items:center;width:52px;height:52px;border-radius:16px;background:#eaf1df;color:#3f6a49}
+.audience-card:nth-child(2) .audience-icon{background:#dceb9d;color:#153e32}
+.audience-tag{font-size:10px;font-weight:600;letter-spacing:.15em;color:#7b8d7b;margin-top:26px}
+.audience-card:nth-child(2) .audience-tag{color:#b9cda0}
+.audience-card strong{font-weight:600;font-size:24px;line-height:1.18;letter-spacing:-.035em;margin-top:10px}
+.audience-body{font-size:15px;line-height:1.7;color:#6b786d;margin:12px 0 28px}
+.audience-card:nth-child(2) .audience-body{color:#c8d6cd}
+.audience-cta{display:inline-flex;align-items:center;gap:10px;margin-top:auto;font-size:14px;font-weight:500;color:#1f5d43}
+.audience-card:nth-child(2) .audience-cta{color:#dceb9d}
+.audience-cta svg{transition:transform .3s}
+.audience-card:hover .audience-cta svg{transform:translate(3px,-3px)}
+@media(max-width:1000px){.audiences-grid{grid-template-columns:1fr}.audiences-heading{grid-template-columns:1fr;gap:20px}.audience-body{margin-bottom:22px}}
+@media(max-width:700px){.audiences{padding:70px 0 75px}.audiences-inner{width:calc(100% - 40px)}.audience-card{padding:26px 22px 24px}.audience-card strong{font-size:21px}.audiences-heading{margin-bottom:34px}}
+@media(prefers-reduced-motion:reduce){.audience-card,.audience-cta svg{transition:none}.audience-card:hover{transform:none}}

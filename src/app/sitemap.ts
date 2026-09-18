@@ -38,7 +38,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       // The partnership pack. Indexed on purpose: an admissions office that
       // receives our email looks us up before it answers.
-      url: `${siteUrl}/partners`,
+      url: `${siteUrl}/institutions`,
       lastModified: now,
       changeFrequency: "monthly",
       priority: 0.7,

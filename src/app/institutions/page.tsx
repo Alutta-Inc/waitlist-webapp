@@ -1,12 +1,12 @@
 import type { Metadata } from "next";
 
-import PartnersPage from "@/components/partners/PartnersPage";
+import InstitutionsPage from "@/components/packs/InstitutionsPage";
 
 export const metadata: Metadata = {
   title: "For institutions",
   description:
     "The Alutta partnership pack: what a partnership gives your institution, how applications reach you, and what it costs. Joining is free.",
-  alternates: { canonical: "/partners" },
+  alternates: { canonical: "/institutions" },
   openGraph: {
     title: "For institutions | Alutta",
     description: "What a partnership with Alutta gives your institution, how it works, and what it costs.",
@@ -15,5 +15,5 @@ export const metadata: Metadata = {
 };
 
 export default function Page() {
-  return <PartnersPage />;
+  return <InstitutionsPage />;
 }

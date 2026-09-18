@@ -100,7 +100,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     // The old build linked /manifest.json. An installed app or a cached page
     // may still ask for it; send it to the manifest that says "browser".
-    return [{ source: "/manifest.json", destination: "/manifest.webmanifest", permanent: true }];
+    return [
+      { source: "/manifest.json", destination: "/manifest.webmanifest", permanent: true },
+      // The address people guess. The pack for institutions is /institutions,
+      // beside /funding-bodies, each named for who it is for.
+      { source: "/partners", destination: "/institutions", permanent: true },
+    ];
   },
 
   async headers() {

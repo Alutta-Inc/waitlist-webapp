@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { ArrowUp, ArrowUpRight, ChevronDown, Instagram, Linkedin, Plane } from "lucide-react";
+import { footerColumns as columns } from "@/components/home/footer-columns";
 
 const questions = [
   ["What is Alutta?", "Alutta helps students turn their study abroad ambitions into real plans. We bring together school research, application planning, payments, travel, and settling support in one place."],
@@ -11,11 +12,6 @@ const questions = [
   ["Do I need to have a university offer?", "No. You can start while you’re exploring destinations and schools. Your plan can grow with you, from your first shortlist to your first week abroad."],
   ["How do payments work?", "Each fee shows who collects it. Depending on the school, you may pay through a licensed payment partner, on the school’s website, or by following the school’s instructions. Alutta is not a bank."],
   ["Can Alutta help with travel and settling in?", "Alutta helps you organise travel plans, accommodation, and arrival essentials, so you can keep track of the practical steps for your new life abroad. Available services will be introduced during the beta."],
-];
-const columns = [
-  { title: "Explore", links: [["The Alutta way", "#about"], ["Destinations", "#destinations"], ["Your journey", "#how-it-works"], ["Questions", "#questions"]] },
-  { title: "Company", links: [["About us", "#about"], ["Careers", "/careers"], ["For institutions", "/partners"], ["Join the waitlist", "/waitlist"], ["Contact", "mailto:hello@alutta.com"]] },
-  { title: "Legal", links: [["Privacy", "/privacy"], ["Terms", "/terms"], ["For researchers", "/researchers"], ["AluttaBot", "/bot"]] },
 ];
 export default function HomeClosing({ onJoin }: { onJoin: () => void }) {
   const [open, setOpen] = useState<number | null>(0);

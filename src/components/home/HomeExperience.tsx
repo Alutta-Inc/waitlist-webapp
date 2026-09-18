@@ -8,6 +8,7 @@ import HomeHeader from "./HomeHeader";
 import HomeBenefits from "./HomeBenefits";
 import JourneyExplorer from "./JourneyExplorer";
 import DestinationShowcase from "./DestinationShowcase";
+import HomeAudiences from "@/components/home/HomeAudiences";
 import HomeClosing from "./HomeClosing";
 import WaitlistForm from "@/components/ui/WaitlistForm";
 
@@ -83,6 +84,8 @@ export default function HomeExperience() {
           </div>
         </div>
       </section>
+
+      <HomeAudiences />
 
       <HomeClosing onJoin={openPlanner} />
 
