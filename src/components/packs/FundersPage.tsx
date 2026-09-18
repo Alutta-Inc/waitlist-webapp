@@ -27,7 +27,7 @@ const sections: Section[] = [
     title: "Who we are",
     blocks: [
       { p: "Alutta is a platform for students who want to study in another country. A student builds one application profile, uses it to apply to institutions, and plans in the same place how the whole thing will be paid for: tuition, living costs, travel, health cover, application and visa fees." },
-      { p: "That plan is where your funding belongs. Most students never hear of most of the awards they qualify for, and most funders spend a great deal of effort reaching students who turn out not to qualify. We are a new company, our first students are in Nigeria, and we are choosing our first funding partners now." },
+      { p: "That plan is where your funding belongs. Most students never hear of most of the awards they qualify for, and most funders spend a great deal of effort reaching students who turn out not to qualify." },
     ],
   },
   {
@@ -89,7 +89,7 @@ const sections: Section[] = [
           },
         ],
       },
-      { p: "We will be plain about where this stands. The interface for decisions is ready today. Delivering applications into a funder’s system is not built yet, and we will build the first of those connections with our first partners." },
+      { p: "We will be plain about where this stands. The interface for decisions is ready today. Delivering applications into a funder’s system is not built yet, and each one will be built with the funder who wants it." },
     ],
   },
   {
@@ -138,7 +138,7 @@ const sections: Section[] = [
           { q: "Do you choose who gets our award?", a: "No. You select exactly as you do now. Alutta shows your award to students it fits and tells them what you ask for. It never ranks, scores or recommends an applicant to you." },
           { q: "Do we need technical staff?", a: "Not to be listed. Connecting your system, so that your decisions reach students at once, needs a developer on your side for a contained piece of work, which we support throughout." },
           { q: "Does any of the money come through Alutta?", a: "No. We record what you tell us you have awarded, so the student’s plan is accurate. We never hold or move award money." },
-          { q: "How many students do you have?", a: "We are new, and we will give you the real figures on a call instead of rounding them up on a page." },
+          { q: "How many students do you have?", a: "We will give you the real figures on a call, instead of rounding them up on a page." },
           { q: "Who do we talk to?", a: `The partnerships desk, at ${EMAIL}. A person answers.` },
         ],
       },

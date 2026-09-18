@@ -17,6 +17,10 @@ import PackPage, { EMAIL, type Pack, type Section } from "@/components/packs/Pac
  *  promised "students in countries where your office does not recruit", which
  *  nobody could stand behind). COMMISSION IS ON ENROLMENT, never on admission: no
  *  institution pays for an offer that a student never takes up.
+ *  NOTHING ABOUT ALUTTA'S AGE, SIZE OR STAGE (a founder's decision, 2026-09-18):
+ *  the page says what Alutta is and what is and is not built, and leaves where
+ *  the company stands for the call. What is NOT built is still said plainly;
+ *  that is about the product, and leaving it out would mislead.
  *  So: no student numbers, no partner names, no commission
  *  rate (the desk confirms those in conversation), and where a thing is not
  *  built yet, the page says so. Change a claim here only when the product
@@ -28,7 +32,6 @@ const sections: Section[] = [
     title: "Who we are",
     blocks: [
       { p: "Alutta is a platform for students applying to study, at home or abroad. A student builds one application profile, entering their details and uploading their documents once, and uses it to apply to any partner institution, each according to that institution’s own requirements. The same place then carries them through what follows: the decision, the fees and, for those going abroad, the visa and the move." },
-      { p: "We are a new company, and we would rather say so than imply otherwise. Our first students are in Nigeria. We are opening by invitation, and we are choosing our first partner institutions now. On a call we will tell you exactly where we are, in numbers." },
     ],
   },
   {
@@ -56,7 +59,7 @@ const sections: Section[] = [
             tag: "From Alutta to you",
             title: "Applications will arrive in your system",
             body: "This is the part we build with you. A complete application, with its documents, will be delivered into the admissions system your office already works in, so nobody retypes anything and nothing arrives by email.",
-            points: ["Built for the system you use: a national or shared portal, a commercial admissions system, or your own", "Planned and tested with your team before any real applicant is involved", "Not live yet for any institution. We are building the first of these connections with our first partners"],
+            points: ["Built for the system you use: a national or shared portal, a commercial admissions system, or your own", "Planned and tested with your team before any real applicant is involved", "Not live yet for any institution. Each connection is built with the institution that uses that system"],
           },
           {
             tag: "From you to Alutta",
@@ -66,7 +69,7 @@ const sections: Section[] = [
           },
         ],
       },
-      { p: "We will be plain about where this stands. The interface for decisions and fees is ready today. The connection that delivers applications is built for each admissions system, and none is live yet, which is why we are choosing our first partners carefully. Until yours is live, students prepare everything on Alutta and submit on your own application page, so recruiting can begin before the work is finished." },
+      { p: "We will be plain about where this stands. The interface for decisions and fees is ready today. The connection that delivers applications is built for each admissions system, and none is live yet. Until yours is live, students prepare everything on Alutta and submit on your own application page, so recruiting can begin before the work is finished." },
     ],
   },
   {
@@ -140,7 +143,7 @@ const sections: Section[] = [
         asked: [
           { q: "Do we have to change our admissions process?", a: "No. You assess and decide exactly as you do now. The connection carries applications in and decisions out. It does not change who decides, or how." },
           { q: "Do we need technical staff?", a: "Yes. A partnership connects your admissions system to ours, so we need a developer on your side, or the vendor of your admissions system. It is a contained piece of work: we supply the integration guide, test keys and a sandbox, and we stay with your team until it is live." },
-          { q: "How many students and partners do you have?", a: "We are new, and we will give you the real figures on a call instead of rounding them up on a page." },
+          { q: "How many students and partners do you have?", a: "We will give you the real figures on a call, instead of rounding them up on a page." },
           { q: "What do we pay if nobody enrols?", a: "Nothing. Commission is due only for a student who applied through Alutta and enrolled with you." },
           { q: "Who do we talk to?", a: `The partnerships desk, at ${EMAIL}. A person answers.` },
         ],
