@@ -6,7 +6,7 @@ import { useState, useEffect, useId, useMemo, useRef } from "react";
 import { Loader2, ArrowRight, Check, Copy, Share2, Search, ChevronDown, UserRound, Mail, ShieldCheck } from "lucide-react";
 import { destinationCountries, sourceCountries } from "@/lib/journey-data";
 import { track } from "@/lib/analytics";
-import { currentCode, forgetCode, isCodeShaped, normaliseCode } from "@/lib/referral";
+import { currentCode, forgetCode, isCodeShaped, normaliseCode, rememberCode } from "@/lib/referral";
 import { useTypedReferral } from "@/lib/use-referral";
 import { TURNSTILE_ACTION, TURNSTILE_SCRIPT_URL } from "@/lib/turnstile";
 import { cn } from "@/lib/utils";
@@ -250,6 +250,15 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
     setReferralInput(code);
     setReferralOpen(true);
   }, []);
+
+  // THE FIELD IS THE TRUTH. Editing it rewrites what this browser is
+  // carrying, so clearing the box and refreshing does not bring the old code
+  // back: what somebody can see is what will be sent.
+  function setReferralCode(value: string) {
+    setReferralInput(value);
+    if (!value) forgetCode();
+    else if (isCodeShaped(value)) rememberCode(value);
+  }
 
   const typedCode = normaliseCode(referralInput);
   // Sent unless we KNOW it is not ours. A lookup that could not answer keeps
@@ -630,7 +639,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
               id={referralFieldId}
               type="text"
               value={referralInput}
-              onChange={(e) => setReferralInput(normaliseCode(e.target.value))}
+              onChange={(e) => setReferralCode(normaliseCode(e.target.value))}
               placeholder="ABCD1234"
               disabled={isSubmitting}
               className={inputClass(false)}
