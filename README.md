@@ -348,10 +348,12 @@ about admissions, and there is no reporting yet. Change a claim only when the pr
 changed first. ai-service links the institutions pack from agent email through
 `PARTNERSHIP_PACK_URL`.
 
-**The hero photos are placeholders.** Each pack wants a picture of its own, briefed in
-`public/images/institutions-hero.prompt.txt` and `funding-bodies-hero.prompt.txt`
-(the site's pictures are generated, each with its prompt beside it). Generate, save
-under the name the brief gives, and set `image.src` in the page's pack.
+**Each pack has a hero photo of its own**, used nowhere else on the site:
+`public/images/institutions-hero.jpg` (the person who reads the application) and
+`funding-bodies-hero.jpg` (the student the funding is for). Both are free-licence
+Unsplash photographs, credited in the hero's caption, with the source beside each file
+as `*.source.txt`. They are portrait photos in a wide frame, so `image.position` in
+the pack decides which band shows; check the face is in it after changing either.
 
 **"Who it's for"** names the three sides of an application: student, institution,
 funding body. It is a footer column (`src/components/home/footer-columns.ts`, one list

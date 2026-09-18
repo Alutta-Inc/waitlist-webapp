@@ -150,9 +150,9 @@ const pack: Pack = {
   heading: ["One profile.", "Every border.", "Your next intake."],
   intro: "Alutta lets a student apply to any partner institution, anywhere in the world, with one application profile. Joining costs an institution nothing.",
   promise: "Your office assesses and decides every application.",
-  // See public/images/partners-hero.prompt.txt: the picture this page is waiting for.
-  image: { src: "/images/campus-friends.png", alt: "Three students from different countries talking as they walk across a university campus", position: "64% center" },
-  caption: "An illustration, not a partner campus.",
+  // This page's own picture (source beside it): the person who reads the application.
+  image: { src: "/images/institutions-hero.jpg", alt: "A smiling member of staff wearing a lanyard, talking with a student across a laptop on a campus terrace", position: "50% 24%" },
+  caption: "Photo: Eliott Reyna, Unsplash.",
   orbit: "FREE TO JOIN",
   flight: ["You pay only", "On a successful admission"],
   // The same four facts as "What it costs", so the hero promises nothing the pack does not.

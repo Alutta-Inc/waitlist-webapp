@@ -45,7 +45,7 @@
 .pack-hero-read{display:inline-flex;align-items:center;gap:12px;font-size:15px;color:#1f5d43;padding:8px 4px}
 .pack-hero .atlas-orbit-label{animation:atlas-label-settle 3.8s ease-in-out,pack-float 7s 3.8s ease-in-out infinite}
 /* The home page retired this label; here it carries the second half of the offer. */
-.pack-hero .atlas-flight-label{display:flex;min-width:0;left:-46px;top:44%;padding-right:26px;animation:atlas-rise-in 1s .35s both,pack-float 8s 1.4s ease-in-out infinite}
+.pack-hero .atlas-flight-label{display:flex;min-width:0;left:-46px;top:58%;padding-right:26px;animation:atlas-rise-in 1s .35s both,pack-float 8s 1.4s ease-in-out infinite}
 .pack-hero-card .atlas-destination-question{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7b8d7b}
 .pack-hero-line{min-height:62px;margin-top:12px}
 .pack-hero-line>span{display:block;font-size:13px;color:#6a7c7b;animation:pack-line .6s both cubic-bezier(.2,.75,.3,1)}

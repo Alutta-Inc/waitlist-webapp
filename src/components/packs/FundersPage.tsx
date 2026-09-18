@@ -152,9 +152,9 @@ const pack: Pack = {
   heading: ["Your funding.", "The right students.", "The right moment."],
   intro: "Alutta shows your scholarships, grants and loans to the students they were made for, while they are planning how to pay for their studies. Listing costs a funding body nothing.",
   promise: "You select every scholar. Award money never passes through us.",
-  // See public/images/funding-bodies-hero.prompt.txt: the picture this page is waiting for.
-  image: { src: "/images/journey-graduates.jpg", alt: "Graduates in gowns throwing their caps into the air at sunset", position: "50% center" },
-  caption: "The day your funding is for.",
+  // This page's own picture (source beside it): the student the funding is for.
+  image: { src: "/images/funding-bodies-hero.jpg", alt: "A smiling student with a backpack and notebooks, outside a campus building", position: "50% 26%" },
+  caption: "Photo: Oluwaseyi Akinlolu, Unsplash.",
   orbit: "FREE TO LIST",
   flight: ["We never touch", "Your award money"],
   // The same three facts as "What it costs", so the hero promises nothing the pack does not.
