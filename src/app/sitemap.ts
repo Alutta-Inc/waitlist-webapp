@@ -44,6 +44,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
     {
+      // The pack for scholarship bodies, sponsors and lenders.
+      url: `${siteUrl}/funding-bodies`,
+      lastModified: now,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
+    {
       // What Supervisor Finder shows about researchers and how to be removed.
       // Indexed on purpose: a researcher searching their own name should find it.
       url: `${siteUrl}/researchers`,

@@ -327,22 +327,39 @@ src/
 
 Questions: `hello@alutta.com`.
 
-## The partnership pack and the email signature
+## The packs, "Who it's for", and the email signature
 
-**`/partners`** (`src/components/partners/PartnersPage.tsx`) is the partnership pack,
-the document the partnerships desk sends an admissions office. It is built from the
-legal page's parts and prints to a clean PDF from its own Print button. Its hero is
-the home page's (arch, halo, floating labels), carrying the offer itself, and its
-card cycles the same four cost facts the pack states. **A partnership is a technical
-connection between two systems**, so the page never offers a "no technical work"
-route; submitting on the school's own page is described only as what happens until
-the connection is live. Both footers link it under Company as "For institutions". **Every
-sentence on it is something the product does today, or is marked as something we
-build with the partner**: a registrar will hold us to it on the first call. It states
-no student numbers, no partner names and no commission rate (the desk confirms those
-in conversation), and it says plainly that no admissions-portal connection is live
-yet. Change a claim there only when the product changed first. ai-service links it
-from agent email through `PARTNERSHIP_PACK_URL`.
+**`/institutions` and `/funding-bodies`** are the packs: the documents the partnerships
+desk sends to the people on the other side of a student's application. Both are one
+component, `src/components/packs/PackPage.tsx`, given its words by
+`InstitutionsPage.tsx` and `FundersPage.tsx`. The hero is the home page's (arch, halo,
+floating labels) carrying the offer itself, and its card cycles the same cost facts
+the pack states; below it the page is the legal page's document frame, and prints to a
+clean PDF from its own Print button. `/partners` redirects to `/institutions`.
+
+**Every sentence on a pack is something the product does today, or is marked as not
+built**: the reader will hold us to it on the first call. No student numbers, no
+partner names, no commission rate (the desk confirms those in conversation). For
+institutions, **a partnership is a technical connection between two systems**, so the
+page never offers a "no technical work" route, and it says that no connection
+delivering applications is live yet. For funding bodies, listing needs no technical
+work, Alutta charges nothing and never moves award money, a funder is shown nothing
+about admissions, and there is no reporting yet. Change a claim only when the product
+changed first. ai-service links the institutions pack from agent email through
+`PARTNERSHIP_PACK_URL`.
+
+**The hero photos are placeholders.** Each pack wants a picture of its own, briefed in
+`public/images/institutions-hero.prompt.txt` and `funding-bodies-hero.prompt.txt`
+(the site's pictures are generated, each with its prompt beside it). Generate, save
+under the name the brief gives, and set `image.src` in the page's pack.
+
+**"Who it's for"** names the three sides of an application: student, institution,
+funding body. It is a footer column (`src/components/home/footer-columns.ts`, one list
+for both footers) and a section on both home pages
+(`src/components/home/HomeAudiences.tsx`), placed late, after the student's story, for
+the admissions officer or scholarship manager who looks us up after our email.
+`/researchers` is deliberately not in it: that page is not an offer, it tells
+researchers what we show about them and how to be left out, so it stays under Legal.
 
 **`/brand/signature.html`** (a static file, `noindex`) is the team's email signature
 and the page a person installs it from: choose the desk, copy, paste into Gmail's
