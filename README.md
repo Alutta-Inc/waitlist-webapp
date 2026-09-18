@@ -326,3 +326,49 @@ src/
 ---
 
 Questions: `hello@alutta.com`.
+
+## The packs, "Who it's for", and the email signature
+
+**`/institutions` and `/funding-bodies`** are the packs: the documents the partnerships
+desk sends to the people on the other side of a student's application. Both are one
+component, `src/components/packs/PackPage.tsx`, given its words by
+`InstitutionsPage.tsx` and `FundersPage.tsx`. The hero is the home page's (arch, halo,
+floating labels) carrying the offer itself, and its card cycles the same cost facts
+the pack states; below it the page is the legal page's document frame, and prints to a
+clean PDF from its own Print button. `/partners` redirects to `/institutions`.
+
+**Every sentence on a pack is something the product does today, or is marked as not
+built**: the reader will hold us to it on the first call. No student numbers, no
+partner names, no commission rate (the desk confirms those in conversation). For
+institutions, **a partnership is a technical connection between two systems**, so the
+page never offers a "no technical work" route, and it says that no connection
+delivering applications is live yet. For funding bodies, listing needs no technical
+work, Alutta charges nothing and never moves award money, a funder is shown nothing
+about admissions, and there is no reporting yet. Change a claim only when the product
+changed first. ai-service links the institutions pack from agent email through
+`PARTNERSHIP_PACK_URL`.
+
+**Each pack has a hero photo of its own**, used nowhere else on the site:
+`public/images/institutions-hero.jpg` (the person who reads the application) and
+`funding-bodies-hero.jpg` (the student the funding is for). Both are free-licence
+Unsplash photographs, credited in the hero's caption, with the source beside each file
+as `*.source.txt`. They are portrait photos in a wide frame, so `image.position` in
+the pack decides which band shows; check the face is in it after changing either.
+
+**"Who it's for"** names the three sides of an application: student, institution,
+funding body. It is a footer column (`src/components/home/footer-columns.ts`, one list
+for both footers) and a section on both home pages
+(`src/components/home/HomeAudiences.tsx`), placed late, after the student's story, for
+the admissions officer or scholarship manager who looks us up after our email.
+`/researchers` is deliberately not in it: that page is not an offer, it tells
+researchers what we show about them and how to be left out, so it stays under Legal.
+
+**`/brand/signature.html`** (a static file, `noindex`) is the team's email signature
+and the page a person installs it from: choose the desk, copy, paste into Gmail's
+signature box. The signature is live text beside one small image,
+`/brand/email-mark.png` (the mark, 3x of its 44 by 40 display size). It is
+deliberately not one big image: that is a blank box wherever images are blocked
+(Outlook, most university mail), cannot be clicked or read aloud, and makes a short
+email mostly-image, which spam filters mark down. It uses the mark and not the
+wordmark because the wordmark's dark text disappears in dark mode. Do not move or
+rename `email-mark.png`: every signature already pasted into a mailbox points at it.

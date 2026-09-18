@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Alutta email signature</title>
+<!--
+  THE TEAM'S EMAIL SIGNATURE, and the page a person installs it from.
+
+  WHY IT IS NOT ONE BIG IMAGE. A signature that is a single picture is a blank
+  box in every client that blocks images until asked (Outlook, most corporate
+  mail, which is who a university registrar reads us in), cannot be selected or
+  clicked as an address, is invisible to a screen reader, and makes a short
+  email mostly-image, which spam filters mark down. So the only image is the
+  mark, 44 by 40, and every word is live text. With images off it still reads
+  in full, and the mark's place says "Alutta" in green.
+
+  WHY THE MARK AND NOT THE WORDMARK. The horizontal logo sets "Alutta" in dark
+  green, which disappears on a dark-mode background. The mark is green on
+  anything. The name text carries no colour of its own, so each client paints
+  it in whatever it paints the rest of the email.
+
+  HOW IT IS INSTALLED. Copy puts the rendered signature on the clipboard as
+  rich text; Gmail's signature box takes it by paste. The image is referenced
+  by URL (alutta.com/brand/email-mark.png), never embedded, because Gmail drops
+  embedded images from a pasted signature.
+-->
+<style>
+  :root {
+    --ground: #f3f6f4; --card: #ffffff; --ink: #003024; --body: #354440; --muted: #74827e;
+    --line: #dde5e1; --green: #029b47; --action: #13ca58;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--body); font: 15px/1.6 "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, Arial, sans-serif; }
+  main { max-width: 860px; margin: 0 auto; padding: 48px 20px 80px; }
+  h1 { font-size: 28px; line-height: 1.2; color: var(--ink); margin: 0 0 8px; letter-spacing: -0.01em; }
+  h2 { font-size: 17px; color: var(--ink); margin: 44px 0 4px; }
+  p { margin: 0 0 12px; max-width: 64ch; }
+  .lede { color: var(--muted); }
+  .pick { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0 0; }
+  .pick button { font: inherit; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--card); color: var(--body); cursor: pointer; }
+  .pick button[aria-pressed="true"] { background: var(--ink); border-color: var(--ink); color: #fff; }
+  .fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 16px 0 0; }
+  .fields label { display: block; font-size: 12px; font-weight: 600; color: var(--muted); }
+  .fields input { display: block; width: 100%; margin-top: 4px; font: inherit; font-size: 14px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--ink); }
+  .stage { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-top: 20px; }
+  .mail { border: 1px solid var(--line); border-radius: 12px; overflow: hidden; background: #fff; }
+  .mail header { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--line); background: #fafcfb; }
+  .mail .sheet { padding: 20px 16px 22px; font-family: Arial, Helvetica, sans-serif; font-size: 14px; line-height: 21px; color: #222; overflow-x: auto; }
+  .mail .sheet p { margin: 0 0 14px; }
+  .mail.dark { background: #1e1f20; border-color: #2c2e30; }
+  .mail.dark header { background: #252729; border-color: #2c2e30; color: #9aa3a0; }
+  .mail.dark .sheet { color: #e3e3e3; }
+  .mail.off img { visibility: hidden; }
+  .mail.off .mark-cell a { display: block; width: 44px; height: 40px; outline: 1px dashed #c5cfca; font: bold 13px/40px Arial, sans-serif; color: #029b47; text-align: center; text-decoration: none; position: relative; }
+  .mail.off .mark-cell a::after { content: "Alutta"; position: absolute; inset: 0; font-size: 11px; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+  .copy { font: inherit; font-weight: 700; font-size: 14px; padding: 11px 20px; border: 0; border-radius: 10px; background: var(--action); color: #fff; cursor: pointer; }
+  .copy:focus-visible, .pick button:focus-visible, .fields input:focus-visible { outline: 3px solid rgba(19, 202, 88, 0.45); outline-offset: 2px; }
+  #said { font-size: 13px; color: var(--green); font-weight: 600; }
+  ol { padding-left: 20px; max-width: 64ch; }
+  ol li { margin-bottom: 6px; }
+  .note { margin-top: 28px; padding: 14px 16px; border-left: 3px solid var(--action); background: var(--card); border-radius: 0 10px 10px 0; font-size: 14px; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Alutta email signature</h1>
+  <p class="lede">One signature for everything a person at Alutta sends. Choose the desk, copy it, and paste it into Gmail.</p>
+
+  <div class="pick" role="group" aria-label="Which desk">
+    <button type="button" data-desk="partnerships" aria-pressed="true">Partnerships</button>
+    <button type="button" data-desk="support" aria-pressed="false">Support</button>
+    <button type="button" data-desk="hello" aria-pressed="false">General</button>
+    <button type="button" data-desk="person" aria-pressed="false">A named person</button>
+  </div>
+
+  <div class="fields" id="person-fields" hidden>
+    <label>Name <input id="f-name" value="Your name" autocomplete="off" /></label>
+    <label>Role <input id="f-role" value="Partnerships" autocomplete="off" /></label>
+    <label>Email <input id="f-email" value="partnerships@alutta.com" autocomplete="off" /></label>
+  </div>
+
+  <div class="stage">
+    <div class="mail">
+      <header>Light mode</header>
+      <div class="sheet"><p>We look forward to hearing from you.</p><div class="slot" id="source"></div></div>
+    </div>
+    <div class="mail dark">
+      <header>Dark mode</header>
+      <div class="sheet"><p>We look forward to hearing from you.</p><div class="slot"></div></div>
+    </div>
+    <div class="mail off">
+      <header>Images blocked (Outlook, most university mail)</header>
+      <div class="sheet"><p>We look forward to hearing from you.</p><div class="slot"></div></div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button type="button" class="copy" id="copy">Copy signature</button>
+    <span id="said" role="status"></span>
+  </div>
+
+  <h2>Put it in Gmail</h2>
+  <ol>
+    <li>Press <strong>Copy signature</strong> above.</li>
+    <li>In Gmail, open <strong>Settings</strong>, then <strong>See all settings</strong>, and scroll to <strong>Signature</strong>.</li>
+    <li>Create a signature, click into the box and paste.</li>
+    <li>Under <strong>Signature defaults</strong>, choose the address it belongs to (for a group address, the one you send as), for new emails and for replies.</li>
+    <li>Tick <strong>Insert signature before quoted text</strong>, then save at the bottom of the page.</li>
+  </ol>
+  <p class="note">A group address such as partnerships@alutta.com has no settings of its own. Each person who answers from it adds the address under <strong>Accounts</strong>, <strong>Send mail as</strong>, and sets this signature for that address in their own Gmail.</p>
+</main>
+
+<script>
+  var DESKS = {
+    partnerships: { name: "Partnerships Team", role: "Alutta", email: "partnerships@alutta.com" },
+    support: { name: "Support Team", role: "Alutta", email: "support@alutta.com" },
+    hello: { name: "The Alutta Team", role: "Alutta", email: "hello@alutta.com" }
+  };
+  var LINE = "One application profile. Any partner institution, anywhere in the world.";
+  var desk = "partnerships";
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+
+  // Tables, inline styles and Arial: the only things every mail client keeps.
+  function signature(d) {
+    var link = "color:#029b47;text-decoration:none;";
+    return '' +
+      '<table cellpadding="0" cellspacing="0" border="0" role="presentation" style="font-family:Arial,Helvetica,sans-serif;border-collapse:collapse;">' +
+      '<tr>' +
+      '<td class="mark-cell" style="padding:0 14px 0 0;vertical-align:middle;"><a href="https://alutta.com" style="text-decoration:none;">' +
+      '<img src="https://alutta.com/brand/email-mark.png" width="44" height="40" alt="Alutta" style="display:block;border:0;font-family:Arial,sans-serif;font-size:13px;font-weight:bold;color:#029b47;" /></a></td>' +
+      '<td style="border-left:2px solid #13ca58;padding:1px 0 1px 14px;vertical-align:middle;">' +
+      '<div style="font-size:15px;line-height:20px;font-weight:bold;">' + esc(d.name) + '</div>' +
+      '<div style="font-size:13px;line-height:19px;color:#74827e;">' + esc(d.role) + '</div>' +
+      '<div style="font-size:13px;line-height:19px;"><a href="mailto:' + esc(d.email) + '" style="' + link + '">' + esc(d.email) + '</a>' +
+      '<span style="color:#74827e;">&nbsp;&nbsp;|&nbsp;&nbsp;</span><a href="https://alutta.com" style="' + link + '">alutta.com</a></div>' +
+      '</td></tr>' +
+      '<tr><td colspan="2" style="padding:10px 0 0 0;font-size:12px;line-height:17px;color:#74827e;">' + LINE + '</td></tr>' +
+      '</table>';
+  }
+
+  function current() {
+    if (desk !== "person") return DESKS[desk];
+    var role = document.getElementById("f-role").value.trim();
+    return {
+      name: document.getElementById("f-name").value.trim() || "Your name",
+      role: role ? role + ", Alutta" : "Alutta",
+      email: document.getElementById("f-email").value.trim() || "hello@alutta.com"
+    };
+  }
+
+  function draw() {
+    var html = signature(current());
+    // On the page the mark is fetched from this site (the page's own policy
+    // allows nothing else); what is copied always names alutta.com in full.
+    var shown = html.replace("https://alutta.com/brand/", "/brand/");
+    document.querySelectorAll(".slot").forEach(function (el) { el.innerHTML = shown; });
+    document.getElementById("person-fields").hidden = desk !== "person";
+    document.getElementById("said").textContent = "";
+  }
+
+  document.querySelectorAll(".pick button").forEach(function (b) {
+    b.addEventListener("click", function () {
+      desk = b.dataset.desk;
+      document.querySelectorAll(".pick button").forEach(function (o) { o.setAttribute("aria-pressed", String(o === b)); });
+      draw();
+    });
+  });
+  document.querySelectorAll(".fields input").forEach(function (i) { i.addEventListener("input", draw); });
+
+  document.getElementById("copy").addEventListener("click", function () {
+    var said = document.getElementById("said");
+    var html = signature(current());
+    var done = function () { said.textContent = "Copied. Paste it into Gmail's signature box."; };
+    // The old way works everywhere and copies exactly what is on the screen.
+    var byHand = function () {
+      var range = document.createRange();
+      range.selectNodeContents(document.getElementById("source"));
+      var sel = window.getSelection();
+      sel.removeAllRanges(); sel.addRange(range);
+      var ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+      sel.removeAllRanges();
+      if (ok) done(); else said.textContent = "Select the light-mode signature above and copy it by hand.";
+    };
+    if (navigator.clipboard && window.ClipboardItem) {
+      navigator.clipboard.write([new ClipboardItem({
+        "text/html": new Blob([html], { type: "text/html" }),
+        "text/plain": new Blob([document.getElementById("source").innerText], { type: "text/plain" })
+      })]).then(done, byHand);
+    } else byHand();
+  });
+
+  draw();
+</script>
+</body>
+</html>

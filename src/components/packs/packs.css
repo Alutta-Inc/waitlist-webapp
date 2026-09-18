@@ -1,0 +1,69 @@
+/* The packs: alutta.com/institutions and /funding-bodies. The frame is the legal page's
+   (legal.css); this adds only what a pack has and a policy does not: a checked
+   list, the two ways of working side by side, the cost table, the steps and
+   the questions. Same palette, same scale, and every one of them prints. */
+.pack-list{list-style:none;display:grid;gap:14px;margin-top:6px;padding:0}
+.pack-list li{display:grid;grid-template-columns:26px minmax(0,1fr);gap:12px;align-items:start;font-size:16px;line-height:1.8;color:#566d69}
+.pack-list li>svg{width:26px;height:26px;padding:5px;border-radius:50%;background:#edf4e4;color:#406d4d;margin-top:2px}
+.pack-ways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:22px}
+.pack-way{display:flex;flex-direction:column;border:1px solid #dfe9da;border-radius:20px;padding:26px 24px;background:#fbfdf8}
+.pack-way:first-child{background:#f4f8ee}
+.pack-tag{align-self:flex-start;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#52735b;border:1px solid #d5e2cc;border-radius:999px;padding:4px 10px;background:#fff}
+.legal-home .pack-way h3{font-family:var(--font-mierb),sans-serif;font-weight:600;font-size:20px;line-height:1.25;letter-spacing:-.02em;color:#133d36;margin-top:16px}
+.legal-section .pack-way p{font-size:15px;line-height:1.75;margin-top:10px}
+.pack-way ul{list-style:none;padding:16px 0 0;margin:auto 0 0;display:grid;gap:8px;border-top:1px solid #e3ebdc}
+.pack-way p+ul{margin-top:18px}
+.pack-way li{position:relative;padding-left:16px;font-size:14px;line-height:1.6;color:#4e6966}
+.pack-way li::before{content:"";position:absolute;left:0;top:.62em;width:6px;height:6px;border-radius:50%;background:#13ca58}
+.pack-terms[data-count="3"]{grid-template-columns:repeat(3,minmax(0,1fr))}
+.pack-terms{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:8px;border:1px solid #dfe9da;border-radius:20px;overflow:hidden;background:#fff}
+.pack-terms>div{padding:22px 20px;border-left:1px solid #e8eee3}
+.pack-terms>div:first-child{border-left:0}
+.pack-terms>div:last-child{background:#f4f8ee}
+.pack-terms dt{font-size:12px;line-height:1.4;color:#7b8d7b}
+.pack-terms dd{margin:8px 0 0;font-family:var(--font-mierb),sans-serif;font-weight:600;font-size:22px;line-height:1.2;letter-spacing:-.03em;color:#133d36}
+.pack-terms>div:last-child dd{font-size:17px;letter-spacing:-.015em}
+.pack-steps{list-style:none;counter-reset:step;padding:0;margin-top:10px;display:grid}
+.pack-steps li{counter-increment:step;position:relative;display:grid;gap:4px;padding:0 0 26px 50px}
+.pack-steps li:last-child{padding-bottom:0}
+.pack-steps li::before{content:counter(step);position:absolute;left:0;top:0;display:grid;place-items:center;width:32px;height:32px;border-radius:50%;border:1px solid #cfdfc6;background:#fff;font-size:13px;color:#406d4d}
+.pack-steps li::after{content:"";position:absolute;left:16px;top:38px;bottom:4px;width:1px;background:#dfe9da}
+.pack-steps li:last-child::after{display:none}
+.pack-steps strong{font-weight:600;font-size:17px;line-height:32px;color:#133d36}
+.pack-steps span{font-size:16px;line-height:1.75;color:#566d69}
+.pack-asked{display:grid;margin-top:4px}
+.pack-asked>div{padding:18px 0;border-top:1px solid #e8eee3}
+.pack-asked>div:first-child{border-top:0;padding-top:6px}
+.pack-asked dt{font-weight:600;font-size:17px;line-height:1.45;color:#133d36}
+.pack-asked dd{margin:0}
+.legal-section .pack-asked dd p{margin-top:6px}
+.pack-print-contact{display:none}
+/* The hero is the home page's (home.css). Only what differs is here: this
+   photo is framed for itself (the home rule over-scales its own), the top
+   label keeps a slow float after it settles, and the card holds one changing line. */
+.pack-hero .atlas-image-arch img{width:100%!important;left:0!important}
+.pack-hero-read{display:inline-flex;align-items:center;gap:12px;font-size:15px;color:#1f5d43;padding:8px 4px}
+.pack-hero .atlas-orbit-label{animation:atlas-label-settle 3.8s ease-in-out,pack-float 7s 3.8s ease-in-out infinite}
+/* The home page retired this label; here it carries the second half of the offer. */
+.pack-hero .atlas-flight-label{display:flex;min-width:0;left:-46px;top:58%;padding-right:26px;animation:atlas-rise-in 1s .35s both,pack-float 8s 1.4s ease-in-out infinite}
+.pack-hero-card .atlas-destination-question{display:block;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#7b8d7b}
+.pack-hero-line{min-height:62px;margin-top:12px}
+.pack-hero-line>span{display:block;font-size:13px;color:#6a7c7b;animation:pack-line .6s both cubic-bezier(.2,.75,.3,1)}
+.pack-hero-line strong{display:block;font-family:var(--font-mierb),sans-serif;font-weight:600;font-size:24px;line-height:1.15;letter-spacing:-.03em;color:#133d36;margin-top:4px}
+.pack-hero-dots{display:flex;gap:6px;margin-top:14px}
+.pack-hero-dots i{width:18px;height:4px;border-radius:4px;background:#e3ebdc;transition:background .4s,width .4s}
+.pack-hero-dots i[data-on="true"]{width:30px;background:#13ca58}
+@keyframes pack-float{0%,100%{translate:0 0}50%{translate:0 -7px}}
+@keyframes pack-line{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.pack-hero .atlas-flight-label,.pack-hero .atlas-orbit-label,.pack-hero-line>span{animation:none}}
+@media(max-width:1050px){.pack-hero .atlas-flight-label{left:-14px}}
+@media(max-width:760px){.pack-hero .atlas-flight-label{left:-8px;top:24%;padding:11px 16px 11px 11px}.pack-hero-line strong{font-size:20px}.pack-hero-line{min-height:54px}}
+@media(max-width:900px){.pack-terms{grid-template-columns:repeat(2,minmax(0,1fr))}.pack-terms>div:nth-child(3){border-left:0}.pack-terms>div:nth-child(n+3){border-top:1px solid #e8eee3}}
+@media(max-width:760px){.pack-ways{grid-template-columns:1fr}.pack-way{padding:22px 20px}.pack-terms dd{font-size:19px}.pack-terms>div{padding:18px 16px}}
+@media print{
+  .pack-hero{display:none!important}
+  .pack-list li,.pack-steps span,.pack-way li,.legal-section .pack-way p{color:#000;font-size:11pt}
+  .pack-way,.pack-terms,.pack-terms>div:last-child,.pack-way:first-child{background:#fff!important}
+  .pack-ways,.pack-terms,.pack-steps li,.pack-asked>div{break-inside:avoid}
+  .pack-print-contact{display:block;margin-top:24px;padding-top:12px;border-top:1px solid #999;font-size:10pt;color:#000}
+}
