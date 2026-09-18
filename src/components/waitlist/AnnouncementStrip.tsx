@@ -48,7 +48,7 @@ export function AnnouncementStrip({ joinHref, onJoin }: { joinHref: string; onJo
   return (
     <div className="atlas-announcement">
       <span className="atlas-status-dot" />
-      Your next chapter is calling. {action("Private beta is open", "cta-announcement-waitlist")}
+      Your next chapter is calling. {action("Private beta is open", "join-announcement")}
     </div>
   );
 }

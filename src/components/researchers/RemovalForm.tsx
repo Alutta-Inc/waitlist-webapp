@@ -4,6 +4,7 @@ import Script from "next/script";
 import { useState } from "react";
 import { ArrowRight, Check, Loader2, ShieldCheck } from "lucide-react";
 
+import { track } from "@/lib/analytics";
 import { TURNSTILE_REMOVAL_ACTION, TURNSTILE_SCRIPT_URL } from "@/lib/turnstile";
 import { useTurnstile } from "@/lib/use-turnstile";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,7 @@ export default function RemovalForm() {
         turnstile.reset();
         return;
       }
+      track("researcher-removal-submit");
       setSent(true);
     } catch {
       setError("Connection error. Please check your internet and try again.");

@@ -13,7 +13,7 @@ export default function ExplainerModal({ onJoin }: { onJoin: () => void }) {
   const [failed, setFailed] = useState(false);
   const close = () => dialog.current?.close();
   return <>
-    <button className="atlas-hero-secondary" onClick={() => { setFailed(false); dialog.current?.showModal(); }} aria-haspopup="dialog"><span><Play size={17} fill="currentColor" aria-hidden /></span>Take a look around</button>
+    <button className="atlas-hero-secondary" onClick={() => { setFailed(false); dialog.current?.showModal(); }} aria-haspopup="dialog" data-track="explainer-open"><span><Play size={17} fill="currentColor" aria-hidden /></span>Take a look around</button>
     <dialog className="explainer-dialog" ref={dialog} aria-labelledby="explainer-title" onClose={() => video.current?.pause()} onClick={event => { if (event.target === event.currentTarget) close(); }}>
       <div className="explainer-content">
         <div className="explainer-top"><span><Play size={12} fill="currentColor" /> A QUICK LOOK AROUND</span><button autoFocus className="explainer-close" aria-label="Close explainer" onClick={close}><X /></button></div>
@@ -23,7 +23,7 @@ export default function ExplainerModal({ onJoin }: { onJoin: () => void }) {
         <h2 id="explainer-title">See how Alutta works</h2>
         <p className="explainer-intro">Alutta helps students discover schools, prepare applications, make payments, plan travel, and settle into a new city.</p>
         <div className="explainer-features">{[{ Icon: Landmark, title: "Explore schools", detail: "Find the right fit" }, { Icon: Wallet, title: "Pay securely", detail: "Through trusted partners" }, { Icon: Plane, title: "Travel and settle", detail: "Support at every step" }].map(({ Icon, title, detail }) => <div key={title}><span><Icon aria-hidden="true" /></span><div><strong>{title}</strong><small>{detail}</small></div></div>)}</div>
-        <div className="explainer-actions"><button className="atlas-button" onClick={() => { close(); onJoin(); }}>Join the waitlist <ArrowUpRight size={20} /></button><button className="explainer-later" onClick={close}>Maybe later</button></div>
+        <div className="explainer-actions"><button className="atlas-button" onClick={() => { close(); onJoin(); }} data-track="join-explainer">Join the waitlist <ArrowUpRight size={20} /></button><button className="explainer-later" onClick={close}>Maybe later</button></div>
       </div>
     </dialog>
   </>;

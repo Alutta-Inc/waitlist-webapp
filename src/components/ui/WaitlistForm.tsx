@@ -361,6 +361,7 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
     : "";
 
   const handleCopy = async () => {
+    track("copy-referral");
     try {
       await navigator.clipboard.writeText(referralLink);
       setCopied(true);
