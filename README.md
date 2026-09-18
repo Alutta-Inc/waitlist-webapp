@@ -339,7 +339,11 @@ clean PDF from its own Print button. `/partners` redirects to `/institutions`.
 
 **Every sentence on a pack is something the product does today, or is marked as not
 built**: the reader will hold us to it on the first call. No student numbers, no
-partner names, no commission rate (the desk confirms those in conversation). For
+partner names, no commission rate (the desk confirms those in conversation). **A pack says
+what Alutta does, never what the reader will get**: no promise of more applicants, of
+international students or of reach. **Commission is on enrolment, never on admission**
+(no institution pays for an offer nobody takes up); the agent's approved facts in
+ai-service say the same, and the three must stay in step. For
 institutions, **a partnership is a technical connection between two systems**, so the
 page never offers a "no technical work" route, and it says that no connection
 delivering applications is live yet. For funding bodies, listing needs no technical
