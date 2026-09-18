@@ -5,7 +5,7 @@ import InstitutionsPage from "@/components/packs/InstitutionsPage";
 export const metadata: Metadata = {
   title: "For institutions",
   description:
-    "The Alutta partnership pack: what a partnership gives your institution, how applications reach you, and what it costs. Joining is free.",
+    "The Alutta partnership pack: what a partnership gives your institution, how applications reach you, and what it costs. Joining is free, and commission is due only when a student enrols.",
   alternates: { canonical: "/institutions" },
   openGraph: {
     title: "For institutions | Alutta",

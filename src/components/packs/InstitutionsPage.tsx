@@ -12,7 +12,16 @@ import PackPage, { EMAIL, type Pack, type Section } from "@/components/packs/Pac
  *
  *  EVERY SENTENCE HERE IS SOMETHING THE PRODUCT DOES TODAY, or is marked as
  *  something we build with the partner. A registrar will hold us to this page
- *  on the first call. So: no student numbers, no partner names, no commission
+ *  on the first call. WHAT ALUTTA DOES, NEVER WHAT THE READER WILL GET: no promise
+ *  of more applicants, of international students or of reach (the first version
+ *  promised "students in countries where your office does not recruit", which
+ *  nobody could stand behind). COMMISSION IS ON ENROLMENT, never on admission: no
+ *  institution pays for an offer that a student never takes up.
+ *  NOTHING ABOUT ALUTTA'S AGE, SIZE OR STAGE (a founder's decision, 2026-09-18):
+ *  the page says what Alutta is and what is and is not built, and leaves where
+ *  the company stands for the call. What is NOT built is still said plainly;
+ *  that is about the product, and leaving it out would mislead.
+ *  So: no student numbers, no partner names, no commission
  *  rate (the desk confirms those in conversation), and where a thing is not
  *  built yet, the page says so. Change a claim here only when the product
  *  changed first. */
@@ -22,8 +31,7 @@ const sections: Section[] = [
     id: "who-we-are",
     title: "Who we are",
     blocks: [
-      { p: "Alutta is a platform for students who want to study in another country. A student builds one application profile, and uses it to apply to any partner institution, anywhere in the world. The same place then carries them through what follows: the decision, the fees, the visa and the move." },
-      { p: "We are a new company, and we would rather say so than imply otherwise. Our first students are in Nigeria. We are opening by invitation, and we are choosing our first partner institutions now. On a call we will tell you exactly where we are, in numbers." },
+      { p: "Alutta is a platform for students applying to study, at home or abroad. A student builds one application profile, entering their details and uploading their documents once, and uses it to apply to any partner institution, each according to that institution’s own requirements. The same place then carries them through what follows: the decision, the fees and, for those going abroad, the visa and the move." },
     ],
   },
   {
@@ -32,7 +40,7 @@ const sections: Section[] = [
     blocks: [
       {
         list: [
-          "Applications from international students in countries where your office does not recruit today, without opening an office, attending a fair or appointing anyone there.",
+          "One step away, not one more form. A student who is already applying elsewhere through Alutta can apply to you as well without starting another form from the beginning. We do not promise you a number of applicants. We remove the reason a student leaves you off their list.",
           "Complete applications. A student cannot send an application until every section your level of study requires is filled in and the documents it names are actually on file. The student certifies it, and any later edit clears that certification.",
           "Applications only when you are open. Your intakes and application windows are part of your listing, and an application outside an open window is refused before it reaches you.",
           "No change to how you decide. Your office assesses every application by its own standards and makes every decision. Alutta never decides, and never advises a student on your behalf.",
@@ -51,7 +59,7 @@ const sections: Section[] = [
             tag: "From Alutta to you",
             title: "Applications will arrive in your system",
             body: "This is the part we build with you. A complete application, with its documents, will be delivered into the admissions system your office already works in, so nobody retypes anything and nothing arrives by email.",
-            points: ["Built for the system you use: a national or shared portal, a commercial admissions system, or your own", "Planned and tested with your team before any real applicant is involved", "Not live yet for any institution. We are building the first of these connections with our first partners"],
+            points: ["Built for the system you use: a national or shared portal, a commercial admissions system, or your own", "Planned and tested with your team before any real applicant is involved", "Not live yet for any institution. Each connection is built with the institution that uses that system"],
           },
           {
             tag: "From you to Alutta",
@@ -61,7 +69,7 @@ const sections: Section[] = [
           },
         ],
       },
-      { p: "We will be plain about where this stands. The interface for decisions and fees is ready today. The connection that delivers applications is built for each admissions system, and none is live yet, which is why we are choosing our first partners carefully. Until yours is live, students prepare everything on Alutta and submit on your own application page, so recruiting can begin before the work is finished." },
+      { p: "We will be plain about where this stands. The interface for decisions and fees is ready today. The connection that delivers applications is built for each admissions system, and none is live yet. Until yours is live, students prepare everything on Alutta and submit on your own application page, so recruiting can begin before the work is finished." },
     ],
   },
   {
@@ -73,10 +81,10 @@ const sections: Section[] = [
           { label: "To join", value: "Nothing" },
           { label: "To be listed", value: "Nothing" },
           { label: "Per application", value: "Nothing" },
-          { label: "Per successful admission", value: "A commission, agreed in writing" },
+          { label: "Per enrolled student", value: "A commission, agreed in writing" },
         ],
       },
-      { p: "Alutta earns a commission only when a student is successfully admitted from an application made through Alutta. If nobody is admitted, you pay nothing. The rate, and exactly what counts as a successful admission, are set out in the agreement we sign with you before anything goes live." },
+      { p: "Alutta earns a commission only when a student who applied through Alutta enrols with you. An offer that nobody takes up costs you nothing, and if nobody enrols, you pay nothing. The rate, and exactly when a student counts as enrolled, are set out in the agreement we sign with you before anything goes live." },
     ],
   },
   {
@@ -135,8 +143,8 @@ const sections: Section[] = [
         asked: [
           { q: "Do we have to change our admissions process?", a: "No. You assess and decide exactly as you do now. The connection carries applications in and decisions out. It does not change who decides, or how." },
           { q: "Do we need technical staff?", a: "Yes. A partnership connects your admissions system to ours, so we need a developer on your side, or the vendor of your admissions system. It is a contained piece of work: we supply the integration guide, test keys and a sandbox, and we stay with your team until it is live." },
-          { q: "How many students and partners do you have?", a: "We are new, and we will give you the real figures on a call instead of rounding them up on a page." },
-          { q: "What do we pay if nobody is admitted?", a: "Nothing." },
+          { q: "How many students and partners do you have?", a: "We will give you the real figures on a call, instead of rounding them up on a page." },
+          { q: "What do we pay if nobody enrols?", a: "Nothing. Commission is due only for a student who applied through Alutta and enrolled with you." },
           { q: "Who do we talk to?", a: `The partnerships desk, at ${EMAIL}. A person answers.` },
         ],
       },
@@ -148,17 +156,17 @@ const pack: Pack = {
   path: "institutions",
   eyebrow: "FOR INSTITUTIONS",
   heading: ["One profile.", "Every border.", "Your next intake."],
-  intro: "Alutta lets a student apply to any partner institution, anywhere in the world, with one application profile. Joining costs an institution nothing.",
+  intro: "Alutta lets a student apply to any partner institution, at home or abroad, with one application profile. Joining costs an institution nothing.",
   promise: "Your office assesses and decides every application.",
   // This page's own picture (source beside it): the person who reads the application.
   image: { src: "/images/institutions-hero.jpg", alt: "A smiling member of staff wearing a lanyard, talking with a student across a laptop on a campus terrace", position: "50% 24%" },
   caption: "Photo: Eliott Reyna, Unsplash.",
   orbit: "FREE TO JOIN",
-  flight: ["You pay only", "On a successful admission"],
+  flight: ["You pay only", "When a student enrols"],
   // The same four facts as "What it costs", so the hero promises nothing the pack does not.
   card: {
     heading: "What a partnership costs",
-    lines: [["To join", "Nothing"], ["To be listed", "Nothing"], ["Per application", "Nothing"], ["Per successful admission", "A commission, agreed in writing"]],
+    lines: [["To join", "Nothing"], ["To be listed", "Nothing"], ["Per application", "Nothing"], ["Per enrolled student", "A commission, agreed in writing"]],
   },
   document: {
     title: "Partnership pack",

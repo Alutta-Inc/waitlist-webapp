@@ -14,7 +14,7 @@ import { ArrowUpRight, GraduationCap, HandCoins, Landmark } from "lucide-react";
 
 const audiences = [
   { Icon: GraduationCap, tag: "FOR STUDENTS", title: "One profile, every application", body: "Build your profile once. Use it for every school and every award you apply to, then for everything that comes after.", cta: "Join the waitlist", href: "/waitlist" },
-  { Icon: Landmark, tag: "FOR INSTITUTIONS", title: "Students you do not reach today", body: "Complete applications from international students, delivered to your admissions system. Free to join, and you decide every application.", cta: "See how a partnership works", href: "/institutions" },
+  { Icon: Landmark, tag: "FOR INSTITUTIONS", title: "One step away, not one more form", body: "Students apply to you with the profile they have already built. Complete applications, free to join, and you decide every one.", cta: "See how a partnership works", href: "/institutions" },
   { Icon: HandCoins, tag: "FOR FUNDING BODIES", title: "Your awards, in front of the right students", body: "Scholarships and grants shown to the students they were made for, at the moment they are planning how to pay.", cta: "See how funders work with us", href: "/funding-bodies" },
 ];
 
