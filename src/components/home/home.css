@@ -127,7 +127,9 @@
 .benefit-card > p { color: #758087; font-size: clamp(14px,1.15vw,18px); line-height: 1.5; min-height: 54px; margin: 0; }
 .benefit-art { height: 270px; position: relative; margin-top: 22px; }
 .benefit-portrait { position: absolute; width: 77%; height: 270px; right: -12px; bottom: -22px; overflow: hidden; border-radius: 50% 50% 30% 45%; transform: rotate(-9deg); }
-.benefit-portrait img { object-fit: cover; object-position: 85% center; transform: rotate(9deg) scale(1.15); }
+/* Her face sits mid-frame and the checklist covers the frame's left half, so the
+   photo is enlarged and moved right until she looks out from beside it. */
+.benefit-portrait img { object-fit: cover; object-position: 50% 12%; transform: rotate(9deg) scale(1.35) translate(16%, -2%); }
 .benefit-scribble { font-family: 'Segoe Print','Bradley Hand',cursive; font-size: 15px; line-height: 1.25; color: #224b40; }
 .plan-scribble { position: absolute; right: -5px; top: -5px; transform: rotate(-13deg); z-index: 2; }
 .benefit-checklist { position: relative; z-index: 3; width: 65%; background: #fffffffa; border-radius: 20px; padding: 13px 8px; box-shadow: 0 12px 25px #384b3610; top: 7px; }
@@ -377,7 +379,7 @@
 .closing-invitation-art { position:relative; min-height:290px; }
 .closing-invitation-art::before { content:''; position:absolute; inset:-15px 65px -20px 0; background:#649e5c20; border-radius:45%; transform:rotate(-23deg); }
 .closing-photo { position:absolute; left:15%; top:-25px; bottom:-25px; width:58%; border:2px solid #fffffff0; border-radius:28px; overflow:hidden; transform:rotate(-4deg); }
-.closing-photo img { object-fit:cover; object-position:85% center; }
+.closing-photo img { object-fit:cover; object-position:50% 18%; }
 .closing-travel-note { position:absolute; top:40px; left:-8px; display:flex; align-items:center; gap:12px; padding:15px; border-radius:13px; background:#fff; color:#174936; transform:rotate(-9deg); font-size:11px; box-shadow:0 8px 22px #09291c22; }
 .closing-photo-note { position:absolute; right:-25px; top:70px; color:#f1f6df; font-size:22px; }
 .closing-photo-note::after { border-color:#e2eea1; }
