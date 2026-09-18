@@ -326,3 +326,25 @@ src/
 ---
 
 Questions: `hello@alutta.com`.
+
+## The partnership pack and the email signature
+
+**`/partners`** (`src/components/partners/PartnersPage.tsx`) is the partnership pack,
+the document the partnerships desk sends an admissions office. It is built from the
+legal page's parts and prints to a clean PDF from its own Print button. **Every
+sentence on it is something the product does today, or is marked as something we
+build with the partner**: a registrar will hold us to it on the first call. It states
+no student numbers, no partner names and no commission rate (the desk confirms those
+in conversation), and it says plainly that no admissions-portal connection is live
+yet. Change a claim there only when the product changed first. ai-service links it
+from agent email through `PARTNERSHIP_PACK_URL`.
+
+**`/brand/signature.html`** (a static file, `noindex`) is the team's email signature
+and the page a person installs it from: choose the desk, copy, paste into Gmail's
+signature box. The signature is live text beside one small image,
+`/brand/email-mark.png` (the mark, 3x of its 44 by 40 display size). It is
+deliberately not one big image: that is a blank box wherever images are blocked
+(Outlook, most university mail), cannot be clicked or read aloud, and makes a short
+email mostly-image, which spam filters mark down. It uses the mark and not the
+wordmark because the wordmark's dark text disappears in dark mode. Do not move or
+rename `email-mark.png`: every signature already pasted into a mailbox points at it.

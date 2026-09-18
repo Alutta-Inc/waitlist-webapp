@@ -18,6 +18,8 @@ import "@/components/legal/legal.css";
 // After legal.css: the researchers page is built on the legal page's parts.
 import "@/components/researchers/researchers.css";
 import "@/components/bot/bot.css";
+// The partnership pack, on the legal page's parts too.
+import "@/components/partners/partners.css";
 import { Analytics } from "@/components/Analytics";
 import { STUDENT_APP_URL } from "@/lib/site";
 
