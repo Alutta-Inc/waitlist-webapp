@@ -6,6 +6,8 @@ import { useState, useEffect, useId, useMemo, useRef } from "react";
 import { Loader2, ArrowRight, Check, Copy, Share2, Search, ChevronDown, UserRound, Mail, ShieldCheck } from "lucide-react";
 import { destinationCountries, sourceCountries } from "@/lib/journey-data";
 import { track } from "@/lib/analytics";
+import { currentCode, forgetCode, isCodeShaped, normaliseCode } from "@/lib/referral";
+import { useTypedReferral } from "@/lib/use-referral";
 import { TURNSTILE_ACTION, TURNSTILE_SCRIPT_URL } from "@/lib/turnstile";
 import { cn } from "@/lib/utils";
 import { HONEYPOT_FIELD } from "@/lib/waitlist-input";
@@ -186,14 +188,6 @@ function getUtmParams() {
   };
 }
 
-/** The referral code in the URL, in the shape we issue them (alphanumeric,
- *  4 to 16 characters) or nothing. Anything else is not a code of ours. */
-function getReferralCode() {
-  if (typeof window === "undefined") return null;
-  const raw = (new URLSearchParams(window.location.search).get("ref") || "").trim().toUpperCase();
-  return /^[A-Z0-9]{4,16}$/.test(raw) ? raw : null;
-}
-
 function getLocaleCountryName() {
   if (typeof navigator === "undefined") return null;
 
@@ -236,27 +230,32 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
   // cannot ship a form that sends a bypass token the server will refuse.
   const turnstileDisabled = process.env.NODE_ENV !== "production" && process.env.NEXT_PUBLIC_TURNSTILE_DISABLED === "true";
 
-  // Pre-fill from URL if user lands from a referral, and ask customer-service
-  // (through /api/referral) whose code it is. A real code shows the
-  // referrer's first name; an unknown one shows nothing and is not sent, so
-  // a typo cannot be mistaken for a friend's invitation.
-  const [referredBy, setReferredBy] = useState<string | null>(null);
-  const [referrerName, setReferrerName] = useState<string | null>(null);
+  // THE REFERRAL CODE IS A FIELD, not a hidden URL parameter.
+  //
+  // It is prefilled from the invitation this visit is carrying (this URL's
+  // `?ref=`, or one seen earlier in the visit and remembered — see
+  // lib/referral.ts), and typeable when there is none, because codes get read
+  // out and pasted into chats without their link. Whose code it is comes from
+  // customer-service through /api/referral: a real one names the friend, an
+  // unknown one says so plainly and is not sent, so a typo can never be
+  // mistaken for an invitation.
+  const [referralInput, setReferralInput] = useState("");
+  const [referralOpen, setReferralOpen] = useState(false);
+  const referralFieldId = useId();
+  const referralNoteId = useId();
+  const referral = useTypedReferral(referralInput);
   useEffect(() => {
-    const code = getReferralCode();
+    const code = currentCode();
     if (!code) return;
-    let cancelled = false;
-    setReferredBy(code);
-    fetch(`/api/referral?code=${encodeURIComponent(code)}`)
-      .then((res) => (res.ok ? res.json() : null))
-      .then((data: { valid?: boolean | null; referrerFirstName?: string } | null) => {
-        if (cancelled || !data) return;
-        if (data.valid === false) setReferredBy(null);
-        else if (data.valid === true && data.referrerFirstName) setReferrerName(data.referrerFirstName);
-      })
-      .catch(() => { /* an outage keeps the code; customer-service checks it again on signup */ });
-    return () => { cancelled = true; };
+    setReferralInput(code);
+    setReferralOpen(true);
   }, []);
+
+  const typedCode = normaliseCode(referralInput);
+  // Sent unless we KNOW it is not ours. A lookup that could not answer keeps
+  // the code: customer-service checks it again when the signup lands.
+  const referredBy = isCodeShaped(typedCode) && referral.status !== "invalid" ? typedCode : null;
+  const referrerName = referral.status === "valid" ? referral.referrerName : "";
 
   // The honeypot. A person never sees this field; a script that fills every
   // input in the form does, and the route refuses the request.
@@ -343,8 +342,13 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
   const showCountryError = countryTouched && !countryValid;
   const showDestinationError = destinationTouched && !destinationValid;
 
+  // THE LINK LANDS ON THE FORM. It used to point at the site root, so an
+  // invitation opened the homepage and the friend had to go and find the
+  // waitlist page themselves. The code still works on any page (the strip
+  // above the header says who invited them, and the code is remembered), but
+  // a link built today opens the thing it is asking them to do.
   const referralLink = submitted
-    ? `${typeof window !== "undefined" ? window.location.origin : "https://alutta.com"}${source === "nigeria-waitlist" ? "/ng/waitlist" : ""}?ref=${submitted.referralCode}`
+    ? `${typeof window !== "undefined" ? window.location.origin : "https://alutta.com"}${source === "nigeria-waitlist" ? "/ng/waitlist" : "/waitlist"}?ref=${submitted.referralCode}`
     : "";
 
   const handleCopy = async () => {
@@ -437,8 +441,12 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
 
       // Real conversion — record it as the "waitlist-signup" event tag. New
       // signups only, so re-submits by an existing email do not inflate the count.
-      if (!data.alreadySignedUp) track("waitlist-signup", { source });
+      if (!data.alreadySignedUp) track("waitlist-signup", { source, referred: !!referredBy });
 
+      // The invitation has been spent. Dropping it here keeps the code they
+      // arrived on from turning up again beside the one they are now given
+      // to share.
+      forgetCode();
       onSuccess?.();
       setSubmitted({
         referralCode: data.referralCode,
@@ -610,6 +618,47 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
         </div>
       </div>
 
+      {/* Optional, and last, because it is the only field that is not about
+          the person joining. Open already when the link carried a code. */}
+      <div className="waitlist-referral">
+        {referralOpen ? (
+          <div className="waitlist-referral-field">
+            <label className="block text-sm font-medium text-brand-dark mb-1.5" htmlFor={referralFieldId}>
+              Referral code <span className="text-gray-400 font-normal">(optional)</span>
+            </label>
+            <input
+              id={referralFieldId}
+              type="text"
+              value={referralInput}
+              onChange={(e) => setReferralInput(normaliseCode(e.target.value))}
+              placeholder="ABCD1234"
+              disabled={isSubmitting}
+              className={inputClass(false)}
+              autoComplete="off"
+              spellCheck={false}
+              inputMode="text"
+              maxLength={16}
+              aria-describedby={referralNoteId}
+            />
+            <p id={referralNoteId} className={cn("waitlist-referral-note", referrerName && "is-valid")} aria-live="polite">
+              {referrerName ? (
+                <><Check className="w-4 h-4" aria-hidden="true" />{referrerName} referred you.</>
+              ) : referral.status === "checking" ? (
+                <><Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />Checking that code.</>
+              ) : referral.status === "invalid" ? (
+                <>We do not recognise that code. You can still join without it.</>
+              ) : (
+                <>A friend&rsquo;s code moves them up the list. Leave it blank if you do not have one.</>
+              )}
+            </p>
+          </div>
+        ) : (
+          <button type="button" className="waitlist-referral-toggle" onClick={() => setReferralOpen(true)} data-track="referral-code-open">
+            Have a referral code?
+          </button>
+        )}
+      </div>
+
       {error && (
         <p className="text-sm text-red-600 bg-red-50 px-4 py-2.5 rounded-lg border border-red-100">{error}</p>
       )}
@@ -648,7 +697,6 @@ export default function WaitlistForm({ variant = "hero", source = "hero", initia
 
       <p className="text-xs text-center text-gray-400">
         <ShieldCheck className="waitlist-privacy-icon hidden" aria-hidden="true" /> No spam. Unsubscribe anytime.
-        {referredBy && <span className="block mt-1 text-brand-accent">✓ {referrerName ? `${referrerName} referred you` : "Referred by a friend"}</span>}
       </p>
     </form>
   );

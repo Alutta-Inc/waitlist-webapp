@@ -641,3 +641,21 @@ body:has(.explainer-dialog[open]){overflow:hidden}
 /* The homepage shortlist is an interactive demo, not a catalogue search. */
 .journey-demo-tools{display:flex;align-items:center;justify-content:space-between;gap:18px;margin:24px 0 18px}.journey-country-menu{width:240px;max-width:100%;flex-shrink:0}.journey-country-menu>button{height:48px;border:1px solid #dce7df;border-radius:12px;background:#f6f9f5;padding-inline:16px;font-size:14px}.journey-country-menu [role=listbox]{min-width:0;border-radius:14px}.journey-country-menu [role=option]{font-size:14px;min-height:42px}.journey-demo-tools>span{font-size:12px;color:#698073;text-align:right}.journey-demo-note{font-size:11px;line-height:1.5;color:#798a80;margin:10px 0 0}.journey-school-city{font-size:9px;font-weight:400}.journey-quiz,.journey-search-body>.journey-quiz{align-items:center;gap:18px;flex-wrap:wrap}.journey-quiz>div{flex:0 1 auto;display:flex;align-items:center}.journey-quiz strong{display:block;line-height:1.5;font-size:14px}.journey-quiz button{margin:0;padding:0;min-height:44px;line-height:1.5;font-size:14px;align-items:center;background:transparent}.journey-search-body>.journey-quiz>button{padding:0}.journey-school-copy>p{align-items:center;line-height:1.5;margin-bottom:0}.journey-school-copy>p svg{margin:0}.journey-school-photo img{object-position:center!important}
 @media(max-width:540px){.journey-demo-tools{flex-direction:column;align-items:stretch;gap:12px}.journey-country-menu{width:100%}.journey-demo-tools>span{text-align:left}.journey-quiz,.journey-search-body>.journey-quiz{gap:0 14px}.journey-quiz strong,.journey-quiz button{font-size:13px}.journey-panel-heading{padding-top:0}}
+
+/* An invitation: the announcement strip, when the visitor arrived on somebody's
+   referral link. Same strip, same height, so nothing shifts when it swaps in. */
+.atlas-announcement button.atlas-announcement-action{display:inline-flex;gap:4px;align-items:center;color:var(--lime);border-bottom:1px solid #dceb9d66;font:inherit;padding:0}
+.atlas-announcement-invite{gap:8px}
+.atlas-announcement-invite>svg{color:var(--lime);flex:none}
+.atlas-announcement-invite strong{font-weight:600}
+
+/* A referral code on the waitlist form: optional, prefilled when the link
+   carried one, and typeable when it did not. */
+.waitlist-referral{margin-top:4px}
+.waitlist-referral-toggle{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:#5d7a6b;text-decoration:underline;text-underline-offset:3px;padding:6px 0;min-height:36px}
+.waitlist-referral-toggle:hover{color:#3c6350}
+.waitlist-referral-field input{text-transform:uppercase;letter-spacing:.12em}
+.waitlist-referral-note{display:flex;align-items:center;gap:6px;font-size:12px;line-height:1.5;margin-top:7px;color:#6d7c73}
+.waitlist-referral-note.is-valid{color:#3c7a52}
+.waitlist-referral-note.is-valid svg{color:#3c7a52}
+.waitlist-referral-note svg{flex:none}
