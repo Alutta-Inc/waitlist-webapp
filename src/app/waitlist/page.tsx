@@ -5,7 +5,7 @@ import { ArrowUpRight, Globe2, Mail, Sparkles, Users } from "lucide-react";
 import WaitlistCard from "@/components/waitlist/WaitlistCard";
 import HomeHeader from "@/components/home/HomeHeader";
 import CareersFooter from "@/components/home/CareersFooter";
-export const metadata: Metadata = {
+const baseMetadata: Metadata = {
   title: "Join the waitlist",
   description:
     "Get early access to Alutta. Tell us where you are and where you want to study, and we will email you when it is your turn.",
@@ -17,6 +17,27 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
+
+// Independence Day 2026: readers share alutta.com/waitlist?ref=... from the
+// email's WhatsApp card, so the link preview shows the card until the end of
+// 3 October in Lagos (22:59 UTC), then this page goes back to its own preview.
+const INDEPENDENCE_PREVIEW_UNTIL = Date.UTC(2026, 9, 3, 22, 59, 59);
+export const revalidate = 600;
+
+export function generateMetadata(): Metadata {
+  if (Date.now() > INDEPENDENCE_PREVIEW_UNTIL) return baseMetadata;
+  const image = { url: "/og/independence-ng-2026.jpg", width: 1200, height: 630, alt: "Nigeria's 36 states and the FCT, with Abuja at the centre" };
+  return {
+    ...baseMetadata,
+    openGraph: {
+      title: "Happy Independence Day, Nigeria",
+      description: "Many voices. One home. Planning to study at home or abroad? Join the Alutta waitlist.",
+      type: "website",
+      images: [image],
+    },
+    twitter: { card: "summary_large_image", title: "Happy Independence Day, Nigeria", images: [image.url] },
+  };
+}
 
 
 const steps = [
