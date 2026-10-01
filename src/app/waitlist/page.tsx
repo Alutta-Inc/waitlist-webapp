@@ -26,7 +26,7 @@ export const revalidate = 600;
 
 export function generateMetadata(): Metadata {
   if (Date.now() > INDEPENDENCE_PREVIEW_UNTIL) return baseMetadata;
-  const image = { url: "/og/independence-ng-2026.jpg", width: 1200, height: 630, alt: "Nigeria's 36 states and the FCT, with Abuja at the centre" };
+  const image = { url: "/og/independence-ng-2026-2.jpg", width: 1200, height: 630, alt: "Nigeria's 36 states and the FCT, with Abuja at the centre" };
   return {
     ...baseMetadata,
     openGraph: {
